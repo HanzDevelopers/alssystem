@@ -1,0 +1,52 @@
+.about{
+    margin-top: 40px;
+}
+.team-members {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  
+  .team-member {
+    text-align: center;
+    margin: 10px;
+    flex: 1 1 200px; /* Adjust the basis as per your layout needs */
+  }
+  
+  .team-member img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 50%; /* Optional: To make the images circular */
+  }
+  
+  @media (max-width: 768px) {
+    .team-member {
+      flex: 1 1 100%;
+    }
+  }
+  .image {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    .image {
+      display: block;
+    }
+  }
+  .about {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  @media (max-width: 768px) {
+    .image {
+      display: block;
+    }
+  }
+  
+  .image {
+    display: none;
+  }
+  

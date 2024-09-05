@@ -1,0 +1,11 @@
+#area-chart,
+        #line-chart,
+        #bar-chart,
+        #stacked,
+        #pie-chart {
+            min-height: 250px;
+        }
+.offcanvas-header{
+    background-color: rgb(34, 31, 31);
+    color: aliceblue;
+}

@@ -1,0 +1,6 @@
+.links a.active {
+    color: #ff0015; /* Change this color to whatever you prefer */
+    font-weight: bold;
+    border-bottom: 2px solid #ff0015; /* Optional: Add a bottom border to highlight the active link */
+  }
+  

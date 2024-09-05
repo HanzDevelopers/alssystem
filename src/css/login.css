@@ -1,0 +1,80 @@
+/* Global Styles */
+body {
+    font-family: 'Open Sans', sans-serif;
+    background: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Form Container */
+.form-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Form */
+.form {
+    width: 100%;
+}
+
+/* Form Elements */
+.form-label {
+    font-weight: bold;
+    color: #333;
+}
+
+.form-control {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+.form-text {
+    color: #888;
+}
+
+.btn-primary {
+    background: #6c63ff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #5a54d3;
+}
+
+.btn-secondary {
+    background: #888;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background: #666;
+}
+
+/* Request Account Link */
+.request-account-link {
+    color: #6c63ff;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.request-account-link:hover {
+    text-decoration: underline;
+}
+
