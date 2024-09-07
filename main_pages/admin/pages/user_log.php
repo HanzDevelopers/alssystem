@@ -73,7 +73,7 @@
                             <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="logout.php" class="sidebar-link">Log Out</a>
+                        <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
                         </li>
                     </ul>
                 </li>
@@ -209,5 +209,11 @@ echo '</nav>';
   <script type="text/javascript" src="../../../src/js/materialize.min.js"></script>
   <script type="text/javascript" src="../../../src/js/plugins.min.js"></script>
   <script src="../../../src/js/nav.js"></script>
+  <!-- Confirmation Script -->
+    <script>
+        function confirmLogout() {
+            return confirm("Are you sure you want to log out?");
+        }
+    </script>
 </body>
 </html>

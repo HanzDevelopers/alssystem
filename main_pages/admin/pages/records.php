@@ -74,7 +74,7 @@
                             <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="logout.php" class="sidebar-link">Log Out</a>
+                            <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
                         </li>
                     </ul>
                 </li>
@@ -113,12 +113,12 @@
             <h1>Records</h1>
             <!-- Search Form -->
             <form method="GET" class="mb-3">
-            <div class="row justify-content-end"> <!-- Use justify-content-end to align right -->
+                <div class="row justify-content-end"> <!-- Use justify-content-end to align right -->
                     <div class="col-md-4">
                         <input type="text" name="search" class="form-control" placeholder="Search by Name, Birthday, Age, or Address" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
                     </div>
                     <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                        <button type="submit" class="btn btn-primary">Search</button>
                     </div>
                 </div>
             </form>
@@ -187,16 +187,19 @@
   </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <!-- jQuery Library -->
-  <script type="text/javascript" src="../../../src/js/plugins/jquery-1.11.2.min.js"></script>  
-  <!-- materialize js -->
-  <script type="text/javascript" src="../../../src/js/materialize.min.js"></script>
-  <!-- plugins.js - Some Specific JS codes for Plugin Settings -->
-  <script type="text/javascript" src="../../../src/js/plugins.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- jQuery Library -->
     <script type="text/javascript" src="../../../src/js/plugins/jquery-1.11.2.min.js"></script>  
+    <!-- materialize js -->
     <script type="text/javascript" src="../../../src/js/materialize.min.js"></script>
+    <!-- plugins.js - Some Specific JS codes for Plugin Settings -->
     <script type="text/javascript" src="../../../src/js/plugins.min.js"></script>
     <script src="../../../src/js/nav.js"></script>
+
+    <!-- Confirmation Script -->
+    <script>
+        function confirmLogout() {
+            return confirm("Are you sure you want to log out?");
+        }
+    </script>
 </body>
 </html>

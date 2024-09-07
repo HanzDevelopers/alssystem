@@ -91,7 +91,7 @@
                                 <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="logout.php" class="sidebar-link">Log Out</a>
+                            <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
                             </li>
                         </ul>
                     </li>
@@ -259,5 +259,11 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
         <script src="../../../src/js/nav.js"></script>
+        <!-- Confirmation Script -->
+    <script>
+        function confirmLogout() {
+            return confirm("Are you sure you want to log out?");
+        }
+    </script>
 </body>
 </html>
