@@ -50,23 +50,23 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
                             aria-expanded="false" aria-controls="pages">
                             <i class="fa-solid fa-list pe-2"></i>
                             Reports
                         </a>
                         <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                <a href="#" class="sidebar-link">District OSY</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
+                                <a href="#" class="sidebar-link">District Population</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="OSY_age.php" class="sidebar-link">OSY By Age</a>
+                                <a href="#" class="sidebar-link">OSY By Age</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
+                                <a href="#" class="sidebar-link">List of Interested in ALS</a>
                             </li>
                         </ul>
                     </li>
@@ -74,7 +74,7 @@
                         User Action
                     </li>
                     <li class="sidebar-item">
-                        <a href="user_log.php" class="sidebar-link">
+                        <a href="#" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
                             User Log
                         </a>
@@ -88,10 +88,10 @@
                         <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                           
                         <li class="sidebar-item">
-                                <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
+                                <a href="#" class="sidebar-link">Edit Profile</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="logout.php" class="sidebar-link">Log Out</a>
+                                <a href="#" class="sidebar-link">Log Out</a>
                             </li>
                         </ul>
                     </li>
@@ -126,43 +126,7 @@
   </nav>
   <!-- End of top nav -->
 
-  <div class="container mt-4">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            Brg. Tankulan OSY
-          </div>
-          <div class="card-body">
-            <canvas id="pieChart"></canvas>
-            <a href="#" class="btn btn-primary mt-2">View Info</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            Population
-          </div>
-          <div class="card-body">
-            <canvas id="barChart"></canvas>
-            <a href="#" class="btn btn-primary mt-2">View Info</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            OSY by Age
-          </div>
-          <div class="card-body">
-            <canvas id="barChart2"></canvas>
-            <a href="#" class="btn btn-primary mt-2">View Info</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  
 
   </div>
     </div>
@@ -177,87 +141,5 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <script>
-    var ctx = document.getElementById('pieChart').getContext('2d');
-    var pieChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Mangima', 'Proper Calanawan', 'Upper Calanawan', 'Lower Calanawan', 'Centro', 'Lower Pol-Oton', 'Upper Pol-Oton', 'Mulberry', 'Kihare', 'Tumampong', 'Upper Sosohon', 'Lower Sosohon', 'st. Joseph'],
-        datasets: [{
-          label: 'Brg. Tankulan OSY',
-          data: [5, 4, 5, 10, 20, 20, 6, 5, 25, 3, 10, 5, 2],
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FFCD56', '#36A2EB', '#FF6384', '#FF9F40', '#4BC0C0', '#9966FF','#9945FF']
-        }]
-        
-      },
-      options: {
-        plugins: {
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }
-    });
-
-    var ctx2 = document.getElementById('barChart').getContext('2d');
-    var barChart = new Chart(ctx2, {
-      type: 'bar',
-      data: {
-        labels: ['Mangima', 'Proper Calanawan', 'Upper Calanawan', 'Lower Calanawan', 'Centro', 'Lower Pol-Oton', 'Upper Pol-Oton', 'Mulberry', 'Kihare', 'Tumampong', 'Upper Sosohon', 'Lower Sosohon', 'st. Joseph'],
-        datasets: [{
-          label: 'Population',
-          data: [230, 168, 130, 111, 578, 126, 169, 354, 211, 110, 200, 169, 259],
-          backgroundColor: 'rgba(54, 162, 235, 0.6)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-
-    var ctx3 = document.getElementById('barChart2').getContext('2d');
-    var barChart2 = new Chart(ctx3, {
-      type: 'bar',
-      data: {
-        labels: ['2021', '2022', '2023', '2024'],
-        datasets: [{
-          label: '15-20',
-          data: [4.3, 2.5, 3.5, 4.5],
-          backgroundColor: 'rgba(54, 162, 235, 0.6)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-        }, {
-          label: '21-25',
-          data: [3, 4, 3, 3],
-          backgroundColor: 'rgba(255, 99, 132, 0.6)',
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1
-        }, {
-          label: '26-30',
-          data: [1, 1.5, 2, 2.5],
-          backgroundColor: 'rgba(75, 192, 192, 0.6)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous"></script>
-        <script src="../../../src/js/nav.js"></script>
 </body>
 </html>

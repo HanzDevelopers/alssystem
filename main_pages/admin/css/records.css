@@ -1,0 +1,3 @@
+.form-control, .btn {
+    margin-left: auto; /* Align the form input and button to the right */
+}

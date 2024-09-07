@@ -7,9 +7,13 @@
     
     <!-- CORE CSS-->
     <link href="../../../src/css/style.min.css" type="text/css" rel="stylesheet" media="screen,projection">
-    <link rel="stylesheet" href="../css/dashboard.css">
     <title>Dynamic Form</title>
 </head>
+<style>
+    *{
+        font-size: 15px;
+    }
+</style>
 <body>
     
   <!-- Start Page Loading -->
@@ -19,66 +23,6 @@
       <div class="loader-section section-right"></div>
   </div>
   <!-- End Page Loading -->
-
-  <!-- Top nav -->
-  <nav class="navbar" style="background-color: #e3f2fd;">
-    <div class="container">
-      <button class="btn btn-light-border-subtle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"><img src="../../../assets/images/burger-bar.png" alt="Menu" width="30"></button>
-      <ul class="nav justify-content-end nav-pills">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="dashboard.php">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="records.php">Records</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="users.php">Users</a>
-        </li>
-        <li class="nav-item">
-          <a class="navbar-brand" href="#">
-            <img src="../../../assets/images/logo.png" alt="Bootstrap" width="40" height="30">
-          </a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  <!-- End of top nav -->
-
-  <!-- Side bar -->
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-    <div class="offcanvas-header">
-        <?php
-            session_start();
-            if (isset($_SESSION['username'])) {
-                echo '<h5 class="navAdmin offcanvas-title" id="offcanvasScrollingLabel">' . htmlspecialchars($_SESSION['username']) . '</h5>';
-            } else {
-                echo '<h5 class="navAdmin offcanvas-title" id="offcanvasScrollingLabel">Admin</h5>';
-            }
-        ?>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <a class="nav-link" href="form.php">Form</a>
-        
-        <!-- Report Dropdown -->
-        <div class="dropdown mt-3">
-            <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Report
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="reportDropdown">
-                <li><a class="dropdown-item" href="#">Brgy. Tankulan OSY</a></li>
-                <li><a class="dropdown-item" href="#">Brgy. Tankulan Population</a></li>
-                <li><a class="dropdown-item" href="#">OSY By Age</a></li>
-                <li><a class="dropdown-item" href="#">List of Interested in ALS</a></li>
-            </ul>
-        </div>
-        
-        <!-- Additional Links -->
-        <a class="nav-link" href="#">User Log</a>
-        <a class="nav-link" href="#">Log Out</a>
-    </div>
-</div>
-<!-- End of side bar -->
 
 <div class="container">
     <h1>Form</h1>

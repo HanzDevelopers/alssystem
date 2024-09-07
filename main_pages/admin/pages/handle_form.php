@@ -2,6 +2,7 @@
 // Start session
 session_start();
 include '../../../src/db/db_connection.php';
+
 // Check if the user is logged in
 if (!isset($_SESSION['username'])) {
     die("You must be logged in to submit the form.");
@@ -107,8 +108,22 @@ foreach ($household_members as $index => $member) {
 // Close the statement and connection
 $stmt->close();
 $conn->close();
-
-// Redirect to a success page or display a success message
-header("Location: success.php"); // Redirect to a success page
-exit();
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success</title>
+    <script>
+        function showSuccessMessage() {
+            alert('New household added successfully');
+            window.location.href = 'form.php'; // Redirect to form.php after the alert
+        }
+        window.onload = showSuccessMessage;
+    </script>
+</head>
+<body>
+</body>
+</html>
