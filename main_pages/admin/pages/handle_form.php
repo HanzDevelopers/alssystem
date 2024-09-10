@@ -117,11 +117,17 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Success</title>
     <script>
-        function showSuccessMessage() {
-            alert('New household added successfully');
-            window.location.href = 'form.php'; // Redirect to form.php after the alert
-        }
-        window.onload = showSuccessMessage;
+        window.onload = function() {
+            // Alert with options
+            const result = confirm('New household added successfully. Click OK to go to the Dashboard or Cancel to add another Household.');
+            if (result) {
+                // User clicked OK, redirect to dashboard.php
+                window.location.href = 'dashboard.php';
+            } else {
+                // User clicked Cancel, stay on form.php
+                window.location.href = 'form.php';
+            }
+        };
     </script>
 </head>
 <body>
