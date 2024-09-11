@@ -73,14 +73,13 @@ h1 {
     width: 100%;
 }
 
-#dynamicTable, #educationTable {
+#dynamicTable {
     width: 100%;
     border-collapse: collapse;
     table-layout: auto; /* Allows columns to adjust based on content */
 }
 
-#dynamicTable th, #dynamicTable td,
-#educationTable th, #educationTable td {
+#dynamicTable th, #dynamicTable td {
     white-space: normal; /* Allows text to wrap */
     padding: 8px;
     text-align: center;
@@ -89,13 +88,12 @@ h1 {
     height: auto; /* Automatically adjust height based on content */
 }
 
-#dynamicTable td, #educationTable td {
+#dynamicTable td {
     padding: 8px;
     text-align: center;
 }
 
-#dynamicTable input, #dynamicTable textarea,
-#educationTable input, #educationTable textarea {
+#dynamicTable input, #dynamicTable textarea {
     width: 100%;
     box-sizing: border-box; /* Ensures padding does not affect width */
     border: none; /* Remove border for input fields */
@@ -104,7 +102,7 @@ h1 {
     white-space: pre-wrap; /* Ensure text wraps properly */
 }
 
-#dynamicTable textarea, #educationTable textarea {
+#dynamicTable textarea {
     min-height: 40px; /* Ensure textarea has minimum height */
     overflow: hidden; /* Hide overflow */
     box-sizing: border-box; /* Ensure padding does not affect width */
@@ -114,17 +112,17 @@ h1 {
 
 /* Responsive design for mobile */
 @media (max-width: 768px) {
-    #dynamicTable thead, #educationTable thead, .step-3-table thead {
+    #dynamicTable thead {
         display: none;
     }
 
-    #dynamicTable tbody tr, #educationTable tbody tr, .step-3-table tbody tr {
+    #dynamicTable tbody tr {
         display: block;
         margin-bottom: 10px;
         border: 1px solid #ddd;
     }
 
-    #dynamicTable tbody tr td, #educationTable tbody tr td, .step-3-table tbody tr td {
+    #dynamicTable tbody tr td {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -133,35 +131,26 @@ h1 {
         border-bottom: 1px solid #ddd;
     }
 
-    #dynamicTable tbody tr td:before, #educationTable tbody tr td:before, .step-3-table tbody tr td:before {
+    #dynamicTable tbody tr td:before {
         content: attr(data-label);
         flex-basis: 50%;
         text-align: left;
         font-weight: bold;
         padding-right: 10px;
     }
-
-    /* Add border to input fields */
-    #dynamicTable input, #educationTable input, .step-3-table input {
-        border: 1px solid #ccc; /* Add border for input fields */
-        padding: 8px; /* Adjust padding for better appearance */
-        border-radius: 4px; /* Optional: Rounded corners */
-        width: 100%; /* Ensure inputs take full width in mobile view */
-        box-sizing: border-box; /* Ensures padding does not affect width */
-    }
 }
 
 /* Button Group Styling */
-.button-group-container {
+.button-group {
     display: flex;
-    justify-content: space-between; /* Space between start and end button groups */
-    align-items: center; /* Center items vertically */
+    justify-content: space-between;
+    align-items: center;
     margin-top: 20px;
 }
 
 .button-group-start {
     display: flex;
-    gap: 10px; /* Space between buttons in the start group */
+    gap: 10px; /* Space between Add Row and Delete Last Row buttons */
 }
 
 .button-group-end {

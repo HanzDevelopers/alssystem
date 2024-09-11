@@ -4,29 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
-    <!-- CORE CSS-->
-    <link href="../../../src/css/style.min.css" type="text/css" rel="stylesheet" media="screen,projection">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../../src/css/form.css"> <!-- Instead of putting the css of the form file in inside main_page/css/, I put the directory of the form.css file inside the src/css folder directory -->
+    <link href="../../../src/css/style.min.css" type="text/css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../src/css/form.css">
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../../src/css/nav.css">
-    <title>Dynamic Form</title>
+    <title>Household Form</title>
 </head>
 <style>
-    * {
-        font-size: 14px;
+    * { font-size: 14px; }
+    .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table-bordered {
+    width: 100%;
+}
+
+    /* Remove border from inputs in Step 3 table for desktop view */
+.step-3-table input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
+/* Add border for inputs in Step 3 table for mobile view */
+@media screen and (max-width: 768px) {
+    .step-3-table input {
+        border: 1px solid #ccc; /* You can adjust the border style, color, and thickness as needed */
+        outline: none;
+        background-color: white; /* Ensure a consistent background color */
     }
+}
+
+
+    .button-group {
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 10px; /* Add space between the buttons */
+}
+.step-indicator {
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.step {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: lightgray;
+    color: #000;
+    cursor: pointer;
+}
+
+.step.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.step.completed {
+    background-color: #28a745;
+    color: white;
+}
+
+
 </style>
 <body>
-    
-  <!-- Start Page Loading -->
+    <!-- Start Page Loading -->
   <div id="loader-wrapper">
       <div id="loader"></div>        
       <div class="loader-section section-left"></div>
       <div class="loader-section section-right"></div>
   </div>
   <!-- End Page Loading -->
-  <div class="wrapper">
+
+    <!-- Page Wrapper -->
+    <div class="wrapper">
         <!-- Sidebar -->
         <aside id="sidebar">
             <div class="h-100">
@@ -127,107 +180,139 @@
     </div>
   </nav>
   <!-- End of top nav -->
+            <div class="container2">
+                <h1>Household Form</h1>
+                <form method="post" action="handle_form.php" id="householdForm">
+                    <!-- Step Indicators -->
+                    <div class="step-indicator">
+                        <span id="step1-indicator" class="step active">Step 1</span>
+                        <span id="step2-indicator" class="step">Step 2</span>
+                        <span id="step3-indicator" class="step">Step 3</span>
+                    </div>
 
-  <div class="container2">
-    <h1>Household Form</h1>
-    <form method="post" action="handle_form.php">
-        <div class="group-container">
-            <div class="group">
-                <label>Date Encoded:</label>
+
+                    <!-- Step 1 -->
+                    <div class="form-step" id="step1">
+                        <div class="group-container">
+                            <div class="group">
+                                <label>Date Encoded:</label>
                 <input type="date" name="date_encoded" required>
-            </div>
-            <div class="group">
-                <label>Year:</label>
-                <input type="date" name="year" required>
-            </div>
-            <div class="group">
-                <label>Province:</label>
-                <input type="text" name="province" required>
-            </div>
-        </div>
-        <div class="group-container">
-            <div class="group">
-                <label>City/Municipality:</label>
-                <input type="text" name="city" required>
-            </div>
-            <div class="group">
-                <label>Barangay:</label>
-                <input type="text" name="barangay" required>
-            </div>
-            <div class="group">
-                <label>Sitio/Zone:</label>
-                <input type="text" name="sitio_zone_purok" required>
-            </div>
-        </div>
-        <div class="group-container">
-            <div class="group">
-                <label>House Number:</label>
-                <input type="text" name="house_number" required>
-            </div>
-            <div class="group">
-                <label>Estimated Family Income:</label>
-                <input type="number" name="estimated_family_income" required>
-            </div>
-            <div class="group">
-                <label>Other Notes:</label>
-                <textarea name="notes" rows="4" cols="50"></textarea>
-            </div>
-        </div>
+                                
+                            </div>
+                            <div class="group">
+                                <label>Year:</label>
+                                <input type="date" name="year" required>
+                            </div>
+                            <div class="group">
+                                <label>Province:</label>
+                                <input type="text" name="province" required placeholder="Province">
+                            </div>
+                        </div>
+                        <div class="group-container">
+                            <div class="group">
+                                <label>City/Municipality:</label>
+                                <input type="text" name="city" required placeholder="City/Municipality">
+                            </div>
+                            <div class="group">
+                                <label>Barangay:</label>
+                                <input type="text" name="barangay" required placeholder="Barangay">
+                            </div>
+                            <div class="group">
+                                <label>Sitio/Zone:</label>
+                                <input type="text" name="sitio_zone_purok" required placeholder="Sitio/Zone">
+                            </div>
+                        </div>
+                        <div class="group-container">
+                            <div class="group">
+                                <label>House Number:</label>
+                                <input type="text" name="house_number" required placeholder="House Number">
+                            </div>
+                            <div class="group">
+                                <label>Estimated Family Income:</label>
+                                <input type="number" name="estimated_family_income" required placeholder="Estimated Family Income">
+                            </div>
+                            <div class="group">
+                                <label>Other Notes:</label>
+                                <textarea name="notes" rows="4" cols="50" placeholder="State Notes Here"></textarea>
+                             </div>
+                        </div>
+                        <div class="button-group">
+                            <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next</button>
+                        </div>
+                    </div>
 
-        <div class="table-responsive">
-            <table id="dynamicTable">
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Household Members</th>
-                        <th>Relationship to Head</th>
-                        <th>Birthdate</th>
-                        <th>Age</th>
-                        <th>Gender</th>
-                        <th>Civil Status</th>
-                        <th>Person w/ Disability</th>
-                        <th>Ethnicity</th>
-                        <th>Religion</th>
-                        <th>Highest Grade/Year Completed</th>
-                        <th>Currently Attending School?</th>
-                        <th>Level Enrolled</th>
-                        <th>Reasons for Not Attending School</th>
-                        <th>Can Read/Write Simple Message in any Language?</th>
-                        <th>Occupation</th>
-                        <th>Work</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <tr>
-    <td data-label="No.">1</td>
-    <td data-label="Household Members"><textarea name="household_members[]"></textarea></td>
-    <td data-label="Relationship to Head"><textarea name="relationship_to_head[]"></textarea></td>
-    <td data-label="Birthdate"><input type="date" name="birthdate[]"></td>
-    <td data-label="Age"><input type="number" name="age[]"></td>
-    <td data-label="Gender"><input type="text" name="gender[]"></td>
-    <td data-label="Civil Status"><input type="text" name="civil_status[]"></td>
-    <td data-label="Person w/ Disability"><textarea name="disability[]"></textarea></td>
-    <td data-label="Ethnicity"><textarea name="ethnicity[]"></textarea></td>
-    <td data-label="Religion"><textarea name="religion[]"></textarea></td>
-    <td data-label="Highest Grade Completed"><textarea name="highest_grade[]"></textarea></td>
-    <td data-label="Currently Attending School?"><textarea name="attending_school[]"></textarea></td>
-    <td data-label="Level Enrolled"><input type="text" name="level_enrolled[]"></td>
-    <td data-label="Reasons Not Attending"><textarea name="reasons_not_attending[]"></textarea></td>
-    <td data-label="Can Read/Write"><input type="text" name="can_read_write[]"></td>
-    <td data-label="Occupation"><textarea name="occupation[]"></textarea></td>
-    <td data-label="Work"><textarea name="work[]"></textarea></td>
-    <td data-label="Status"><input type="text" name="status[]"></td>
-</tr>
-
-                </tbody>
-            </table>
-        </div>
-
-        <div class="button-group">
-    <div class="button-group-start">
-        <button type="button" class="btn btn-add" onclick="addRow()">Add Row</button>
+                    <!-- Step 2 -->
+                    <div class="form-step" id="step2" style="display:none;">
+                        <div class="table-responsive">
+                            <table id="dynamicTable">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Household Members:</th>
+                                        <th>Relationship to Head:</th>
+                                        <th>Birthdate:</th>
+                                        <th>Age:</th>
+                                        <th>Gender:</th>
+                                        <th>Civil Status:</th>
+                                        <th>Person w/ Disability:</th>
+                                        <th>Ethnicity:</th>
+                                        <th>Religion:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-label="No.">1</td>
+                                        <td data-label="Household Members"><input type="text" name="household_members[]"placeholder="Name of Member"></td>
+                                        <td data-label="Relationship to Head"><input type="text" name="relationship_to_head[]"placeholder="Relationship to Head"></td>
+                                        <td data-label="Birthdate"><input type="date" name="birthdate[]"></td>
+                                        <td data-label="Age"><input type="number" name="age[]" placeholder="Age"></td>
+                                        <td data-label="Gender"><input type="text" name="gender[]" placeholder="Gender"></td>
+                                        <td data-label="Civil Status"><input type="text" name="civil_status[]" placeholder="Civil Status"></td>
+                                        <td data-label="Person w/ Disability"><input type="text" name="disability[]" placeholder="Person w/ Disability"></td>
+                                        <td data-label="Ethnicity"><input type="text" name="ethnicity[]" placeholder="Ethnicity"></td>
+                                        <td data-label="Religion"><input type="text" name="religion[]" placeholder="Religion"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="button-group-start" style="margin-top: 10px;">
+        <button type="button" class="btn btn-add" onclick="addRow()">Add Member</button>
         <button type="button" class="btn btn-danger btn-sm" onclick="deleteLastRow()">Delete Last Row</button>
+    </div>
+    <div class="button-group">
+    <button type="button" class="btn btn-secondary" onclick="previousStep(1)">Previous</button>
+    <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next</button>
+</div>
+
+                    </div>
+
+                    <!-- Step 3 -->
+<div class="form-step" id="step3" style="display:none;">
+    <div class="table-responsive">
+        <table id="step3Table" class="table-bordered step-3-table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Household Members</th> <!-- New column for identification -->
+                    <th>Highest Grade/Year Completed</th>
+                    <th>Currently Attending School?</th>
+                    <th>Level Enrolled</th>
+                    <th>Reasons for Not Attending School</th>
+                    <th>Can Read/Write Simple Message?</th>
+                    <th>Occupation</th>
+                    <th>Work</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Step 3 rows will be dynamically filled based on Step 2 -->
+                
+            </tbody>
+        </table>
+    </div>
+    <div class="button-group-container">
+    <div class="button-group-start">
+        <button type="button" class="btn btn-secondary" onclick="previousStep(2)">Previous</button>
     </div>
     <div class="button-group-end">
         <button type="submit" class="btn btn-save">Save</button>
@@ -235,12 +320,62 @@
     </div>
 </div>
 
-    </form>
 </div>
 
-    </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
+    <script>
+    let currentStep = 1;
+
+    function nextStep(step) {
+        document.getElementById('step' + currentStep).style.display = 'none';
+        currentStep = step;
+        document.getElementById('step' + currentStep).style.display = 'block';
+        updateStepIndicator();
+        if (step === 3) fillStep3Table(); // Fill Step 3 table when navigating to Step 3
+    }
+
+    function previousStep(step) {
+        document.getElementById('step' + currentStep).style.display = 'none';
+        currentStep = step;
+        document.getElementById('step' + currentStep).style.display = 'block';
+        updateStepIndicator();
+    }
+
+    function updateStepIndicator() {
+        const indicators = document.querySelectorAll('.step');
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index + 1 === currentStep);
+        });
+    }
+
+    function fillStep3Table() {
+        const step3Table = document.getElementById('step3Table').getElementsByTagName('tbody')[0];
+        step3Table.innerHTML = ''; // Clear existing rows
+
+        const step2Table = document.getElementById('dynamicTable').getElementsByTagName('tbody')[0];
+        Array.from(step2Table.rows).forEach((row, index) => {
+            const householdMember = row.cells[1].querySelector('input').value; // Get household member from Step 2
+
+            const newRow = step3Table.insertRow();
+            newRow.innerHTML = `
+                <td data-label="No.">${index + 1}</td>
+                <td data-label="Household Members">${householdMember}</td> <!-- Add household member here for identification -->
+                <td data-label="Highest Grade/Year Completed"><input type="text" name="highest_grade[]" placeholder="Highest Grade/Year Completed"></td>
+                <td data-label="Currently Attending School?"><input type="text" name="attending_school[]" placeholder="Currently Attending School?"></td>
+                <td data-label="Level Enrolled"><input type="text" name="level_enrolled[]" placeholder="Level Enrolled"></td>
+                <td data-label="Reasons for Not Attending School"><input type="text" name="reasons_not_attending[]"placeholder="Reasons for Not Attending School"></td>
+                <td data-label="Can Read/Write Simple Message?"><input type="text" name="can_read_write[]"placeholder="Can Read/Write Simple Message?"></td>
+                <td data-label="Occupation"><input type="text" name="occupation[]"placeholder="Occupation"></td>
+                <td data-label="Work"><input type="text" name="work[]"placeholder="Work"></td>
+                <td data-label="Status"><input type="text" name="status[]"placeholder="Status"></td>`;
+        });
+    }
+</script>
 
     <script>
     // Adding row
@@ -336,8 +471,8 @@ document.querySelector('form').addEventListener('submit', function() {
 
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <!-- jQuery Library -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery Library -->
   <script type="text/javascript" src="../../../src/js/plugins/jquery-1.11.2.min.js"></script>  
   <!-- materialize js -->
   <script type="text/javascript" src="../../../src/js/materialize.min.js"></script>
