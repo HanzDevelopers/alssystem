@@ -10,14 +10,25 @@ if (isset($_GET['page']) && is_numeric($_GET['page'])) {
 }
 $start_from = ($current_page - 1) * $results_per_page;
 
-// Query to get the total number of users with user_type = 'user'
-$total_result = $conn->query("SELECT COUNT(*) AS total FROM user_tbl WHERE user_type = 'user'");
+// Search handling
+$search_term = isset($_GET['search']) ? $_GET['search'] : '';
+
+// Query to get the total number of users with user_type = 'user' and matching the search criteria
+$search_query = "SELECT COUNT(*) AS total FROM user_tbl WHERE user_type = 'user'";
+if (!empty($search_term)) {
+    $search_query .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' OR status LIKE '%" . $conn->real_escape_string($search_term) . "%')";
+}
+$total_result = $conn->query($search_query);
 $row = $total_result->fetch_assoc();
 $total_users = $row['total'];
 $total_pages = ceil($total_users / $results_per_page);
 
-// Query to get the users for the current page
-$sql = "SELECT * FROM user_tbl WHERE user_type = 'user' LIMIT $start_from, $results_per_page";
+// Query to get the users for the current page, ordered from newest to oldest
+$sql = "SELECT * FROM user_tbl WHERE user_type = 'user'";
+if (!empty($search_term)) {
+    $sql .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' OR status LIKE '%" . $conn->real_escape_string($search_term) . "%')";
+}
+$sql .= " ORDER BY user_name asc LIMIT $start_from, $results_per_page";
 $result = $conn->query($sql);
 ?>
 
@@ -36,13 +47,12 @@ $result = $conn->query($sql);
 </head>
 <style>
     .btn {
-    margin: 0 5px; /* Add a uniform margin to both buttons */
-    padding: 5px 10px; /* Adjust padding if needed */
-}
-td {
-    white-space: nowrap; /* Prevents the content from wrapping */
-}
-
+        margin: 0 5px; /* Add a uniform margin to both buttons */
+        padding: 5px 10px; /* Adjust padding if needed */
+    }
+    td {
+        white-space: nowrap; /* Prevents the content from wrapping */
+    }
 </style>
 <body>
   <!-- Sidebar -->
@@ -127,8 +137,7 @@ td {
                             Auth
                         </a>
                         <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                          
-                        <li class="sidebar-item">
+                           <li class="sidebar-item">
                                 <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
                             </li>
                             <li class="sidebar-item">
@@ -136,7 +145,6 @@ td {
                             </li>
                         </ul>
                     </li>
-                    
                 </ul>
         </nav>
 
@@ -152,6 +160,18 @@ td {
         <!-- End of top nav -->
 
         <div class="container mt-5">
+            <!-- Search Form -->
+            <form method="get" class="mb-3">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" name="search" class="form-control" placeholder="Search by name or status" value="<?php echo htmlspecialchars($search_term); ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                        <a href="users.php" class="btn btn-secondary">Clear</a>
+                    </div>
+                </div>
+            </form>
             <a href="add_user.php" class="btn btn-success mb-3">Add</a>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered">
@@ -159,8 +179,8 @@ td {
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Password</th>
                             <th>User Type</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -172,12 +192,16 @@ td {
                                 echo "<tr>
                                         <td>{$row['user_name']}</td>
                                         <td>{$row['email']}</td>
-                                        <td>{$row['pass']}</td>
                                         <td>{$row['user_type']}</td>
+                                        <td>{$row['status']}</td>
                                         <td>
-                                            <a href='edit_user.php?id={$row['user_id']}' class='btn btn-primary btn-sm'>Edit</a>
+                                            <button class='btn btn-sm btn-toggle-status'  onclick='return disable()' 
+                                                data-id='{$row['user_id']}' 
+                                                data-status='{$row['status']}' 
+                                                style='background-color: " . ($row['status'] === 'disable' ? 'green' : 'orange') . "; color: white;'>
+                                                " . ($row['status'] === 'disable' ? 'Enable' : 'Disable') . "
+                                            </button>
                                             <a href='delete_user.php?id={$row['user_id']}' class='btn btn-danger btn-sm' onclick='return confirmDelete()'>Delete</a>
-
                                         </td>
                                       </tr>";
                             }
@@ -241,10 +265,13 @@ td {
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
   <!-- jQuery Custom Scroller CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-<!-- Confirmation Script -->
-<script>
+  <!-- Confirmation Script -->
+  <script>
+    function disable() {
+          return confirm("Are you sure you want to disable/enable this account?");
+      }
       function confirmDelete() {
-          return confirm("Are you sure you want to delete this record?");
+          return confirm("Are you sure you want to delete this account?");
       }
       function confirmLogout() {
           return confirm("Are you sure you want to log out?");
@@ -262,6 +289,42 @@ td {
           });
       });
   </script>
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButtons = document.querySelectorAll('.btn-toggle-status');
+
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const userId = this.getAttribute('data-id');
+                const currentStatus = this.getAttribute('data-status');
+                const newStatus = currentStatus === 'disable' ? 'enable' : 'disable';
+
+                // Send AJAX request to update the status
+                fetch('update_status.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `user_id=${userId}&status=${newStatus}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the button text and status attribute
+                        this.textContent = newStatus === 'disable' ? 'Enable' : 'Disable';
+                        this.setAttribute('data-status', newStatus);
+                    } else {
+                        alert('Failed to update status.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    });
+</script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
       crossorigin="anonymous"></script>

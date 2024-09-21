@@ -1,0 +1,111 @@
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Flexbox container for the charts */
+.dashboard-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Styling for each card */
+.chart-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 30%;
+    min-width: 300px;
+    text-align: center;
+}
+.chart-card h2 {
+    margin-bottom: 20px;
+}
+
+.chart {
+    width: 100%;
+    height: 400px;
+}
+
+/* Media query for responsive design */
+@media (max-width: 900px) {
+    .chart-card {
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+/* Styling for download buttons */
+.download-buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.download-buttons button {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.download-buttons button:hover {
+    background-color: #45a049;
+}
+/* Ensure container pushes content down */
+.container-fluid {
+    margin-top: 130px;
+}
+
+/* Dropdown menu fixed at the top-right */
+.dropdown.fixed-top-right {
+    position: fixed;
+    top: 80px;  /* Adjust based on the height of your page */
+    right: 70px;   /* Adjust based on where you want the dropdown */
+    z-index: 1000;
+    
+}
+
+.dropdown-toggle {
+    background-color: #01c635;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #24b445;
+}
