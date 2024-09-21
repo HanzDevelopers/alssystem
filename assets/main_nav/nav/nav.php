@@ -21,125 +21,70 @@
   </div>
   <!-- End Page Loading -->
 
-  
-
-
   <div class="wrapper">
-        <!-- Sidebar -->
-        <aside id="sidebar">
-            <div class="h-100">
-                <div class="sidebar-logo">
-                <?php
-            session_start();
-            if (isset($_SESSION['username'])) {
-                echo '<a href="#">' . htmlspecialchars($_SESSION['username']) . '</a>';
-            } else {
-                echo '<a href="#">Admin</a>';
-            }
-        ?>
-                </div>
-                <!-- Sidebar Navigation -->
-                <ul class="sidebar-nav">
-                    <li class="sidebar-header">
-                        Tools & Components
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="form.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            Form
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
-                            aria-expanded="false" aria-controls="pages">
-                            <i class="fa-solid fa-list pe-2"></i>
-                            Reports
-                        </a>
-                        <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a href="#" class="sidebar-link">District OSY</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="#" class="sidebar-link">District Population</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="#" class="sidebar-link">OSY By Age</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="#" class="sidebar-link">List of Interested in ALS</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-header">
-                        User Action
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            User Log
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
-                            aria-expanded="false" aria-controls="auth">
-                            <i class="fa-regular fa-user pe-2"></i>
-                            Auth
-                        </a>
-                        <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                          
-                        <li class="sidebar-item">
-                                <a href="#" class="sidebar-link">Edit Profile</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="#" class="sidebar-link">Log Out</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                </ul>
-            </div>
-        </aside>
-        <!-- Main Component -->
-        <div class="main">
-            <nav class="navbar navbar-expand px-3 border-bottom" style="background-color: #e3f2fd;">
-                <!-- Button for sidebar toggle -->
-                <!-- Top nav -->
-    <div class="container">
-      <button class="btn btn-light-border-subtle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"><img src="../../../assets/images/burger-bar.png" alt="Menu" width="30"></button>
-      <ul class="nav justify-content-end nav-pills">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="dashboard.php">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="records.php">Records</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="users.php">Users</a>
-        </li>
-        <li class="nav-item">
-          <a class="navbar-brand" href="#">
-            <img src="../../../assets/images/logo.png" alt="Bootstrap" width="40" height="30">
-          </a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  <!-- End of top nav -->
+      <!-- Sidebar -->
+      <aside id="sidebar">
+          <div class="h-100">
+              <div class="sidebar-logo">
+                  <?php
+                      session_start();
+                      if (isset($_SESSION['username'])) {
+                          echo '<a href="#">' . htmlspecialchars($_SESSION['username']) . '</a>';
+                      } else {
+                          echo '<a href="#">Admin</a>';
+                      }
+                  ?>
+              </div>
+              <!-- Sidebar Navigation -->
+              <ul class="sidebar-nav">
+                  <li class="sidebar-header">Tools & Components</li>
+                  <li class="sidebar-item">
+                      <a href="form.php" class="sidebar-link"><i class="fa-regular fa-file-lines pe-2"></i>Form</a>
+                  </li>
+                  <!-- More Sidebar Items -->
+              </ul>
+          </div>
+      </aside>
+      <!-- Main Component -->
+      <div class="main">
+          <nav class="navbar navbar-expand-lg px-3 border-bottom" style="background-color: #e3f2fd;">
+              <div class="container-fluid">
+                  <!-- Button for sidebar toggle -->
+                  <button class="btn btn-light d-lg-none" type="button" id="sidebarToggle">
+                      <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30">
+                  </button>
+                  <!-- Top nav -->
+                  <ul class="nav justify-content-end nav-pills">
+                      <li class="nav-item">
+                          <a class="nav-link active" aria-current="page" href="dashboard.php">Dashboard</a>
+                      </li>
+                      <!-- More Nav Items -->
+                  </ul>
+              </div>
+          </nav>
 
-  
-
+          <div class="content p-3">
+              <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit...</h1>
+          </div>
+      </div>
   </div>
-    </div>
+
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <!-- jQuery Library -->
-  <script type="text/javascript" src="../../../src/js/plugins/jquery-1.11.2.min.js"></script>  
-  <!-- materialize js -->
+  <script type="text/javascript" src="../../../src/js/plugins/jquery-1.11.2.min.js"></script>
   <script type="text/javascript" src="../../../src/js/materialize.min.js"></script>
-  <!-- plugins.js - Some Specific JS codes for Plugin Settings -->
   <script type="text/javascript" src="../../../src/js/plugins.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  <!--<script src="../../../src/js/nav.js"></script>-->
+  <script>
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    sidebarToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('collapsed');
+    });
+  </script>
 </body>
 </html>

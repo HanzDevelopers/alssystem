@@ -1,24 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<html>
 
-    <!-- CORE CSS-->
-     
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
+    <title>bootstrap4-responsive-sidebar</title>
+
+    <!-- Bootstrap CSS CDN --> 
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
+    <!-- Our Custom CSS -->
     <link rel="stylesheet" href="../../../src/css/nav.css">
-    <title>Records</title>
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
 </head>
-<style>
-    
-</style>
+
 <body>
-  <!-- Sidebar -->
-  <div class="wrapper">
-    <!-- Sidebar  -->
-    <nav id="sidebar">
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
                     <?php
@@ -116,92 +120,15 @@
                 <button type="button" id="sidebarCollapse" class="btn menu-btn">
                     <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
                 </button>
-                <span class="menu-text">Household Records</span>
+                <span class="menu-text">Dashboard</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
             </div>
-        <!-- End of top nav -->
-
-        <div class="container mt-5">
-    <!-- Search Bar -->
-    <form id="searchForm" class="mb-3">
-        <div class="input-group">
-            <input type="text" class="form-control" name="search" id="searchInput" placeholder="Search..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-            <button class="btn btn-primary" type="submit">Search</button>
-        </div>
-    </form>
-
-    <!-- Table -->
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Birthday</th>
-                    <th>Age</th>
-                    <th>Address</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- PHP code to fetch data from database -->
-                <?php
-                include '../../../src/db/db_connection.php';
-
-                $search = isset($_GET['search']) ? '%' . $conn->real_escape_string($_GET['search']) . '%' : '%';
-
-                $sql = "SELECT * FROM osy_tbl
-                        WHERE household_members LIKE ? OR birthdate LIKE ? OR age LIKE ? OR
-                        CONCAT(city_municipality, ' ', barangay, ' ', sitio_zone_purok) LIKE ?
-                        LIMIT 10";
-
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param('ssss', $search, $search, $search, $search);
-                $stmt->execute();
-                $result = $stmt->get_result();
-
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $full_address = $row['city_municipality'] . ' ' . $row['barangay'] . ' ' . $row['sitio_zone_purok'];
-                        echo "<tr>
-                                <td>{$row['household_members']}</td>
-                                <td>{$row['birthdate']}</td>
-                                <td>{$row['age']}</td>
-                                <td>{$full_address}</td>
-                                <td><button class='btn btn-primary'>View Info</button></td>
-                              </tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='5'>No records found</td></tr>";
-                }
-
-                $stmt->close();
-                $conn->close();
-                ?>
-            </tbody>
-        </table>
-    </div>
-        </div>
+    <!-- Main Content Ends Here -->
+        <h1>Hello, I am yours!</h1>
+        <p>This is the main content of the page. Replace or add more content here as needed.</p>
             </div>
-
-        
-    </div>
-  </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <!-- jQuery Library -->
-    <script type="text/javascript" src="../../../src/js/plugins/jquery-1.11.2.min.js"></script>  
-    <!-- materialize js -->
-    <script type="text/javascript" src="../../../src/js/materialize.min.js"></script>
-    <!-- plugins.js - Some Specific JS codes for Plugin Settings -->
-    <script type="text/javascript" src="../../../src/js/plugins.min.js"></script>
-    <script src="../../../src/js/nav.js"></script>
-
-    <!-- Confirmation Script -->
-    <script>
-        function confirmLogout() {
-            return confirm("Are you sure you want to log out?");
-        }
-    </script>
+            </div>
+            
 
     <!-- jQuery CDN - Slim version (=without AJAX) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -228,4 +155,5 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
 </body>
+
 </html>

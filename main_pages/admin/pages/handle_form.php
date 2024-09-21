@@ -12,7 +12,6 @@ if (!isset($_SESSION['username'])) {
 $encoder_name = $_SESSION['username'];
 
 // Retrieve form data
-$year = isset($_POST['year']) ? intval($_POST['year']) : null;
 $province = isset($_POST['province']) ? $_POST['province'] : null;
 $city = isset($_POST['city']) ? $_POST['city'] : null;
 $barangay = isset($_POST['barangay']) ? $_POST['barangay'] : null;
@@ -40,7 +39,7 @@ $date_encoded = date('Y-m-d H:i:s'); // Set current date and time
 $notes = isset($_POST['notes']) ? $_POST['notes'] : '';
 
 // Check if required fields are provided
-if ($year === null || $province === null || $city === null || $barangay === null || $sitio_zone_purok === null || $house_number === null || $estimated_family_income === null || empty($household_members)) {
+if ($province === null || $city === null || $barangay === null || $sitio_zone_purok === null || $house_number === null || $estimated_family_income === null || empty($household_members)) {
     die("Required fields are missing.");
 }
 
@@ -55,10 +54,10 @@ if ($conn->connect_error) {
 // Prepare the insert statement
 $stmt = $conn->prepare("
     INSERT INTO osy_tbl (
-        encoder_name, date_encoded, year, province, city_municipality, barangay, sitio_zone_purok, housenumber, estimated_family_income,
+        encoder_name, date_encoded, province, city_municipality, barangay, sitio_zone_purok, housenumber, estimated_family_income,
         household_members, relationship_to_head, birthdate, age, gender, civil_status, person_with_disability, ethnicity, religion,
         highest_grade_completed, currently_attending_school, grade_level_enrolled, reasons_for_not_attending_school,
-        can_read_write_simple_messages_inanylanguage, occupation, work, status
+        can_read_write_simple_messages_inanylanguage, occupation, work, status, notes
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ");
 
@@ -73,7 +72,6 @@ foreach ($household_members as $index => $member) {
         "ssssssssssssssssssssssssss",
         $encoder_name,
         $date_encoded,
-        $year,
         $province,
         $city,
         $barangay,
@@ -96,7 +94,8 @@ foreach ($household_members as $index => $member) {
         $can_read_write[$index],
         $occupation[$index],
         $work[$index],
-        $status[$index]
+        $status[$index],
+        $notes
     );
 
     // Execute the statement

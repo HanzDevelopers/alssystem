@@ -12,7 +12,7 @@
         <h1>Edit User</h1>
         <?php
         include '../../../src/db/db_connection.php';
-        
+
         // Validate and sanitize the user_id
         if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             $user_id = intval($_GET['id']);
@@ -20,6 +20,7 @@
             die("Invalid user ID");
         }
 
+        // Fetch the user data
         $sql = "SELECT * FROM user_tbl WHERE user_id = $user_id";
         $result = $conn->query($sql);
 
@@ -30,7 +31,7 @@
         }
         ?>
         <form action="edit_user.php" method="POST">
-            <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">
+            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($row['user_id']); ?>">
             <div class="mb-3">
                 <label for="user_name" class="form-label">Name</label>
                 <input type="text" class="form-control" id="user_name" name="user_name" value="<?php echo htmlspecialchars($row['user_name']); ?>" required>
@@ -57,9 +58,9 @@
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_id = intval($_POST['user_id']);
-        $user_name = $_POST['user_name'];
-        $email = $_POST['email'];
-        $user_type = $_POST['user_type'];
+        $user_name = $conn->real_escape_string($_POST['user_name']);
+        $email = $conn->real_escape_string($_POST['email']);
+        $user_type = $conn->real_escape_string($_POST['user_type']);
 
         $sql = "UPDATE user_tbl SET user_name='$user_name', email='$email', user_type='$user_type'";
 
