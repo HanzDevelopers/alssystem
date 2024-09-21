@@ -131,7 +131,7 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-header">
-            Brg. Tankulan OSY
+          District OSY
           </div>
           <div class="card-body">
             <canvas id="pieChart"></canvas>
@@ -142,7 +142,7 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-header">
-            Population
+          District Population
           </div>
           <div class="card-body">
             <canvas id="barChart"></canvas>
@@ -153,7 +153,7 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-header">
-            OSY by Age
+          OSY By Age
           </div>
           <div class="card-body">
             <canvas id="barChart2"></canvas>

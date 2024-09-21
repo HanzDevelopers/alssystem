@@ -1,0 +1,199 @@
+/* General body and container styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container2 {
+    width: 100%;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Header styling */
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Group container for form inputs */
+.group-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.group {
+    width: 32%; /* Makes the three groups fit in a row */
+    display: flex;
+    flex-direction: column;
+}
+
+.group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.group input, .group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensures padding does not affect width */
+}
+
+/* Adjust height of textarea based on content */
+.group textarea {
+    min-height: 40px; /* Set a minimum height */
+    resize: none; /* Prevent manual resizing */
+    overflow: hidden; /* Hide overflow */
+    white-space: pre-wrap; /* Ensure text wraps properly */
+}
+
+/* Responsive design for form inputs */
+@media (max-width: 768px) {
+    .group-container {
+        flex-direction: column;
+    }
+    
+    .group {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Table Styling */
+.table-responsive {
+    overflow-x: auto;
+    width: 100%;
+}
+
+#dynamicTable, #educationTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto; /* Allows columns to adjust based on content */
+}
+
+#dynamicTable th, #dynamicTable td,
+#educationTable th, #educationTable td {
+    white-space: normal; /* Allows text to wrap */
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ccc; /* Keeps border for the table */
+    vertical-align: top; /* Align text to the top of the cell */
+    height: auto; /* Automatically adjust height based on content */
+}
+
+#dynamicTable td, #educationTable td {
+    padding: 8px;
+    text-align: center;
+}
+
+#dynamicTable input, #dynamicTable textarea,
+#educationTable input, #educationTable textarea {
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding does not affect width */
+    border: none; /* Remove border for input fields */
+    resize: none; /* Prevent manual resizing */
+    overflow: hidden; /* Hide overflow */
+    white-space: pre-wrap; /* Ensure text wraps properly */
+}
+
+#dynamicTable textarea, #educationTable textarea {
+    min-height: 40px; /* Ensure textarea has minimum height */
+    overflow: hidden; /* Hide overflow */
+    box-sizing: border-box; /* Ensure padding does not affect width */
+    resize: none; /* Prevent manual resizing */
+    white-space: pre-wrap; /* Ensure text wraps properly */
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    #dynamicTable thead, #educationTable thead, .step-3-table thead {
+        display: none;
+    }
+
+    #dynamicTable tbody tr, #educationTable tbody tr, .step-3-table tbody tr {
+        display: block;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+    }
+
+    #dynamicTable tbody tr td, #educationTable tbody tr td, .step-3-table tbody tr td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #dynamicTable tbody tr td:before, #educationTable tbody tr td:before, .step-3-table tbody tr td:before {
+        content: attr(data-label);
+        flex-basis: 50%;
+        text-align: left;
+        font-weight: bold;
+        padding-right: 10px;
+    }
+
+    /* Add border to input fields */
+    #dynamicTable input, #educationTable input, .step-3-table input {
+        border: 1px solid #ccc; /* Add border for input fields */
+        padding: 8px; /* Adjust padding for better appearance */
+        border-radius: 4px; /* Optional: Rounded corners */
+        width: 100%; /* Ensure inputs take full width in mobile view */
+        box-sizing: border-box; /* Ensures padding does not affect width */
+    }
+}
+
+/* Button Group Styling */
+.button-group-container {
+    display: flex;
+    justify-content: space-between; /* Space between start and end button groups */
+    align-items: center; /* Center items vertically */
+    margin-top: 20px;
+}
+
+.button-group-start {
+    display: flex;
+    gap: 10px; /* Space between buttons in the start group */
+}
+
+.button-group-end {
+    display: flex;
+    gap: 10px; /* Space between Save and Cancel buttons */
+}
+
+/* Button Styling */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-add {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-save {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-cancel {
+    background-color: #dc3545;
+    color: white;
+}
