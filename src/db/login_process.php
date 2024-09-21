@@ -7,7 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
     if (!empty($username) && !empty($password)) {
-        $stmt = $conn->prepare("SELECT * FROM user_tbl WHERE user_name = ? LIMIT 1");
+        // Making the username comparison case-sensitive
+        $stmt = $conn->prepare("SELECT * FROM user_tbl WHERE BINARY user_name = ? LIMIT 1");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -20,19 +21,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['username'] = $user['user_name'];
                 $_SESSION['user_type'] = $user['user_type'];
 
-                $login_time = date("Y-m-d H:i:s");
-                $log_stmt = $conn->prepare("INSERT INTO user_log (user_id, user_name, login_date) VALUES (?, ?, ?)");
-                $log_stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $login_time);
-                $log_stmt->execute();
+                // Check user status
+                if (empty($user['status']) || strtolower($user['status']) == 'enable') {
+                    $login_time = date("Y-m-d H:i:s");
+                    $log_stmt = $conn->prepare("INSERT INTO user_log (user_id, user_name, login_date) VALUES (?, ?, ?)");
+                    $log_stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $login_time);
+                    $log_stmt->execute();
 
-                if (strtolower($user['user_type']) == 'admin') {
-                    header("Location: ../../main_pages/admin/pages/dashboard.php");
-                } elseif (strtolower($user['user_type']) == 'user') {
-                    header("Location: ../../main_pages/user/pages/dashboard.php");
+                    if (strtolower($user['user_type']) == 'admin') {
+                        header("Location: ../../main_pages/admin/pages/dashboard.php");
+                    } elseif (strtolower($user['user_type']) == 'user') {
+                        header("Location: ../../main_pages/user/pages/dashboard.php");
+                    } else {
+                        echo "Invalid user type.";
+                    }
+                    exit();
                 } else {
-                    echo "Invalid user type.";
+                    // Redirect to the disabled accounts page if the status is 'disable'
+                    header("Location: ../../disabled_accounts.php");
+                    exit();
                 }
-                exit();
             } else {
                 $error = "Invalid password.";
             }

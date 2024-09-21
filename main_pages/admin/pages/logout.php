@@ -1,22 +1,32 @@
 <?php
+// Start the session
 session_start();
 
-// Clear all session variables
-$_SESSION = array();
+// Database connection
+include '../../../src/db/db_connection.php';
 
-// Destroy the session
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000, 
-        $params["path"], $params["domain"], 
-        $params["secure"], $params["httponly"]
-    );
+// Check if the user is logged in
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+
+    // Update the user_log table with the logout date
+    $sql = "UPDATE user_log SET logout_date = NOW() WHERE user_id = ? AND logout_date IS NULL ORDER BY login_date DESC LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    
+    if ($stmt->execute()) {
+        // Logout successful
+        session_unset(); // Clear session variables
+        session_destroy(); // Destroy session
+        header("Location: ../../../login.php"); // Redirect to login page
+        exit();
+    } else {
+        // Handle errors if needed
+        echo "Error updating logout date: " . $conn->error;
+    }
+    
+    $stmt->close();
 }
 
-// Destroy the session
-session_destroy();
-
-// Redirect to login page
-header("Location: ../../../index.php");
-exit();
+$conn->close();
 ?>

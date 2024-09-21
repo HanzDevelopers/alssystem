@@ -17,7 +17,6 @@ a:focus {
     text-decoration: none;
     transition: all 0.3s;
 }
-
 a.sidebar-link {
     padding: .625rem 1.625rem;
     color: #000000;
@@ -25,11 +24,9 @@ a.sidebar-link {
     display: block;
     font-size: 1rem;
 }
-
-li {
+li{
     list-style: none;
 }
-
 .navbar {
     padding: 15px 10px;
     background: #fff;
@@ -51,7 +48,6 @@ li {
     border-bottom: 1px dashed #ddd;
     margin: 40px 0;
 }
-
 .sidebar-link[data-bs-toggle="collapse"]::after {
     border: solid;
     border-width: 0 .075rem .075rem 0;
@@ -64,12 +60,10 @@ li {
     transform: rotate(-135deg);
     transition: all .2s ease-out;
 }
-
 .sidebar-link[data-bs-toggle="collapse"].collapsed::after {
     transform: rotate(45deg);
     transition: all .2s ease-out;
 }
-
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
@@ -82,14 +76,13 @@ li {
 #sidebar {
     width: 250px;
     position: fixed;
-    top: 62px; /* Start below the fixed header */
+    top: 0;
     left: 0;
-    height: calc(100vh - 62px); /* Adjust height to account for the fixed header */
+    height: 100vh;
     z-index: 999;
     background: #ffffff;
     color: #000000;
     transition: all 0.3s;
-    overflow-y: auto; /* Add scrolling if the content exceeds the sidebar height */
 }
 
 #sidebar.active {
@@ -118,7 +111,7 @@ li {
 
 #sidebar ul li a:hover {
     color: white;
-    background: #b3b3b3;
+    background:#b3b3b3;
 }
 
 #sidebar ul li.active>a,
@@ -145,47 +138,39 @@ ul ul a {
     background: #00508B;
 }
 
-
 .menu-text {
-    color: rgb(0, 0, 0);
-    font-size: 15px;
-    font-weight: bold;
+   color:rgb(0, 0, 0);
+   font-size: 15px;
+   font-weight: bold;
+   position: relative;
+   left:5px;
 }
 
-.header-logo {
-    height: 40px; /* Adjust the size of the logo */
-    width: auto;
-}
+
 .menu-btn {
     color: white;
 }
 
-/* Fixed positioning for the menu header */
-
 .menu-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 62px;
+    width:100%;
+    height:50px;
     background-color: #e3f2fd;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Distributes space between children */
-    padding: 10px 20px; /* Adjust padding to make room for the logo */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Adjust content padding to prevent overlap with fixed header */
+
+
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
 #content {
     width: calc(100% - 250px);
     min-height: 100vh;
     transition: all 0.3s;
     position: absolute;
-    top: 62px; /* Prevent overlap with the fixed header */
+    top: 0;
     right: 0;
-    padding-top: 20px; /* Additional padding for content */
 }
 
 #content.active {
@@ -193,23 +178,21 @@ ul ul a {
 }
 
 /* ---------------------------------------------------
-    MEDIA QUERIES
+    MEDIAQUERIES
 ----------------------------------------------------- */
 
 @media (max-width: 768px) {
     #sidebar {
         margin-left: -250px;
     }
-
     #sidebar.active {
         margin-left: 0;
     }
-
     #content {
         width: 100%;
     }
-
     #content.active {
         width: calc(100% - 250px);
     }
+   
 }
