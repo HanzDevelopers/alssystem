@@ -238,14 +238,30 @@ if (!isset($_SESSION['username'])) {
 let currentStep = 1;
 
 function nextStep(step) {
-    if (validateCurrentStep()) {
-        document.getElementById('step' + currentStep).style.display = 'none';
-        currentStep = step;
-        document.getElementById('step' + currentStep).style.display = 'block';
-        updateStepIndicator();
-        if (step === 3) fillStep3Table(); // Fill Step 3 table when navigating to Step 3
+    const currentInputs = document.getElementById('step' + currentStep).querySelectorAll('input');
+    let emptyFields = [];
+    
+    // Check for empty fields in the current step
+    currentInputs.forEach(input => {
+        if (input.value.trim() === '') {
+            emptyFields.push(input.placeholder); // Collect placeholders of empty fields
+        }
+    });
+
+    // If there are empty fields, show a single alert
+    if (emptyFields.length > 0) {
+        alert('Please fill in the following fields:\n' + emptyFields.join('\n'));
+        return; // Stop the function if there are empty fields
     }
+
+    // Proceed to the next step if there are no empty fields
+    document.getElementById('step' + currentStep).style.display = 'none';
+    currentStep = step;
+    document.getElementById('step' + currentStep).style.display = 'block';
+    updateStepIndicator();
+    if (step === 3) fillStep3Table(); // Fill Step 3 table when navigating to Step 3
 }
+
 
 function previousStep(step) {
     document.getElementById('step' + currentStep).style.display = 'none';
@@ -322,26 +338,6 @@ document.querySelector('form').addEventListener('submit', function(event) {
         event.preventDefault();
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </script>
 

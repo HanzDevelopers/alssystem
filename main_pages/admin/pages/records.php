@@ -130,93 +130,117 @@
     <!-- Search Bar -->
     <form id="searchForm" class="mb-3">
         <div class="input-group">
-            <input type="text" class="form-control" name="search" id="searchInput" placeholder="Search..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+            <input type="text" class="form-control" name="search" id="searchInput" placeholder="Search By Encoder Name, Household Member, or Birthdate" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
             <button class="btn btn-primary" type="submit">Search</button>
         </div>
     </form>
+    <div class="container mt-5">
+    <!-- Export Dropdown -->
+    <div class="mb-3">
+    <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #01c635; border-color: #01c635;">
+        Download H.R As
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li><a class="dropdown-item" href="#" onclick="downloadCSV()">CSV</a></li>
+        <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Excel</a></li>
+    </ul>
+</div>
 
+    </div>
     <!-- Table -->
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Birthday</th>
-                    <th>Age</th>
-                    <th>Address</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- PHP code to fetch data from database -->
-<?php
+    <?php
+   // Database connection
 include '../../../src/db/db_connection.php';
 
-// Retrieve the search parameter and sanitize it
-$search_input = isset($_GET['search']) ? $_GET['search'] : '';
-$search = '%' . $conn->real_escape_string($search_input) . '%';
+// Get the search query, if any
+$search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Prepare the SQL query with JOINs to combine location and members data
-$sql = "
-    SELECT 
-        m.member_id,
-        m.household_members,
-        m.birthdate,
-        m.age,
-        CONCAT(l.city_municipality, ' ', l.barangay, ' ', l.sitio_zone_purok) AS full_address
-    FROM 
-        members_tbl m
-    INNER JOIN 
-        location_tbl l ON m.record_id = l.record_id
-    WHERE 
-        m.household_members LIKE ? 
-        OR m.birthdate LIKE ? 
-        OR m.age LIKE ? 
-        OR CONCAT(l.city_municipality, ' ', l.barangay, ' ', l.sitio_zone_purok) LIKE ?
-    LIMIT 10
+// Get the current page number from the URL, if none set, default to 1
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 10; // Number of entries to show per page
+$offset = ($page - 1) * $limit; // Calculate the offset for the query
+
+// Fetch the total number of records in the household table that match the search criteria
+$total_sql = "
+    SELECT COUNT(*) AS total 
+    FROM members_tbl m 
+    JOIN location_tbl l ON m.record_id = l.record_id 
+    WHERE /*l.encoder_name LIKE '%$search%' */
+       m.household_members LIKE '%$search%' 
+       OR m.birthdate LIKE '%$search%' 
+       OR m.age LIKE '%$search%' 
+       OR CONCAT(l.province, ', ', l.city_municipality, ', ', l.barangay) LIKE '%$search%'
 ";
+$total_result = $conn->query($total_sql);
+$total_row = $total_result->fetch_assoc();
+$total_records = $total_row['total'];
 
-// Prepare the statement
-$stmt = $conn->prepare($sql);
+// Fetch data from the household table, filtered by search query, ordered by birthdate (newest to oldest) with LIMIT and OFFSET
+$sql = "
+    SELECT m.*, l.encoder_name, CONCAT(l.barangay, ', ', l.city_municipality, ', ',l.province ) AS address
+    FROM members_tbl m 
+    JOIN location_tbl l ON m.record_id = l.record_id 
+    WHERE /*l.encoder_name LIKE '%$search%' */
+       m.household_members LIKE '%$search%' 
+       OR m.birthdate LIKE '%$search%' 
+       OR m.age LIKE '%$search%' 
+       OR CONCAT(l.province, ', ', l.city_municipality, ', ', l.barangay) LIKE '%$search%'
+    ORDER BY m.age ASC 
+    LIMIT $limit OFFSET $offset
+";
+$result = $conn->query($sql);
 
-// Check if the statement was prepared successfully
-if ($stmt === false) {
-    die("Failed to prepare SQL statement: " . $conn->error);
-}
-
-// Bind the parameters
-$stmt->bind_param('ssss', $search, $search, $search, $search);
-
-// Execute the statement
-$stmt->execute();
-
-// Get the result set
-$result = $stmt->get_result();
-
-// Check if any records were found
 if ($result->num_rows > 0) {
+    echo '<table class="table table-striped">';
+    echo '<thead><tr><th>Encoder Name</th><th>Household Member</th><th>Birthdate</th><th>Age</th><th>Address</th><th>Actions</th></tr></thead>';
+    echo '<tbody>';
+    // Output data of each row
     while ($row = $result->fetch_assoc()) {
-        // Display the data in a table row
         echo "<tr>
-                <td>{$row['household_members']}</td>
-                <td>{$row['birthdate']}</td>
-                <td>{$row['age']}</td>
-                <td>{$row['full_address']}</td>
-                <td>
-                    <button class='btn btn-primary' onclick='viewInfo({$row['member_id']})'>View Info</button>
-                </td>
+                <td>" . htmlspecialchars($row["encoder_name"]) . "</td>
+                <td>" . htmlspecialchars($row["household_members"]) . "</td>
+                <td>" . htmlspecialchars($row["birthdate"]) . "</td>
+                <td>" . htmlspecialchars($row["age"]) . "</td>
+                <td>" . htmlspecialchars($row["address"]) . "</td>
+                <td><button class='btn btn-primary' onclick='viewInfo(" . $row["member_id"] . ")'>View Info</button></td>
               </tr>";
     }
+    echo '</tbody></table>';
 } else {
-    // If no records found, display a message
-    echo "<tr><td colspan='5'>No records found</td></tr>";
+    echo "<p>No records found.</p>";
 }
 
-// Close the statement and connection
-$stmt->close();
-$conn->close();
+// Calculate total number of pages
+$total_pages = ceil($total_records / $limit);
+
+// Display pagination buttons
+echo '<nav aria-label="Page navigation">';
+echo '<ul class="pagination justify-content-center">';
+
+// Previous page button
+if ($page > 1) {
+    echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '&search=' . htmlspecialchars($search) . '">Previous</a></li>';
+}
+
+// Page number buttons
+for ($i = 1; $i <= $total_pages; $i++) {
+    echo '<li class="page-item ' . ($i == $page ? 'active' : '') . '"><a class="page-link" href="?page=' . $i . '&search=' . htmlspecialchars($search) . '">' . $i . '</a></li>';
+}
+
+// Next page button
+if ($page < $total_pages) {
+    echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '&search=' . htmlspecialchars($search) . '">Next</a></li>';
+}
+
+echo '</ul>';
+echo '</nav>';
 ?>
 
+
+        </div>
+    </div>
+</div>
 <!-- JavaScript function to handle the View Info button -->
 <script>
     function viewInfo(memberId) {
@@ -254,7 +278,10 @@ $conn->close();
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     <!-- jQuery Custom Scroller CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-
+    <!--libraries to handle the exporting of the table-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="../js/records_download.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $("#sidebar").mCustomScrollbar({
@@ -267,6 +294,21 @@ $conn->close();
             });
         });
     </script>
+
+    <!--handle download-->
+    <script>
+    function downloadCSV() {
+        const search = document.getElementById('searchInput').value;
+        window.location.href = 'download.php?format=csv&search=' + encodeURIComponent(search);
+    }
+
+    function downloadExcel() {
+        const search = document.getElementById('searchInput').value;
+        window.location.href = 'download.php?format=excel&search=' + encodeURIComponent(search);
+    }
+</script>
+>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>

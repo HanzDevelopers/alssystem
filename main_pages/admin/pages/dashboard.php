@@ -156,20 +156,39 @@
     <div class="content p-3">
         <div class="row">
             <!-- Container for charts -->
-    <div class="dashboard-container">
-        <div class="chart-card">
-            <div id="pie-chart" class="chart"></div>
-        </div>
-
-        <div class="chart-card">
-            <div id="bar-chart1" class="chart"></div>
-        </div>
-
-        <div class="chart-card">
-            <div id="bar-chart2" class="chart"></div>
-            <a href="#" class="btn btn-primary mt-2">View Info</a>
-        </div>
+            <div class="dashboard-container">
+    
+    <!-- Chart 1: District OSY Pie Chart -->
+    <div class="chart-card">
+        <div id="pie-chart" class="chart"></div>
+        <!-- View Info Button for Pie Chart -->
+        <a href="sample.php" class="sidebar-link btn btn-primary mt-2">
+                        <i class="fa fa-info-circle me-2"></i>
+                        View Info
+                        </a>
     </div>
+
+    <!-- Chart 2: District Population Bar Chart -->
+    <div class="chart-card">
+        <div id="bar-chart1" class="chart"></div>
+        <!-- View Info Button for Bar Chart 1 -->
+        <a href="sample.php" class="sidebar-link btn btn-primary mt-2">
+                        <i class="fa fa-info-circle me-2"></i>
+                        View Info
+                        </a>
+    </div>
+
+    <!-- Chart 3: OSY By Age Bar Chart -->
+    <div class="chart-card">
+        <div id="bar-chart2" class="chart"></div>
+        <!-- View Info Button for Bar Chart 2 -->
+        <a href="sample.php" class="sidebar-link btn btn-primary mt-2">
+                        <i class="fa fa-info-circle me-2"></i>
+                        View Info
+                        </a>
+    </div>
+    
+</div>
 
         </div>
     </div>

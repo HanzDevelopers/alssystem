@@ -102,7 +102,7 @@ li {
 }
 
 #sidebar ul.components {
-    border-bottom: 1px solid #47748b;
+    border-bottom: 1px solid #ffffff;
 }
 
 #sidebar ul p {
@@ -142,7 +142,7 @@ a[data-toggle="collapse"] {
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #00508B;
+    background: #ffffff;
 }
 
 
