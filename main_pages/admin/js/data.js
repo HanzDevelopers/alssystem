@@ -1,6 +1,5 @@
 // data.js
-
-// Function to fetch and plot District OSY Pie Chart with animation
+// Function to fetch and plot District OSY Pie Chart
 function plotDistrictOSY() {
     fetch('../api/osy_pie_chart.php') // Update the path as needed
         .then(response => response.json())
@@ -12,48 +11,19 @@ function plotDistrictOSY() {
             const pieData = data.counts;
             const pieLabels = data.districts;
 
-            // Initial data with zero values for animation
-            const initialPieData = {
-                values: Array(pieData.length).fill(0),
+            const pieChart = {
+                values: pieData,
                 labels: pieLabels,
-                type: 'pie',
-                textinfo: 'label+percent',
-                hoverinfo: 'label+percent+value',
-                marker: {
-                    colors: Plotly.d3.schemeCategory10
-                }
+                type: 'pie'
             };
 
-            const pieLayout = { 
-                title: 'District OSY (Age 15-30)',
-                transition: {
-                    duration: 1000,
-                    easing: 'cubic-in-out'
-                }
-            };
-
-            Plotly.newPlot('pie-chart', [initialPieData], pieLayout).then(() => {
-                // Animate to actual data
-                Plotly.animate('pie-chart', {
-                    data: [{ values: pieData }],
-                    traces: [0],
-                    layout: {}
-                }, {
-                    transition: {
-                        duration: 1000,
-                        easing: 'cubic-in-out'
-                    },
-                    frame: {
-                        duration: 1000,
-                        redraw: false
-                    }
-                });
-            });
+            const pieLayout = { title: 'District OSY' };
+            Plotly.newPlot('pie-chart', [pieChart], pieLayout);
         })
         .catch(error => console.error('Error fetching District OSY data:', error));
 }
 
-// Function to fetch and plot District Population Bar Chart with animation
+// Function to fetch and plot District Population Bar Chart
 function plotDistrictPopulation() {
     fetch('../api/district_population.php') // Update the path as needed
         .then(response => response.json())
@@ -75,10 +45,9 @@ function plotDistrictPopulation() {
                 }
             }
 
-            // Initial data with zero heights for animation
-            const initialBarChart1 = {
+            const barChart1 = {
                 x: filteredLabels,
-                y: Array(filteredData.length).fill(0),
+                y: filteredData,
                 type: 'bar',
                 marker: {
                     color: 'rgba(55,128,191,0.6)',
@@ -86,122 +55,68 @@ function plotDistrictPopulation() {
                 }
             };
 
-            const barLayout1 = { 
-                title: 'District Population',
-                transition: {
-                    duration: 1000,
-                    easing: 'cubic-in-out'
-                }
-            };
-
-            Plotly.newPlot('bar-chart1', [initialBarChart1], barLayout1).then(() => {
-                // Animate to actual data
-                Plotly.animate('bar-chart1', {
-                    data: [{ y: filteredData }],
-                    traces: [0],
-                    layout: {}
-                }, {
-                    transition: {
-                        duration: 1000,
-                        easing: 'cubic-in-out'
-                    },
-                    frame: {
-                        duration: 1000,
-                        redraw: false
-                    }
-                });
-            });
+            const barLayout1 = { title: 'District Population' };
+            Plotly.newPlot('bar-chart1', [barChart1], barLayout1);
         })
         .catch(error => console.error('Error fetching District Population data:', error));
 }
 
-// Function to fetch and plot OSY By Age Bar Chart with animation
+// Function to fetch and plot OSY By Age Bar Chart
 function plotOSYByAge() {
-    fetch('../api/osy_by_age.php') // Update the path as needed
+    fetch('../api/osy_by_age.php')
         .then(response => response.json())
         .then(data => {
             if (data.error) {
                 console.error(data.error);
                 return;
             }
-            const barData2 = data.counts;
-            const barLabels2 = data.districts;
 
-            // Initial data with zero heights for animation
-            const initialBarChart2 = {
-                x: barLabels2,
-                y: Array(barData2.length).fill(0),
-                type: 'bar',
-                marker: {
-                    color: 'rgba(255,153,51,0.6)',
-                    width: 1
-                }
+            const years = [...new Set(data.map(item => item.year))];
+            const ageRanges = ['15-20', '21-25', '26-30'];
+            const colors = {
+                '15-20': 'rgba(54,162,235,0.6)',  // Blue for 15-20
+                '21-25': 'rgba(255,159,64,0.6)',  // Orange for 21-25
+                '26-30': 'rgba(201,203,207,0.6)'  // Grey for 26-30
             };
 
-            const barLayout2 = { 
-                title: 'OSY By Age (15-30)',
-                transition: {
-                    duration: 1000,
-                    easing: 'cubic-in-out'
-                }
-            };
-
-            Plotly.newPlot('bar-chart2', [initialBarChart2], barLayout2).then(() => {
-                // Animate to actual data
-                Plotly.animate('bar-chart2', {
-                    data: [{ y: barData2 }],
-                    traces: [0],
-                    layout: {}
-                }, {
-                    transition: {
-                        duration: 1000,
-                        easing: 'cubic-in-out'
-                    },
-                    frame: {
-                        duration: 1000,
-                        redraw: false
-                    }
-                });
+            const traces = ageRanges.map(ageRange => {
+                return {
+                    x: years,
+                    y: years.map(year => {
+                        const osyForYearAndRange = data.find(d => d.year === year && d.age_range === ageRange);
+                        return osyForYearAndRange ? osyForYearAndRange.osy_count : 0;
+                    }),
+                    name: ageRange,
+                    type: 'bar',
+                    marker: { color: colors[ageRange] },
+                    text: years.map(year => {
+                        const osyForYearAndRange = data.find(d => d.year === year && d.age_range === ageRange);
+                        return osyForYearAndRange ? osyForYearAndRange.osy_count : 0;
+                    }),
+                    textposition: 'auto'  // To display numbers on top of the bars
+                };
             });
+
+            const layout = {
+                title: 'OSY by Age',
+                barmode: 'group',  // Group the bars side by side
+                xaxis: { title: 'Year' },
+                yaxis: { title: 'OSY Count', tickformat: ',d' },
+                margin: { t: 40, b: 40, l: 40, r: 40 },
+                showlegend: true
+            };
+
+            Plotly.newPlot('bar-chart2', traces, layout);
         })
         .catch(error => console.error('Error fetching OSY By Age data:', error));
 }
 
-// Function to handle "View Info" button clicks
-function setupViewInfoButtons() {
-    // Select all buttons with the class 'view-info-btn'
-    const viewInfoButtons = document.querySelectorAll('.view-info-btn');
 
-    viewInfoButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Retrieve the chart type from the data-chart attribute
-            const chartType = this.getAttribute('data-chart');
-
-            // Redirect to sample.php with the chart type as a query parameter
-            // For example: sample.php?chart=pie
-            window.location.href = `sample.php?chart=${encodeURIComponent(chartType)}`;
-        });
-    });
-}
-
-// Initialize all charts and setup buttons
+// Initialize all charts
 function initCharts() {
     plotDistrictOSY();
     plotDistrictPopulation();
     plotOSYByAge();
-    setupViewInfoButtons(); // Setup buttons after initializing charts
-}
-
-// Call the initCharts function when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initCharts);
-
-
-// Initialize all charts and setup buttons
-function initCharts() {
-    plotDistrictOSY();
-    plotDistrictPopulation();
-    plotOSYByAge();
-    setupViewInfoButtons(); // Setup buttons after initializing charts
 }
 
 // Call the initCharts function when the DOM is fully loaded
@@ -214,30 +129,33 @@ function downloadImage() {
     Plotly.downloadImage(document.getElementById('bar-chart2'), {format: 'png', filename: 'osy-by-age-chart'});
 }
 
+// Function to download the page as PDF
 function downloadPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    doc.text("ALS System Dashboard", 10, 10);
+    doc.text("ALS System Dashboard", 20, 20);
 
-    // Convert each chart to an image and add each to a new page in the PDF
-    Plotly.toImage(document.getElementById('pie-chart'), { format: 'png', width: 900, height: 600 })
+    // Convert each chart to an image and add it to PDF
+    Plotly.toImage(document.getElementById('pie-chart'), { format: 'png' })
         .then(function (imgData) {
-            doc.addImage(imgData, 'PNG', 10, 30, 190, 120); // Adjusted size for pie chart
-            doc.addPage();  // Add a new page for the next chart
-            return Plotly.toImage(document.getElementById('bar-chart1'), { format: 'png', width: 900, height: 600 });
+            doc.addImage(imgData, 'PNG', 15, 30, 180, 90);
+            doc.addPage(); // Add a new page for the next chart
+            return Plotly.toImage(document.getElementById('bar-chart1'), { format: 'png' });
         })
         .then(function (imgData) {
-            doc.addImage(imgData, 'PNG', 10, 30, 190, 120); // Adjusted size for first bar chart
-            doc.addPage();  // Add another page for the third chart
-            return Plotly.toImage(document.getElementById('bar-chart2'), { format: 'png', width: 900, height: 600 });
+            doc.addImage(imgData, 'PNG', 15, 30, 180, 90);
+            doc.addPage(); // Add a new page for the next chart
+            return Plotly.toImage(document.getElementById('bar-chart2'), { format: 'png' });
         })
         .then(function (imgData) {
-            doc.addImage(imgData, 'PNG', 10, 30, 190, 120); // Adjusted size for second bar chart
-            doc.save('dashboard.pdf');  // Save the multi-page PDF
+            doc.addImage(imgData, 'PNG', 15, 30, 180, 90);
+            // Save the PDF after adding all charts
+            doc.save('dashboard.pdf');
         })
         .catch(error => console.error('Error generating PDF:', error));
 }
+
 
 // Function to download data as CSV
 function downloadCSV() {
@@ -268,9 +186,9 @@ function downloadCSV() {
         });
 
         // OSY By Age Section
-        csvContent += "\nOSY By Age (15-30)\nDistrict,OSY Count\n";
-        osyByAgeData.districts.forEach((district, index) => {
-            csvContent += `${district},${osyByAgeData.counts[index]}\n`;
+        csvContent += "\nOSY By Age (15-30)\nYear,Age Range,OSY Count\n";
+        osyByAgeData.forEach((data) => {
+            csvContent += `${data.year},${data.age_range},${data.osy_count}\n`;
         });
 
         const encodedUri = encodeURI(csvContent);
@@ -283,6 +201,7 @@ function downloadCSV() {
     })
     .catch(error => console.error('Error generating CSV:', error));
 }
+
 
 // Function to download data as Excel file
 function downloadExcel() {
@@ -298,40 +217,35 @@ function downloadExcel() {
             return;
         }
 
-        const wb = XLSX.utils.book_new();
+        const workbook = XLSX.utils.book_new();
 
         // District OSY Sheet
-        const osyPieSheetData = [
-            ["District", "OSY Count"]
-        ];
-        osyPieData.districts.forEach((district, index) => {
-            osyPieSheetData.push([district, osyPieData.counts[index]]);
-        });
-        const osyPieSheet = XLSX.utils.aoa_to_sheet(osyPieSheetData);
-        XLSX.utils.book_append_sheet(wb, osyPieSheet, "District OSY");
+        const osyData = osyPieData.districts.map((district, index) => ({
+            District: district,
+            OSY_Count: osyPieData.counts[index]
+        }));
+        const osySheet = XLSX.utils.json_to_sheet(osyData);
+        XLSX.utils.book_append_sheet(workbook, osySheet, 'District OSY');
 
         // District Population Sheet
-        const districtPopSheetData = [
-            ["District", "Population Count"]
-        ];
-        districtPopData.districts.forEach((district, index) => {
-            districtPopSheetData.push([district, districtPopData.counts[index]]);
-        });
-        const districtPopSheet = XLSX.utils.aoa_to_sheet(districtPopSheetData);
-        XLSX.utils.book_append_sheet(wb, districtPopSheet, "District Population");
+        const populationData = districtPopData.districts.map((district, index) => ({
+            District: district,
+            Population_Count: districtPopData.counts[index]
+        }));
+        const populationSheet = XLSX.utils.json_to_sheet(populationData);
+        XLSX.utils.book_append_sheet(workbook, populationSheet, 'District Population');
 
         // OSY By Age Sheet
-        const osyByAgeSheetData = [
-            ["District", "OSY Count"]
-        ];
-        osyByAgeData.districts.forEach((district, index) => {
-            osyByAgeSheetData.push([district, osyByAgeData.counts[index]]);
-        });
-        const osyByAgeSheet = XLSX.utils.aoa_to_sheet(osyByAgeSheetData);
-        XLSX.utils.book_append_sheet(wb, osyByAgeSheet, "OSY By Age");
+        const osyByAgeDataFormatted = osyByAgeData.map(data => ({
+            Year: data.year,
+            Age_Range: data.age_range,
+            OSY_Count: data.osy_count
+        }));
+        const ageSheet = XLSX.utils.json_to_sheet(osyByAgeDataFormatted);
+        XLSX.utils.book_append_sheet(workbook, ageSheet, 'OSY By Age');
 
-        // Write the Excel file
-        XLSX.writeFile(wb, "dashboard_data.xlsx");
+        // Export the Excel file
+        XLSX.writeFile(workbook, 'dashboard_data.xlsx');
     })
-    .catch(error => console.error('Error generating Excel file:', error));
+    .catch(error => console.error('Error generating Excel:', error));
 }

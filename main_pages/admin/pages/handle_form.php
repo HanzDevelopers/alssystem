@@ -35,7 +35,7 @@ $can_read_write = isset($_POST['can_read_write']) ? $_POST['can_read_write'] : [
 $occupation = isset($_POST['occupation']) ? $_POST['occupation'] : [];
 $work = isset($_POST['work']) ? $_POST['work'] : [];
 $status = isset($_POST['status']) ? $_POST['status'] : [];
-$date_encoded = date('Y-m-d H:i:s'); // Set current date and time
+$date_encoded = !empty($_POST['date_encoded']) ? $_POST['date_encoded'] : date('Y-m-d H:i:s'); // Use form date or current date
 $notes = isset($_POST['notes']) ? $_POST['notes'] : '';
 
 // Check if required fields are provided

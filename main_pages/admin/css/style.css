@@ -69,10 +69,6 @@ h1 {
 .download-buttons button:hover {
     background-color: #45a049;
 }
-/* Ensure container pushes content down */
-.container-fluid {
-    margin-top: 130px;
-}
 
 /* Dropdown menu fixed at the top-right */
 .dropdown.fixed-top-right {
