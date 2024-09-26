@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
     <!-- CORE CSS-->
      
     <link rel="stylesheet" href="../../../src/css/nav.css">
@@ -23,6 +24,10 @@
                 <h3 style="color: #ffffff;">
                     <?php
                     session_start();
+                    if (!isset($_SESSION['username'])) {
+                        header('Location: ../../../index.php');
+                        exit();
+                    }
                     if (isset($_SESSION['username'])) {
                         echo '<a href="#">' . htmlspecialchars($_SESSION['username']) . '</a>';
                     } else {
@@ -144,39 +149,83 @@
             </thead>
             <tbody>
                 <!-- PHP code to fetch data from database -->
-                <?php
-                include '../../../src/db/db_connection.php';
+<?php
+include '../../../src/db/db_connection.php';
 
-                $search = isset($_GET['search']) ? '%' . $conn->real_escape_string($_GET['search']) . '%' : '%';
+// Retrieve the search parameter and sanitize it
+$search_input = isset($_GET['search']) ? $_GET['search'] : '';
+$search = '%' . $conn->real_escape_string($search_input) . '%';
 
-                $sql = "SELECT * FROM osy_tbl
-                        WHERE household_members LIKE ? OR birthdate LIKE ? OR age LIKE ? OR
-                        CONCAT(city_municipality, ' ', barangay, ' ', sitio_zone_purok) LIKE ?
-                        LIMIT 10";
+// Prepare the SQL query with JOINs to combine location and members data
+$sql = "
+    SELECT 
+        m.member_id,
+        m.household_members,
+        m.birthdate,
+        m.age,
+        CONCAT(l.city_municipality, ' ', l.barangay, ' ', l.sitio_zone_purok) AS full_address
+    FROM 
+        members_tbl m
+    INNER JOIN 
+        location_tbl l ON m.record_id = l.record_id
+    WHERE 
+        m.household_members LIKE ? 
+        OR m.birthdate LIKE ? 
+        OR m.age LIKE ? 
+        OR CONCAT(l.city_municipality, ' ', l.barangay, ' ', l.sitio_zone_purok) LIKE ?
+    LIMIT 10
+";
 
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param('ssss', $search, $search, $search, $search);
-                $stmt->execute();
-                $result = $stmt->get_result();
+// Prepare the statement
+$stmt = $conn->prepare($sql);
 
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $full_address = $row['city_municipality'] . ' ' . $row['barangay'] . ' ' . $row['sitio_zone_purok'];
-                        echo "<tr>
-                                <td>{$row['household_members']}</td>
-                                <td>{$row['birthdate']}</td>
-                                <td>{$row['age']}</td>
-                                <td>{$full_address}</td>
-                                <td><button class='btn btn-primary'>View Info</button></td>
-                              </tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='5'>No records found</td></tr>";
-                }
+// Check if the statement was prepared successfully
+if ($stmt === false) {
+    die("Failed to prepare SQL statement: " . $conn->error);
+}
 
-                $stmt->close();
-                $conn->close();
-                ?>
+// Bind the parameters
+$stmt->bind_param('ssss', $search, $search, $search, $search);
+
+// Execute the statement
+$stmt->execute();
+
+// Get the result set
+$result = $stmt->get_result();
+
+// Check if any records were found
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        // Display the data in a table row
+        echo "<tr>
+                <td>{$row['household_members']}</td>
+                <td>{$row['birthdate']}</td>
+                <td>{$row['age']}</td>
+                <td>{$row['full_address']}</td>
+                <td>
+                    <button class='btn btn-primary' onclick='viewInfo({$row['member_id']})'>View Info</button>
+                </td>
+              </tr>";
+    }
+} else {
+    // If no records found, display a message
+    echo "<tr><td colspan='5'>No records found</td></tr>";
+}
+
+// Close the statement and connection
+$stmt->close();
+$conn->close();
+?>
+
+<!-- JavaScript function to handle the View Info button -->
+<script>
+    function viewInfo(memberId) {
+        // Redirect to the member's detailed information page
+        // You need to create this page and handle the memberId parameter
+        window.location.href = 'member_info.php?member_id=' + memberId;
+    }
+</script>
+
             </tbody>
         </table>
     </div>
@@ -187,13 +236,7 @@
     </div>
   </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <!-- jQuery Library -->
-    <script type="text/javascript" src="../../../src/js/plugins/jquery-1.11.2.min.js"></script>  
-    <!-- materialize js -->
-    <script type="text/javascript" src="../../../src/js/materialize.min.js"></script>
-    <!-- plugins.js - Some Specific JS codes for Plugin Settings -->
-    <script type="text/javascript" src="../../../src/js/plugins.min.js"></script>
+        
     <script src="../../../src/js/nav.js"></script>
 
     <!-- Confirmation Script -->
@@ -202,7 +245,7 @@
             return confirm("Are you sure you want to log out?");
         }
     </script>
-
+ 
     <!-- jQuery CDN - Slim version (=without AJAX) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <!-- Popper.JS -->

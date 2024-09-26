@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header('Location: ../../../index.php');
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -186,7 +193,7 @@
                     <th>No.</th>
                     <th>Household Members</th> <!-- New column for identification -->
                     <th>Highest Grade/Year Completed</th>
-                    <th>CurrentlyFAttending School?</th>
+                    <th>Currently Attending School?</th>
                     <th>Level Enrolled</th>
                     <th>Reasons for Not Attending School</th>
                     <th>Can Read/Write Simple Message?</th>
@@ -228,56 +235,113 @@
     if (step === 3) fillStep3Table();  // Fill Step 3 table if it's the last step
 }
 
-    let currentStep = 1;
+let currentStep = 1;
 
-    function nextStep(step) {
+function nextStep(step) {
+    if (validateCurrentStep()) {
         document.getElementById('step' + currentStep).style.display = 'none';
         currentStep = step;
         document.getElementById('step' + currentStep).style.display = 'block';
         updateStepIndicator();
         if (step === 3) fillStep3Table(); // Fill Step 3 table when navigating to Step 3
     }
+}
 
-    function previousStep(step) {
-        document.getElementById('step' + currentStep).style.display = 'none';
-        currentStep = step;
-        document.getElementById('step' + currentStep).style.display = 'block';
-        updateStepIndicator();
-    }
+function previousStep(step) {
+    document.getElementById('step' + currentStep).style.display = 'none';
+    currentStep = step;
+    document.getElementById('step' + currentStep).style.display = 'block';
+    updateStepIndicator();
+}
 
-    function updateStepIndicator() {
-        const indicators = document.querySelectorAll('.step');
-        indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index + 1 === currentStep);
-        });
-    }
+function updateStepIndicator() {
+    const indicators = document.querySelectorAll('.step');
+    indicators.forEach((indicator, index) => {
+        indicator.classList.toggle('active', index + 1 === currentStep);
+    });
+}
 
-    function fillStep3Table() {
+function validateCurrentStep() {
+    let isValid = true;
+    const step = document.getElementById('step' + currentStep);
+    const inputs = step.querySelectorAll('input, textarea');
+    
+    inputs.forEach(input => {
+        if (input.hasAttribute('required') && input.value.trim() === '') {
+            isValid = false;
+            alert(`Please fill out the ${input.previousElementSibling.innerText} field.`);
+        }
+    });
+
+    return isValid;
+}
+
+function fillStep3Table() {
     const step3Table = document.getElementById('step3Table').getElementsByTagName('tbody')[0];
     step3Table.innerHTML = ''; // Clear existing rows
 
     const step2Table = document.getElementById('dynamicTable').getElementsByTagName('tbody')[0];
     Array.from(step2Table.rows).forEach((row, index) => {
         const householdMember = row.cells[1].querySelector('input').value; // Get household member from Step 2
+        const inputs = row.querySelectorAll('input');
+        let hasEmptyField = false;
 
-        const newRow = step3Table.insertRow();
-        newRow.innerHTML = `
-            <td data-label="No.">${index + 1}</td>
-            <td data-label="Household Members">${householdMember}</td> <!-- Add household member here for identification -->
-            <td data-label="Highest Grade/Year Completed"><input type="text" name="highest_grade[]" placeholder="Grade/Year"></td>
-            <td data-label="Currently Attending School?"><input type="text" name="attending_school[]" placeholder="Yes/No"></td>
-            <td data-label="Level Enrolled"><input type="text" name="level_enrolled[]" placeholder="Level Enrolled"></td>
-            <td data-label="Reasons for Not Attending School"><input type="text" name="reasons_not_attending[]" placeholder="Reasons"></td>
-            <td data-label="Can Read/Write Simple Message?"><input type="text" name="can_read_write[]" placeholder="Yes/No"></td>
-            <td data-label="Occupation"><input type="text" name="occupation[]" placeholder="Yes/No"></td>
-            <td data-label="Work"><input type="text" name="work[]" placeholder="Current Work"></td>
-            <td data-label="Status">
-                <small style="font-weight: normal; color: gray;">Interested in ALS?</small>
-                <br>
-                <input type="text" name="status[]" placeholder="Yes/No">
-            </td>`;
+        // Check if all fields in the row are filled
+        inputs.forEach(input => {
+            if (input.value.trim() === '') {
+                hasEmptyField = true;
+            }
+        });
+
+        // Only add the row to Step 3 if all fields are filled
+        if (!hasEmptyField) {
+            const newRow = step3Table.insertRow();
+            newRow.innerHTML = `
+                <td data-label="No.">${index + 1}</td>
+                <td data-label="Household Members">${householdMember}</td> <!-- Add household member here for identification -->
+                <td data-label="Highest Grade/Year Completed"><input type="text" name="highest_grade[]" placeholder="Grade/Year"></td>
+                <td data-label="Currently Attending School?"><input type="text" name="attending_school[]" placeholder="Yes/No"></td>
+                <td data-label="Level Enrolled"><input type="text" name="level_enrolled[]" placeholder="Level Enrolled"></td>
+                <td data-label="Reasons for Not Attending School"><input type="text" name="reasons_not_attending[]" placeholder="Reasons"></td>
+                <td data-label="Can Read/Write Simple Message?"><input type="text" name="can_read_write[]" placeholder="Yes/No"></td>
+                <td data-label="Occupation"><input type="text" name="occupation[]" placeholder="Occupation"></td>
+                <td data-label="Work"><input type="text" name="work[]" placeholder="Current Work"></td>
+                <td data-label="Status">
+                    <small style="font-weight: normal; color: gray;">Interested in ALS?</small>
+                    <br>
+                    <input type="text" name="status[]" placeholder="Yes/No">
+                </td>`;
+        }
     });
 }
+
+
+document.querySelector('form').addEventListener('submit', function(event) {
+    // Prevent form submission if there are missing fields
+    if (!validateRows()) {
+        event.preventDefault();
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
 
@@ -341,6 +405,44 @@ window.addEventListener('beforeunload', function(event) {
         return 'You have unsaved changes, are you sure you want to leave?';
     }
 });
+document.querySelector('form').addEventListener('submit', function(event) {
+    // Prevent form submission if there are missing fields
+    if (!validateRows()) {
+        event.preventDefault();
+    }
+});
+
+function validateRows() {
+    const step2Rows = document.getElementById('dynamicTable').getElementsByTagName('tbody')[0].rows;
+    let isValid = true;
+    let alertMessage = '';
+    
+    // Loop through each row in Step 2
+    for (let i = 0; i < step2Rows.length; i++) {
+        const inputs = step2Rows[i].querySelectorAll('input');
+        let isRowComplete = true;
+
+        // Check if any of the inputs are empty
+        inputs.forEach(input => {
+            if (input.value.trim() === '') {
+                isRowComplete = false;
+            }
+        });
+
+        // If the row is incomplete
+        if (!isRowComplete) {
+            alertMessage += `Row ${i + 1} has missing fields. Please complete all fields.\n`;
+            isValid = false;
+        }
+    }
+
+    // Alert the user if there are any incomplete rows
+    if (!isValid) {
+        alert(alertMessage);
+    }
+
+    return isValid; // Return true if all rows are complete, otherwise false
+}
 
 // Confirmation when back to dashboard button is clicked
 document.getElementById('dashboard').addEventListener('click', function(event) {

@@ -51,33 +51,51 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Prepare the insert statement
-$stmt = $conn->prepare("
-    INSERT INTO osy_tbl (
-        encoder_name, date_encoded, province, city_municipality, barangay, sitio_zone_purok, housenumber, estimated_family_income,
-        household_members, relationship_to_head, birthdate, age, gender, civil_status, person_with_disability, ethnicity, religion,
-        highest_grade_completed, currently_attending_school, grade_level_enrolled, reasons_for_not_attending_school,
-        can_read_write_simple_messages_inanylanguage, occupation, work, status, notes
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+// Insert into location_tbl
+$stmt_loc = $conn->prepare("
+    INSERT INTO location_tbl (
+        encoder_name, date_encoded, province, city_municipality, barangay, sitio_zone_purok, housenumber, estimated_family_income, notes
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 ");
 
-// Check if statement was prepared correctly
-if ($stmt === false) {
-    die("Failed to prepare SQL statement: " . $conn->error);
+if ($stmt_loc === false) {
+    die("Failed to prepare location SQL statement: " . $conn->error);
 }
 
-// Loop through each household member and insert data
+$stmt_loc->bind_param("sssssssss", $encoder_name, $date_encoded, $province, $city, $barangay, $sitio_zone_purok, $house_number, $estimated_family_income, $notes);
+
+// Execute location insert
+if (!$stmt_loc->execute()) {
+    die("Error inserting into location_tbl: " . $stmt_loc->error);
+}
+
+// Get the inserted record_id from location_tbl
+$record_id = $stmt_loc->insert_id;
+$stmt_loc->close();
+
+// Loop through each household member and insert into members_tbl and background_tbl
+$stmt_mem = $conn->prepare("
+    INSERT INTO members_tbl (
+        record_id, household_members, relationship_to_head, birthdate, age, gender, civil_status, person_with_disability, ethnicity, religion
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
+
+$stmt_bg = $conn->prepare("
+    INSERT INTO background_tbl (
+        member_id, highest_grade_completed, currently_attending_school, grade_level_enrolled, reasons_for_not_attending_school,
+        can_read_write_simple_messages_inanylanguage, occupation, work, status
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
+
+if ($stmt_mem === false || $stmt_bg === false) {
+    die("Failed to prepare members or background SQL statement: " . $conn->error);
+}
+
 foreach ($household_members as $index => $member) {
-    $stmt->bind_param(
-        "ssssssssssssssssssssssssss",
-        $encoder_name,
-        $date_encoded,
-        $province,
-        $city,
-        $barangay,
-        $sitio_zone_purok,
-        $house_number,
-        $estimated_family_income,
+    // Insert into members_tbl
+    $stmt_mem->bind_param(
+        "isssssssss",
+        $record_id,
         $household_members[$index],
         $relationship_to_head[$index],
         $birthdate[$index],
@@ -86,7 +104,20 @@ foreach ($household_members as $index => $member) {
         $civil_status[$index],
         $disability[$index],
         $ethnicity[$index],
-        $religion[$index],
+        $religion[$index]
+    );
+    
+    if (!$stmt_mem->execute()) {
+        die("Error inserting into members_tbl: " . $stmt_mem->error);
+    }
+    
+    // Get the inserted member_id from members_tbl
+    $member_id = $stmt_mem->insert_id;
+
+    // Insert into background_tbl
+    $stmt_bg->bind_param(
+        "issssssss",
+        $member_id,
         $highest_grade[$index],
         $attending_school[$index],
         $level_enrolled[$index],
@@ -94,18 +125,17 @@ foreach ($household_members as $index => $member) {
         $can_read_write[$index],
         $occupation[$index],
         $work[$index],
-        $status[$index],
-        $notes
+        $status[$index]
     );
 
-    // Execute the statement
-    if (!$stmt->execute()) {
-        echo "Error: " . $stmt->error;
+    if (!$stmt_bg->execute()) {
+        die("Error inserting into background_tbl: " . $stmt_bg->error);
     }
 }
 
-// Close the statement and connection
-$stmt->close();
+// Close the statements and connection
+$stmt_mem->close();
+$stmt_bg->close();
 $conn->close();
 ?>
 
