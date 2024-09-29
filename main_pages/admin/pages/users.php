@@ -55,14 +55,17 @@ $result = $conn->query($sql);
     }
 </style>
 <body>
-  <!-- Sidebar -->
-  <div class="wrapper">
-    <!-- Sidebar  -->
-    <nav id="sidebar">
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
                     <?php
                     session_start();
+                    if (!isset($_SESSION['username'])) {
+                        header('Location: ../../../index.php');
+                        exit();
+                    }
                     if (isset($_SESSION['username'])) {
                         echo '<a href="#">' . htmlspecialchars($_SESSION['username']) . '</a>';
                     } else {
@@ -86,11 +89,11 @@ $result = $conn->query($sql);
                         Tools & Components
                     </li>
                     <li class="sidebar-item">
-                        <a href="form.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            Form
-                        </a>
-                    </li>
+                <a href="#" id="formLink" class="sidebar-link">
+                    <i class="fa-regular fa-file-lines pe-2"></i>
+                    Form
+                </a>
+            </li>
                     <li class="sidebar-item">
                         <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
                             aria-expanded="false" aria-controls="pages">
@@ -137,7 +140,8 @@ $result = $conn->query($sql);
                             Auth
                         </a>
                         <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                           <li class="sidebar-item">
+                          
+                        <li class="sidebar-item">
                                 <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
                             </li>
                             <li class="sidebar-item">
@@ -145,8 +149,28 @@ $result = $conn->query($sql);
                             </li>
                         </ul>
                     </li>
+                    
                 </ul>
         </nav>
+
+
+        <!-- Modal Structure -->
+    <div class="modal fade" id="csvModal" tabindex="-1" aria-labelledby="csvModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="csvModalLabel">Choose an Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>What would you like to do?</p>
+                    <button type="button" id="uploadCsvBtn" class="btn btn-outline-primary btn-lg mb-3">Upload CSV File</button><br>
+                    <button type="button" id="goToFormBtn" class="btn btn-primary btn-lg">Go to Form</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
         <!-- Page Content  -->
         <div id="content">
@@ -328,5 +352,6 @@ $result = $conn->query($sql);
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
       crossorigin="anonymous"></script>
+      <script src="../js/form.js"></script>
 </body>
 </html>

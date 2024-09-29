@@ -1,17 +1,16 @@
-<?php
-// Include the logic to fetch the summary data
-include '../api/fetch_summary_data.php';
-?>
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
-    <title>Dashboard</title>
+    <title>Upload CSV File</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap CSS CDN --> 
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
     <!-- Our Custom CSS -->
     <link rel="stylesheet" href="../../../src/css/nav.css">
@@ -26,27 +25,10 @@ include '../api/fetch_summary_data.php';
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
-<style>
-    /* Ensure container pushes content down */
-    .container-fluid {
-        margin-top: 1px;
-    }
-    p {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.1em;
-    font-weight: 300;
-    line-height: 1.7em;
-    color: #ffffff;
-}
-    .container.my-5 {
-            background-color: gainsboro; /* Set background color to gainsboro */
-            padding: 20px; /* Optional: add padding around the container */
-            border-radius: 8px; /* Optional: add rounded corners */
-        }
-</style>
 
 <body>
-    <div class="wrapper">
+    
+<div class="wrapper">
         <!-- Sidebar  -->
         <nav id="sidebar">
             <div class="sidebar-header" style="background: gray;">
@@ -143,25 +125,6 @@ include '../api/fetch_summary_data.php';
                     
                 </ul>
         </nav>
-
-
-        <!-- Modal Structure -->
-    <div class="modal fade" id="csvModal" tabindex="-1" aria-labelledby="csvModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="csvModalLabel">Choose an Action</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p>What would you like to do?</p>
-                    <button type="button" id="uploadCsvBtn" class="btn btn-outline-primary btn-lg mb-3">Upload CSV File</button><br>
-                    <button type="button" id="goToFormBtn" class="btn btn-primary btn-lg">Go to Form</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
         <!-- Page Content  -->
         <div id="content">
             
@@ -189,130 +152,118 @@ include '../api/fetch_summary_data.php';
 
         </div>
 
-        <!-- Main Content Starts Here -->
-        <div class="container-fluid">
-            
-    <div class="content p-3">
-        <div class="row">
-
-
-
-
-        <div class="container my-5">
-    <h1 class="mb-4">Data Summary</h1>
-    <div class="d-flex flex-wrap justify-content-between gap-3">
-        <!-- Total Population (District 1 to 4) -->
-        <div class="card text-white bg-secondary flex-grow-1" style="min-width: 200px;">
-            <div class="card-body text-center">
-                <p class="card-text">Total Population (District 1 to 4)</p>
-                <h3 class="card-title"><?php echo $data['totalPopulation']; ?></h3>
-            </div>
-        </div>
-        <!-- Not Attending School (Age 15-30) -->
-        <div class="card text-white bg-primary flex-grow-1" style="min-width: 200px;">
-            <div class="card-body text-center">
-                <p class="card-text">Not Attending School (Age 15-30)</p>
-                <h3 class="card-title"><?php echo $data['notAttendingSchool']; ?></h3>
-            </div>
-        </div>
-
-        <!-- Interested in ALS -->
-        <div class="card text-white bg-success flex-grow-1" style="min-width: 200px;">
-            <div class="card-body text-center">
-                <p class="card-text">Interested in ALS</p>
-                <h3 class="card-title"><?php echo $data['interestedInAls']; ?></h3>
-            </div>
-        </div>
-
-        <!-- Persons with Disability -->
-        <div class="card text-white bg-warning flex-grow-1" style="min-width: 200px;">
-            <div class="card-body text-center">
-                <p class="card-text">Persons with Disability</p>
-                <h3 class="card-title"><?php echo $data['personsWithDisability']; ?></h3>
-            </div>
-        </div>
-
-        <!-- No Occupation -->
-        <div class="card text-white bg-danger flex-grow-1" style="min-width: 200px;">
-            <div class="card-body text-center">
-                <p class="card-text">No Occupation</p>
-                <h3 class="card-title"><?php echo $data['noOccupation']; ?></h3>
-            </div>
-        </div>
-
-        <!-- Families with Income Below 20,000 -->
-        <div class="card text-white bg-info flex-grow-1" style="min-width: 200px;">
-            <div class="card-body text-center">
-                <p class="card-text">Families with Income Below 20,000</p>
-                <h3 class="card-title"><?php echo $data['lowIncomeFamilies']; ?></h3>
-            </div>
-        </div>
-
-        
-    </div>
-</div>
-
-
-            <!--
-        <form id="searchForm">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" id="dateEncoded" name="dateEncoded" placeholder="Search by year Encoded">
-                    <button class="btn btn-primary" type="submit">Search</button>
+        <!-- Modal Structure -->
+        <div class="modal fade" id="csvModal" tabindex="-1" aria-labelledby="csvModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="csvModalLabel">Choose an Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </form>
-                -->
-            <!-- Container for charts -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Data Charts</h1>
-    <div class="btn-group" style="margin-right: 100px;">
-        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Download
-        </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" onclick="downloadImage()">Download Images</a></li>
-            <li><a class="dropdown-item" href="#" onclick="downloadPDF()">Download PDF</a></li>
-            <li><a class="dropdown-item" href="#" onclick="downloadCSV()">Download CSV</a></li>
-            <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Download Excel</a></li>
-        </ul>
-    </div>
-</div>
-
-<div class="dashboard-container">
-    <!-- Chart 1: District OSY Pie Chart -->
-    <div class="chart-card">
-        <div id="pie-chart" class="chart"></div>
-        <!-- View Info Button for Pie Chart -->
-        <a href="district_osy.php" class="sidebar-link btn btn-primary mt-2">
-            <i class="fa fa-info-circle me-2"></i>
-            View Info
-        </a>
+                <div class="modal-body text-center">
+                    <p>What would you like to do?</p>
+                    <button type="button" id="uploadCsvBtn" class="btn btn-outline-primary btn-lg mb-3">Upload CSV File</button><br>
+                    <button type="button" id="goToFormBtn" class="btn btn-primary btn-lg">Go to Form</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Chart 2: District Population Bar Chart -->
-    <div class="chart-card">
-        <div id="bar-chart1" class="chart"></div>
-        <!-- View Info Button for Bar Chart 1 -->
-        <a href="district_population.php" class="sidebar-link btn btn-primary mt-2">
-            <i class="fa fa-info-circle me-2"></i>
-            View Info
-        </a>
+
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="text-center">Upload CSV File</h2>
+            </div>
+            <div class="card-body">
+                <form action="form_upload_csv_process.php" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="file">Choose CSV file:</label>
+                        <input type="file" class="form-control-file" name="file" accept=".csv" required>
+                    </div>
+                    <button type="submit" name="upload" class="btn btn-success btn-block">Upload</button>
+                </form>
+
+                <!-- Example CSV format table -->
+                <div class="mt-4">
+
+                    <h4 class="text-center">Example CSV Format</h4>
+                <p class="text-center">Make sure to follow the CSV format below to ensure successful file upload and data processing.</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>encoder_name</th>
+                                    <th>date_encoded</th>
+                                    <th>province</th>
+                                    <th>city_municipality</th>
+                                    <th>barangay</th>
+                                    <th>sitio_zone_purok</th>
+                                    <th>housenumber</th>
+                                    <th>estimated_family_income</th>
+                                    <th>notes</th>
+                                    <th>household_members</th>
+                                    <th>relationship_to_head</th>
+                                    <th>birthdate</th>
+                                    <th>age</th>
+                                    <th>gender</th>
+                                    <th>civil_status</th>
+                                    <th>person_with_disability</th>
+                                    <th>ethnicity</th>
+                                    <th>religion</th>
+                                    <th>highest_grade_completed</th>
+                                    <th>currently_attending_school</th>
+                                    <th>grade_level_enrolled</th>
+                                    <th>reasons_for_not_attending_school</th>
+                                    <th>can_read_write_simple_messages_inanylanguage</th>
+                                    <th>occupation</th>
+                                    <th>work</th>
+                                    <th>status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td>2023-09-28</td>
+                                    <td>Province A</td>
+                                    <td>City B</td>
+                                    <td>Barangay C</td>
+                                    <td>Zone 1</td>
+                                    <td>123</td>
+                                    <td>10000</td>
+                                    <td>Sample note</td>
+                                    <td>Jane Doe</td>
+                                    <td>Spouse</td>
+                                    <td>1990-01-01</td>
+                                    <td>33</td>
+                                    <td>Female</td>
+                                    <td>Married</td>
+                                    <td>No</td>
+                                    <td>Ethnic Group A</td>
+                                    <td>Religion X</td>
+                                    <td>High School</td>
+                                    <td>Yes</td>
+                                    <td>Grade 10</td>
+                                    <td>N/A</td>
+                                    <td>Yes</td>
+                                    <td>Yes</td>
+                                    <td>Teacher</td>
+                                    <td>No</td>
+                                </tr>
+                                <!-- You can add more example rows here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- Chart 3: OSY By Age Bar Chart -->
-    <div class="chart-card">
-        <div id="bar-chart2" class="chart"></div>
-        <!-- View Info Button for Bar Chart 2 -->
-        <a href="sample.php" class="sidebar-link btn btn-primary mt-2">
-            <i class="fa fa-info-circle me-2"></i>
-            View Info
-        </a>
     </div>
-</div>
-
-   
-</div>
-
-<!-- jQuery CDN - Slim version (=without AJAX) -->
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <!-- Popper.JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
@@ -338,7 +289,6 @@ include '../api/fetch_summary_data.php';
         crossorigin="anonymous"></script>
         <script src="../js/data.js"></script>
         <script src="../js/form.js"></script>
-
 </body>
 
 </html>

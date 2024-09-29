@@ -173,7 +173,7 @@ while ($row = $district_osy_result->fetch_assoc()) {
 </style>
 
 <body>
-    <div class="wrapper">
+<div class="wrapper">
         <!-- Sidebar  -->
         <nav id="sidebar">
             <div class="sidebar-header" style="background: gray;">
@@ -207,11 +207,11 @@ while ($row = $district_osy_result->fetch_assoc()) {
                         Tools & Components
                     </li>
                     <li class="sidebar-item">
-                        <a href="form.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            Form
-                        </a>
-                    </li>
+                <a href="#" id="formLink" class="sidebar-link">
+                    <i class="fa-regular fa-file-lines pe-2"></i>
+                    Form
+                </a>
+            </li>
                     <li class="sidebar-item">
                         <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
                             aria-expanded="false" aria-controls="pages">
@@ -270,6 +270,25 @@ while ($row = $district_osy_result->fetch_assoc()) {
                     
                 </ul>
         </nav>
+
+
+        <!-- Modal Structure -->
+    <div class="modal fade" id="csvModal" tabindex="-1" aria-labelledby="csvModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="csvModalLabel">Choose an Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>What would you like to do?</p>
+                    <button type="button" id="uploadCsvBtn" class="btn btn-outline-primary btn-lg mb-3">Upload CSV File</button><br>
+                    <button type="button" id="goToFormBtn" class="btn btn-primary btn-lg">Go to Form</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 
         <!-- Page Content  -->
         <div id="content">
@@ -412,6 +431,7 @@ while ($row = $district_osy_result->fetch_assoc()) {
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
     <script src="../js/data.js"></script>
+    <script src="../js/form.js"></script>
 </body>
 
 </html>
