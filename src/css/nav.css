@@ -95,7 +95,18 @@ li {
 #sidebar.active {
     margin-left: -250px;
 }
-
+.active1{
+    background-color: #515151;
+    color: white;
+}
+.active2{
+    background-color: #b9b9b9;
+    color: white;
+}
+.active{
+    background-color: #b9b9b9;
+    color: white;
+}
 #sidebar .sidebar-header {
     padding: 11px 20px 10px 20px;
     background: white;

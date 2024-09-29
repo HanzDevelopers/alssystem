@@ -27,6 +27,10 @@ include '../api/fetch_summary_data.php';
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <style>
+.active{
+    background-color: #b9b9b9;
+    color: white;
+}
     /* Ensure container pushes content down */
     .container-fluid {
         margin-top: 1px;
@@ -70,7 +74,7 @@ include '../api/fetch_summary_data.php';
             <li class="sidebar-header">
                         Key Performans Indicator
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item active">
                         <a href="dashboard.php" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
                             Dashboard

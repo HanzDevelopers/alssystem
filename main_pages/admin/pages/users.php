@@ -40,12 +40,18 @@ $result = $conn->query($sql);
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
+    <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
     <!-- CORE CSS-->
     <link rel="stylesheet" href="../../../src/css/dashboard.css">
     <link rel="stylesheet" href="../../../src/css/nav.css">
     <title>Records</title>
 </head>
 <style>
+    
+.active2{
+    background-color: #b9b9b9;
+    color: white;
+}
     .btn {
         margin: 0 5px; /* Add a uniform margin to both buttons */
         padding: 5px 10px; /* Adjust padding if needed */
@@ -121,7 +127,7 @@ $result = $conn->query($sql);
                     <li class="sidebar-header">
                         Admin Action
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item active2">
                         <a href="users.php" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
                             Users

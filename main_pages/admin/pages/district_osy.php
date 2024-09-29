@@ -129,6 +129,16 @@ while ($row = $district_osy_result->fetch_assoc()) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <style>
+    
+    .active2{
+    background-color: #b9b9b9;
+    color: white;
+}
+
+.active1{
+    background-color: #515151;
+    color: white;
+}
     /* Ensure container pushes content down */
     .container-fluid {
         margin-top: 1px;
@@ -213,7 +223,7 @@ while ($row = $district_osy_result->fetch_assoc()) {
                 </a>
             </li>
                     <li class="sidebar-item">
-                        <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
+                        <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
                             aria-expanded="false" aria-controls="pages">
                             <i class="fa-solid fa-list pe-2"></i>
                             Reports
@@ -222,7 +232,7 @@ while ($row = $district_osy_result->fetch_assoc()) {
                         <li class="sidebar-item">
                                 <a href="records.php" class="sidebar-link">Household Records</a>
                             </li>
-                            <li class="sidebar-item">
+                            <li class="sidebar-item active2">
                                 <a href="district_osy.php" class="sidebar-link">District OSY</a>
                             </li>
                             <li class="sidebar-item">

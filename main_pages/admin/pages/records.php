@@ -14,6 +14,16 @@
 </head>
 <style>
     
+.active2{
+    background-color: #b9b9b9;
+    color: white;
+}
+
+.active1{
+    background-color: #515151;
+    color: white;
+}
+
 </style>
 <body>
     <div class="wrapper">
@@ -56,13 +66,13 @@
                 </a>
             </li>
                     <li class="sidebar-item">
-                        <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
+                        <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
                             aria-expanded="false" aria-controls="pages">
                             <i class="fa-solid fa-list pe-2"></i>
                             Reports
                         </a>
                         <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                        <li class="sidebar-item">
+                        <li class="sidebar-item active2">
                                 <a href="records.php" class="sidebar-link">Household Records</a>
                             </li>
                             <li class="sidebar-item">

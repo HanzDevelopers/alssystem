@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="../../../src/css/nav.css">
     <title>User Log</title>
 </head>
+<style>
+    
+.active2{
+    background-color: #b9b9b9;
+    color: white;
+}
+</style>
 <body>
     <div class="wrapper">
         <!-- Sidebar  -->
@@ -82,7 +89,7 @@
                             Users
                         </a>
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item active2">
                         <a href="user_log.php" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
                             User Log
