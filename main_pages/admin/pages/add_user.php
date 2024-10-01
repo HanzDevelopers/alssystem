@@ -25,7 +25,12 @@
             </div>
             <div class="mb-3">
                 <label for="user_type" class="form-label">User Type</label>
-                <input type="text" class="form-control" id="user_type" name="user_type" required>
+                <select class="form-select" id="user_type" name="user_type" required>
+                    <option value="" disabled selected>Select User Type</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Head">Head</option>
+                    <option value="User">User</option>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Add User</button>
         </form>

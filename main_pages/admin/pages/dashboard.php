@@ -27,7 +27,7 @@ include '../api/fetch_summary_data.php';
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <style>
-.active{
+.active4{
     background-color: #b9b9b9;
     color: white;
 }
@@ -55,18 +55,45 @@ include '../api/fetch_summary_data.php';
         <nav id="sidebar">
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
-                    <?php
-                    session_start();
-                    if (!isset($_SESSION['username'])) {
-                        header('Location: ../../../index.php');
-                        exit();
-                    }
-                    if (isset($_SESSION['username'])) {
-                        echo '<a href="#">' . htmlspecialchars($_SESSION['username']) . '</a>';
-                    } else {
-                        echo '<a href="#">Admin</a>';
-                    }
-                ?>
+                <?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../../../index.php');
+    exit();
+}
+
+// Include the database connection
+include '../../../src/db/db_connection.php';
+
+// Fetch the latest user data from the database based on session user_id
+$user_id = $_SESSION['user_id']; // Assuming user_id is stored in the session during login
+
+// Adjust column name to match your database structure
+$sql = "SELECT user_name FROM user_tbl WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    // Update the session username with the latest data from the database
+    $_SESSION['username'] = $row['user_name']; // Adjusted to 'user_name'
+}
+
+// Display the latest username
+if (isset($_SESSION['username'])) {
+    echo '<a href="#">' . htmlspecialchars($_SESSION['username']) . '</a>';
+} else {
+    echo '<a href="#">Admin</a>';
+}
+
+$stmt->close();
+$conn->close();
+?>
+
             </h3>
                 
             </div>
@@ -74,7 +101,7 @@ include '../api/fetch_summary_data.php';
             <li class="sidebar-header">
                         Key Performans Indicator
                     </li>
-                    <li class="sidebar-item active">
+                    <li class="sidebar-item active4">
                         <a href="dashboard.php" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
                             Dashboard

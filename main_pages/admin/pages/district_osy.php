@@ -103,6 +103,22 @@ $district_data = [];
 while ($row = $district_osy_result->fetch_assoc()) {
     $district_data[$row['district']] = $row['total_osy'];
 }
+// Query to get total number of males and females for the current year
+$gender_osy_query = "SELECT 
+                        SUM(CASE WHEN m.gender = 'Male' THEN 1 ELSE 0 END) AS total_males, 
+                        SUM(CASE WHEN m.gender = 'Female' THEN 1 ELSE 0 END) AS total_females
+                     FROM members_tbl m
+                     JOIN background_tbl b ON m.member_id = b.member_id
+                     JOIN location_tbl l ON l.record_id = m.record_id
+                     WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
+                     AND m.age BETWEEN 15 AND 30
+                     AND YEAR(l.date_encoded) = $current_year";
+
+$gender_osy_result = $conn->query($gender_osy_query);
+$gender_osy_data = $gender_osy_result->fetch_assoc();
+$total_males = $gender_osy_data['total_males'];
+$total_females = $gender_osy_data['total_females'];
+
 ?>
 
 <!DOCTYPE html>
@@ -150,6 +166,11 @@ while ($row = $district_osy_result->fetch_assoc()) {
         background-color: #007bff; /* Blue */
         color: white;
     }
+    .card-osy-gender {
+        background-color: #6185ad; /* Blue */
+        color: white;
+}
+
     .card-osy-district {
         background-color: #28a745; /* Green */
         color: white;
@@ -163,6 +184,7 @@ while ($row = $district_osy_result->fetch_assoc()) {
     .card-osy-district:nth-child(3) {
         background-color: #17a2b8; /* Teal */
     }
+    
 
     /* Ensure responsive card sizes */
     .card {
@@ -332,7 +354,8 @@ while ($row = $district_osy_result->fetch_assoc()) {
     </div> -->
     
     <div class="container mt-4">
-    <div class="row justify-content-center">
+    <!-- First Row: Total OSY and Gender Cards -->
+    <div class="row justify-content-center mb-3">
         <!-- Total OSY Card -->
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
             <div class="card text-center card-osy-total">
@@ -343,6 +366,20 @@ while ($row = $district_osy_result->fetch_assoc()) {
             </div>
         </div>
 
+        <!-- Gender OSY Card (Male and Female) -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-gender">
+                <div class="card-body">
+                    <h5 class="card-title">Male and Female OSY</h5>
+                    <p class="card-text">Males: <?php echo $total_males; ?></p>
+                    <p class="card-text">Females: <?php echo $total_females; ?></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Row: District OSY Cards -->
+    <div class="row justify-content-center">
         <!-- District OSY Cards -->
         <?php foreach ($district_data as $district => $count): ?>
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
@@ -356,6 +393,8 @@ while ($row = $district_osy_result->fetch_assoc()) {
         <?php endforeach; ?>
     </div>
 </div>
+
+
     <!-- Search Form -->
 <form method="GET" action="">
     <div class="input-group mb-3">
@@ -440,7 +479,6 @@ while ($row = $district_osy_result->fetch_assoc()) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
-    <script src="../js/data.js"></script>
     <script src="../js/form.js"></script>
 </body>
 

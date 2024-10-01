@@ -290,7 +290,6 @@ echo '</nav>';
   </div>
 
         
-    <script src="../../../src/js/nav.js"></script>
 
     <!-- Confirmation Script -->
     <script>
@@ -342,5 +341,6 @@ echo '</nav>';
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
         <script src="../js/form.js"></script>
+        <script src="../../../src/js/nav.js"></script>
 </body>
 </html>

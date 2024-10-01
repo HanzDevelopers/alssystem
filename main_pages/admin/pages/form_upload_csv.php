@@ -132,7 +132,7 @@
                 <button type="button" id="sidebarCollapse" class="btn menu-btn">
                     <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
                 </button>
-                <span class="menu-text">Dashboard</span>
+                <span class="menu-text">Upload CSV File</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
                 <!-- Dropdown fixed at the bottom
 <div class="dropdown fixed-top-right">

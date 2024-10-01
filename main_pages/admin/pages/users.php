@@ -13,8 +13,8 @@ $start_from = ($current_page - 1) * $results_per_page;
 // Search handling
 $search_term = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Query to get the total number of users with user_type = 'user' and matching the search criteria
-$search_query = "SELECT COUNT(*) AS total FROM user_tbl WHERE user_type = 'user'";
+// Query to get the total number of users with user_type = 'user' or 'head' in any case and matching the search criteria
+$search_query = "SELECT COUNT(*) AS total FROM user_tbl WHERE LOWER(user_type) IN ('user', 'head')";
 if (!empty($search_term)) {
     $search_query .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' OR status LIKE '%" . $conn->real_escape_string($search_term) . "%')";
 }
@@ -23,13 +23,14 @@ $row = $total_result->fetch_assoc();
 $total_users = $row['total'];
 $total_pages = ceil($total_users / $results_per_page);
 
-// Query to get the users for the current page, ordered from newest to oldest
-$sql = "SELECT * FROM user_tbl WHERE user_type = 'user'";
+// Query to get the users for the current page, ordered by user_name in ascending order
+$sql = "SELECT * FROM user_tbl WHERE LOWER(user_type) IN ('user', 'head')";
 if (!empty($search_term)) {
     $sql .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' OR status LIKE '%" . $conn->real_escape_string($search_term) . "%')";
 }
-$sql .= " ORDER BY user_name asc LIMIT $start_from, $results_per_page";
+$sql .= " ORDER BY user_name ASC LIMIT $start_from, $results_per_page";
 $result = $conn->query($sql);
+
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +43,6 @@ $result = $conn->query($sql);
 
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
     <!-- CORE CSS-->
-    <link rel="stylesheet" href="../../../src/css/dashboard.css">
     <link rel="stylesheet" href="../../../src/css/nav.css">
     <title>Records</title>
 </head>

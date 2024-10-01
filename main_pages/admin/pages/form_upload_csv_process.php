@@ -1,4 +1,7 @@
 <?php
+// Database connection
+include '../../../src/db/db_connection.php';
+
 if (isset($_POST['upload'])) {
     $file = $_FILES['file']['tmp_name'];
 
@@ -17,16 +20,9 @@ if (isset($_POST['upload'])) {
 
         // Check if the headers match the expected format
         if ($header === $expectedHeaders) {
-            $db = new mysqli("localhost", "root", "", "normal");
-
-            // Check for connection errors
-            if ($db->connect_error) {
-                die("Connection failed: " . $db->connect_error);
-            }
-
             // Process the CSV rows
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                insertLocation($db, $data);
+                insertLocation($conn, $data); // Use the connection from db_connection.php
             }
             fclose($handle);
 
