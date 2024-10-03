@@ -155,6 +155,7 @@
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary">Search</button>
+            <a href="user_log.php" class="btn btn-secondary">Reset</a>
         </div>
     </div>
 </form>

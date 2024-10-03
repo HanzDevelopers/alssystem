@@ -160,6 +160,7 @@
         <div class="input-group">
             <input type="text" class="form-control" name="search" id="searchInput" placeholder="Search By Encoder Name, Household Member, or Birthdate" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
             <button class="btn btn-primary" type="submit">Search</button>
+            <a href="records.php" class="btn btn-secondary">Reset</a>
         </div>
     </form>
     <div class="container mt-5">

@@ -17,8 +17,7 @@ $total_osy_query = "SELECT COUNT(*) AS total_osy
                     FROM members_tbl m 
                     JOIN background_tbl b ON m.member_id = b.member_id 
                     JOIN location_tbl l ON l.record_id = m.record_id
-                    WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
-                    AND m.age BETWEEN 15 AND 30
+                    WHERE m.age BETWEEN 15 AND 30
                     AND YEAR(l.date_encoded) = $current_year";
 $total_osy_result = $conn->query($total_osy_query);
 $total_osy = $total_osy_result->fetch_assoc()['total_osy'];
@@ -37,8 +36,7 @@ $district_osy_query = "
     FROM members_tbl m
     JOIN background_tbl b ON m.member_id = b.member_id
     JOIN location_tbl l ON l.record_id = m.record_id
-    WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
-    AND m.age BETWEEN 15 AND 30
+    WHERE m.age BETWEEN 15 AND 30
     AND YEAR(l.date_encoded) = $current_year
     GROUP BY district";
 
@@ -48,140 +46,161 @@ while ($row = $district_osy_result->fetch_assoc()) {
     $district_data[$row['district']] = $row['total_osy'];
 }
 
+// Query to get the total number of people interested in ALS for the current year
+$interested_als_query = "SELECT COUNT(*) AS total_interested_als 
+                         FROM members_tbl m
+                         JOIN background_tbl b ON m.member_id = b.member_id
+                         JOIN location_tbl l ON l.record_id = m.record_id
+                         WHERE b.status IN ('Yes', 'YES', 'yes')  /* Filter for those interested in ALS */
+                         AND YEAR(l.date_encoded) = $current_year";
 
-// Query to get total number of males and females for the current year (case-insensitive, including 'm' and 'f')
-$gender_osy_query = "SELECT 
-                        SUM(CASE WHEN LOWER(m.gender) IN ('male', 'm') THEN 1 ELSE 0 END) AS total_males, 
-                        SUM(CASE WHEN LOWER(m.gender) IN ('female', 'f') THEN 1 ELSE 0 END) AS total_females
-                     FROM members_tbl m
-                     JOIN background_tbl b ON m.member_id = b.member_id
-                     JOIN location_tbl l ON l.record_id = m.record_id
-                     WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
-                     AND m.age BETWEEN 15 AND 30
-                     AND YEAR(l.date_encoded) = $current_year";
-
-$gender_osy_result = $conn->query($gender_osy_query);
-$gender_osy_data = $gender_osy_result->fetch_assoc();
-$total_males = $gender_osy_data['total_males'];
-$total_females = $gender_osy_data['total_females'];
-
-
-// Query to count records with undefined or invalid gender (excluding 'Male', 'Female', 'm', 'f')
-$undefined_gender_query = "SELECT COUNT(*) AS undefined_gender_count 
-                           FROM members_tbl m
-                           JOIN background_tbl b ON m.member_id = b.member_id
-                           JOIN location_tbl l ON l.record_id = m.record_id
-                           WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
-                           AND m.age BETWEEN 15 AND 30
-                           AND YEAR(l.date_encoded) = $current_year
-                           AND LOWER(m.gender) NOT IN ('male', 'female', 'm', 'f')";
-
-$undefined_gender_result = $conn->query($undefined_gender_query);
-$undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gender_count'];
-
+$interested_als_result = $conn->query($interested_als_query);
+$total_interested_als = $interested_als_result->fetch_assoc()['total_interested_als'];
 ?>
 
+
+
+
 <?php
-// Include necessary files
 include '../../../src/db/db_connection.php';
-// District mapping
+
+// District Mapping
 $district_mapping = [
+    // District 1
     'Tankulan' => 'District 1',
     'Diklum' => 'District 1',
     'San Miguel' => 'District 1',
     'Ticala' => 'District 1',
     'Lingion' => 'District 1',
+
+    // District 2
     'Alae' => 'District 2',
     'Damilag' => 'District 2',
     'Mambatangan' => 'District 2',
     'Mantibugao' => 'District 2',
     'Minsuro' => 'District 2',
     'Lunocan' => 'District 2',
+
+    // District 3
     'Agusan canyon' => 'District 3',
     'Mampayag' => 'District 3',
     'Dahilayan' => 'District 3',
     'Sankanan' => 'District 3',
     'Kalugmanan' => 'District 3',
     'Lindaban' => 'District 3',
+
+    // District 4
     'Dalirig' => 'District 4',
     'Maluko' => 'District 4',
     'Santiago' => 'District 4',
-    'Guilang2' => 'District 4'
+    'Guilang2' => 'District 4',
 ];
 
-// Get the current year
-$current_year = date('Y');
+// Set the number of results per page
+$results_per_page = 10;
 
-// Pagination setup
-$limit = 10; // Number of records per page
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = ($page - 1) * $limit;
+// Get search query from user input
+$search_query = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
 
-// Search functionality
-$search = isset($_GET['search']) ? $_GET['search'] : '';
+// Find out the number of results stored in the database
+$sql = "SELECT COUNT(*) AS total FROM members_tbl
+        JOIN background_tbl ON members_tbl.member_id = background_tbl.member_id
+        JOIN location_tbl ON members_tbl.record_id = location_tbl.record_id
+        AND YEAR(location_tbl.date_encoded) = YEAR(CURDATE())
+        AND background_tbl.status IN ('Yes', 'yes', 'YES')
+        AND (members_tbl.household_members LIKE '%$search_query%' 
+            OR members_tbl.age LIKE '%$search_query%' 
+            OR location_tbl.barangay LIKE '%$search_query%' 
+            OR (CASE 
+                    WHEN location_tbl.barangay = 'Tankulan' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'Diklum' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'San Miguel' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'Ticala' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'Lingion' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'Alae' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Damilag' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Mambatangan' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Mantibugao' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Minsuro' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Lunocan' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Agusan canyon' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Mampayag' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Dahilayan' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Sankanan' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Kalugmanan' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Lindaban' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Dalirig' THEN 'District 4'
+                    WHEN location_tbl.barangay = 'Maluko' THEN 'District 4'
+                    WHEN location_tbl.barangay = 'Santiago' THEN 'District 4'
+                    WHEN location_tbl.barangay = 'Guilang2' THEN 'District 4'
+                END) LIKE '%$search_query%')"; 
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$total_results = $row['total'];
 
-// Base query
-$query = "SELECT m.household_members AS name, m.age, l.barangay, l.sitio_zone_purok, l.housenumber, 
-                 b.highest_grade_completed, b.currently_attending_school, b.reasons_for_not_attending_school 
-          FROM members_tbl m
-          JOIN location_tbl l ON m.record_id = l.record_id
-          JOIN background_tbl b ON m.member_id = b.member_id
-          WHERE m.age BETWEEN 15 AND 30
-          AND LOWER(b.currently_attending_school) = 'no'";
+// Determine number of pages available
+$number_of_pages = ceil($total_results / $results_per_page);
 
-// Adjusting the query to allow for year searches
-if (!empty($search)) {
-    $search = strtolower($search);
-    // Check if the search term is a valid year
-    if (preg_match('/^\d{4}$/', $search)) {
-        $query .= " AND YEAR(l.date_encoded) = '$search'";
-    } else {
-        $query .= " AND (m.age LIKE '%$search%' OR l.barangay LIKE '%$search%' 
-                         OR LOWER(b.currently_attending_school) LIKE '%$search%' 
-                         OR LOWER(b.reasons_for_not_attending_school) LIKE '%$search%')";
-    }
-} else {
-    // If no search term is provided, filter by the current year
-    $query .= " AND YEAR(l.date_encoded) = $current_year";
-}
+// Determine which page number visitor is currently on
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Default page
 
-$query .= " ORDER BY m.age ASC LIMIT $limit OFFSET $offset";
+// Calculate the starting number for the results on the displaying page
+$starting_limit = ($page - 1) * $results_per_page;
 
-// Get total records for pagination
-$total_query = "SELECT COUNT(*) as total FROM members_tbl m
-                JOIN location_tbl l ON m.record_id = l.record_id
-                JOIN background_tbl b ON m.member_id = b.member_id
-                WHERE m.age BETWEEN 15 AND 30
-                AND LOWER(b.currently_attending_school) = 'no'";
+// Fetch data for the current page and order by age
+$sql = "SELECT 
+            members_tbl.household_members AS Name, 
+            members_tbl.age, 
+            location_tbl.barangay AS Address, 
+            background_tbl.highest_grade_completed AS Highest_Grade,
+            background_tbl.currently_attending_school,
+            background_tbl.work,
+            background_tbl.status AS Interested_in_ALS
+        FROM members_tbl
+        JOIN background_tbl ON members_tbl.member_id = background_tbl.member_id
+        JOIN location_tbl ON members_tbl.record_id = location_tbl.record_id
+        AND YEAR(location_tbl.date_encoded) = YEAR(CURDATE())
+        AND background_tbl.status IN ('Yes', 'yes', 'YES')
+        AND (members_tbl.household_members LIKE '%$search_query%' 
+            OR members_tbl.age LIKE '%$search_query%' 
+            OR location_tbl.barangay LIKE '%$search_query%' 
+            OR (CASE 
+                    WHEN location_tbl.barangay = 'Tankulan' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'Diklum' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'San Miguel' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'Ticala' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'Lingion' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'Alae' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Damilag' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Mambatangan' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Mantibugao' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Minsuro' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Lunocan' THEN 'District 2'
+                    WHEN location_tbl.barangay = 'Agusan canyon' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Mampayag' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Dahilayan' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Sankanan' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Kalugmanan' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Lindaban' THEN 'District 3'
+                    WHEN location_tbl.barangay = 'Dalirig' THEN 'District 4'
+                    WHEN location_tbl.barangay = 'Maluko' THEN 'District 4'
+                    WHEN location_tbl.barangay = 'Santiago' THEN 'District 4'
+                    WHEN location_tbl.barangay = 'Guilang2' THEN 'District 4'
+                END) LIKE '%$search_query%')
+        ORDER BY members_tbl.age ASC  -- Order by age
+        LIMIT $starting_limit, $results_per_page";
 
-if (!empty($search)) {
-    // Check if the search term is a valid year
-    if (preg_match('/^\d{4}$/', $search)) {
-        $total_query .= " AND YEAR(l.date_encoded) = '$search'";
-    } else {
-        $total_query .= " AND (m.age LIKE '%$search%' OR l.barangay LIKE '%$search%' 
-                              OR LOWER(b.currently_attending_school) LIKE '%$search%' 
-                              OR LOWER(b.reasons_for_not_attending_school) LIKE '%$search%')";
-    }
-} else {
-    // If no search term is provided, filter by the current year
-    $total_query .= " AND YEAR(l.date_encoded) = $current_year";
-}
+$result = mysqli_query($conn, $sql);
 
-$total_result = $conn->query($total_query);
-$total_row = $total_result->fetch_assoc();
-$total_records = $total_row['total'];
-$total_pages = ceil($total_records / $limit);
-
-$result = $conn->query($query);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
-    <title>OSY by Age</title>
+    <title>List of Interested in ALS</title>
     <!-- Bootstrap CSS CDN --> 
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
@@ -335,10 +354,10 @@ $result = $conn->query($query);
                             <li class="sidebar-item">
                                 <a href="district_population.php" class="sidebar-link">District Population</a>
                             </li>
-                            <li class="sidebar-item active2">
+                            <li class="sidebar-item">
                                 <a href="OSY_age.php" class="sidebar-link">OSY By Age</a>
                             </li>
-                            <li class="sidebar-item">
+                            <li class="sidebar-item active2">
                                 <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
                             </li>
                         </ul>
@@ -404,7 +423,7 @@ $result = $conn->query($query);
                 <button type="button" id="sidebarCollapse" class="btn menu-btn">
                     <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
                 </button>
-                <span class="menu-text">OSY by Age</span>
+                <span class="menu-text">List of Interested in ALS</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
             </div>
             
@@ -454,14 +473,13 @@ $result = $conn->query($query);
         <div class="col-12 col-sm-6 col-md-8 col-lg-6 mb-3"> <!-- Set to double width -->
             <div class="card text-center card-osy-gender">
                 <div class="card-body">
-                    <h5 class="card-title">OSY Genders</h5>
-                    <p class="card-text d-inline">Males: <?php echo $total_males; ?></p>
-                    <p class="card-text d-inline ms-3">Females: <?php echo $total_females; ?></p>
-                    <p class="card-text d-inline ms-3">Other: <?php echo $undefined_gender_count; ?></p>
+            <h5 class="card-title">Total Interested in ALS</h5>
+            <p class="card-text">Total: <?php echo $total_interested_als; ?></p>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Second Row: District OSY Cards -->
     <div class="row justify-content-center">
@@ -484,80 +502,87 @@ $result = $conn->query($query);
 
 
 
-<div class="container my-4">
-    <h2 class="mb-4">OSY By Age (Ages 15-30, Not Attending School)</h2>
-    
-    <!-- Search Form -->
+
+<div class="container mt-5">
+    <h2 class="mb-4">Interested in ALS</h2>
+
+    <!-- Search Bar -->
     <form method="GET" class="mb-4">
         <div class="input-group">
-            <input type="text" class="form-control" name="search" placeholder="Search by Age, or Year encoded" value="<?php echo htmlspecialchars($search); ?>">
-            <button type="submit" class="btn btn-primary">Search</button>
-            <a href="osy_age.php" class="btn btn-secondary">Reset</a>
+            <input type="text" class="form-control" name="search" placeholder="Search by Name, Age, District, or Address" value="<?php echo htmlspecialchars($search_query); ?>">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Search</button>
+                <a href="interested.php" class="btn btn-secondary">Reset</a>
+            </div>
         </div>
     </form>
 
-    <!-- Download Options -->
-     
+
 <P>TO DOWNLOAD SPECIFIC DATA, PLEASE USE THE SEARCH BAR</P>
-    <div class="mb-3">
+    <!-- Download Button -->
+    <div class="text-right mb-3">
         <div class="btn-group">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Download Data
             </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="../download_functions/osy_by_age_download.php?type=csv&search=<?php echo urlencode($search); ?>">Download CSV</a></li>
-                <li><a class="dropdown-item" href="../download_functions/osy_by_age_download.php?type=excel&search=<?php echo urlencode($search); ?>">Download Excel</a></li>
-            </ul>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="../download_functions/interested_download.php?format=csv&search=<?php echo urlencode($search_query); ?>">Download CSV</a>
+                <a class="dropdown-item" href="../download_functions/interested_download.php?format=excel&search=<?php echo urlencode($search_query); ?>">Download Excel</a>
+            </div>
         </div>
     </div>
 
-    <table class="table table-striped table-bordered">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>District</th>
-            <th>Address</th>
-            <th>Highest Grade/Year Completed</th>
-            <th>Currently Attending School</th>
-            <th>Interested in ALS</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php if ($result->num_rows > 0): ?>
-            <?php while ($row = $result->fetch_assoc()): ?>
+
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td><?php echo htmlspecialchars($row['name']); ?></td>
-                    <td><?php echo htmlspecialchars($row['age']); ?></td>
-                    <td><?php echo htmlspecialchars(isset($district_mapping[$row['barangay']]) ? $district_mapping[$row['barangay']] : 'Unknown'); ?></td>
-                    <td><?php echo htmlspecialchars($row['sitio_zone_purok'] . ', ' . $row['housenumber']); ?></td>
-                    <td><?php echo htmlspecialchars($row['highest_grade_completed']); ?></td>
-                    <td><?php echo htmlspecialchars($row['currently_attending_school']); ?></td>
-                    <td><?php echo htmlspecialchars(stripos($row['reasons_for_not_attending_school'], 'ALS') !== false ? 'Yes' : 'No'); ?></td>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>District</th>
+                    <th>Address</th>
+                    <th>Highest Grade/Year Completed</th>
+                    <th>Currently Attending School</th>
+                    <th>Work</th>
+                    <th>Interested in ALS</th>
                 </tr>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <tr>
-                <td colspan="7" class="text-center">No data found.</td>
-            </tr>
-        <?php endif; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $district = '';
+                    foreach ($district_mapping as $barangay => $mapped_district) {
+                        if ($row['Address'] == $barangay) {
+                            $district = $mapped_district;
+                            break;
+                        }
+                    }
+                    echo "<tr>
+                            <td>{$row['Name']}</td>
+                            <td>{$row['age']}</td>
+                            <td>{$district}</td>
+                            <td>{$row['Address']}</td>
+                            <td>{$row['Highest_Grade']}</td>
+                            <td>{$row['currently_attending_school']}</td>
+                            <td>{$row['work']}</td>
+                            <td>{$row['Interested_in_ALS']}</td>
+                          </tr>";
+                }
+                ?>
+            </tbody>
+        </table>
 
-    <!-- Pagination -->
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
-        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <li class="page-item <?php echo $i === $page ? 'active' : ''; ?>">
-                <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
-            </li>
-        <?php endfor; ?>
-    </ul>
-</nav>
-
-</div>
-
-
+        <nav>
+            <ul class="pagination justify-content-center">
+                <?php
+                for ($page = 1; $page <= $number_of_pages; $page++) {
+                    echo '<li class="page-item' . ($page == (isset($_GET['page']) ? $_GET['page'] : 1) ? ' active' : '') . '">
+                              <a class="page-link" href="?page=' . $page . '&search=' . urlencode($search_query) . '">' . $page . '</a>
+                          </li>';
+                }
+                ?>
+            </ul>
+        </nav>
+    </div>
 
 
 

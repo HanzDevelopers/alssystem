@@ -333,7 +333,7 @@ $conn->close();
     <div class="chart-card">
         <div id="bar-chart2" class="chart"></div>
         <!-- View Info Button for Bar Chart 2 -->
-        <a href="sample.php" class="sidebar-link btn btn-primary mt-2">
+        <a href="interested.php" class="sidebar-link btn btn-primary mt-2">
             <i class="fa fa-info-circle me-2"></i>
             View Info
         </a>

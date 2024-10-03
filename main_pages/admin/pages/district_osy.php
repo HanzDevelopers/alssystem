@@ -449,7 +449,8 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
     <div class="input-group mb-3">
         <input type="text" name="search" class="form-control" placeholder="Search by District, Household Members, House Number, or Date Encoded" value="<?php echo $search; ?>">
         <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="submit">Search</button>
+            <button class="btn btn-primary" type="submit">Search</button>
+            <a href="district_osy.php" class="btn btn-secondary">Reset</a>
         </div>
     </div>
 </form>
