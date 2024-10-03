@@ -67,6 +67,14 @@ include '../../../src/db/db_connection.php';
 
 // Get the current year
 $current_year = date("Y");
+// Query to get total number of household members for the current year
+$total_population_query = "
+    SELECT COUNT(*) AS total_population
+    FROM members_tbl m
+    JOIN location_tbl l ON l.record_id = m.record_id
+    WHERE YEAR(l.date_encoded) = $current_year";
+$total_population_result = $conn->query($total_population_query);
+$total_population = $total_population_result->fetch_assoc()['total_population'];
 
 // Query to get total number of OSY for the current year regardless of district
 $total_osy_query = "SELECT COUNT(*) AS total_osy 
@@ -103,10 +111,11 @@ $district_data = [];
 while ($row = $district_osy_result->fetch_assoc()) {
     $district_data[$row['district']] = $row['total_osy'];
 }
-// Query to get total number of males and females for the current year
+
+// Query to get total number of males and females for the current year (case-insensitive, including 'm' and 'f')
 $gender_osy_query = "SELECT 
-                        SUM(CASE WHEN m.gender = 'Male' THEN 1 ELSE 0 END) AS total_males, 
-                        SUM(CASE WHEN m.gender = 'Female' THEN 1 ELSE 0 END) AS total_females
+                        SUM(CASE WHEN LOWER(m.gender) IN ('male', 'm') THEN 1 ELSE 0 END) AS total_males, 
+                        SUM(CASE WHEN LOWER(m.gender) IN ('female', 'f') THEN 1 ELSE 0 END) AS total_females
                      FROM members_tbl m
                      JOIN background_tbl b ON m.member_id = b.member_id
                      JOIN location_tbl l ON l.record_id = m.record_id
@@ -118,6 +127,21 @@ $gender_osy_result = $conn->query($gender_osy_query);
 $gender_osy_data = $gender_osy_result->fetch_assoc();
 $total_males = $gender_osy_data['total_males'];
 $total_females = $gender_osy_data['total_females'];
+
+
+// Query to count records with undefined or invalid gender (excluding 'Male', 'Female', 'm', 'f')
+$undefined_gender_query = "SELECT COUNT(*) AS undefined_gender_count 
+                           FROM members_tbl m
+                           JOIN background_tbl b ON m.member_id = b.member_id
+                           JOIN location_tbl l ON l.record_id = m.record_id
+                           WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
+                           AND m.age BETWEEN 15 AND 30
+                           AND YEAR(l.date_encoded) = $current_year
+                           AND LOWER(m.gender) NOT IN ('male', 'female', 'm', 'f')";
+
+$undefined_gender_result = $conn->query($undefined_gender_query);
+$undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gender_count'];
+
 
 ?>
 
@@ -185,7 +209,11 @@ $total_females = $gender_osy_data['total_females'];
         background-color: #17a2b8; /* Teal */
     }
     
-
+    /* New style for Total Population card */
+    .card-total-population {
+        background-color: rgb(108 117 125);
+        color: white;
+    }
     /* Ensure responsive card sizes */
     .card {
         min-width: 200px; /* Minimum width for cards */
@@ -202,6 +230,16 @@ $total_females = $gender_osy_data['total_females'];
     .mt-4{
         margin-bottom: 50px;
     }
+
+    .card-body h5 {
+    font-size: 1.2rem;
+    color: darkslategray;
+    }
+
+    .card-body p {
+        font-size: 1.5rem;
+    }
+
 </style>
 
 <body>
@@ -352,10 +390,19 @@ $total_females = $gender_osy_data['total_females'];
 
         </div>
     </div> -->
-    
     <div class="container mt-4">
-    <!-- First Row: Total OSY and Gender Cards -->
+    <!-- First Row: Total Population, Total OSY, and Gender Cards -->
     <div class="row justify-content-center mb-3">
+        <!-- Total Population Card -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-total-population">
+                <div class="card-body">
+                    <h5 class="card-title">Total Population</h5>
+                    <p class="card-text"><?php echo $total_population; ?></p>
+                </div>
+            </div>
+        </div>
+
         <!-- Total OSY Card -->
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
             <div class="card text-center card-osy-total">
@@ -366,13 +413,14 @@ $total_females = $gender_osy_data['total_females'];
             </div>
         </div>
 
-        <!-- Gender OSY Card (Male and Female) -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+        <!-- Gender OSY Card (Male, Female, Undefined) -->
+        <div class="col-12 col-sm-6 col-md-8 col-lg-6 mb-3"> <!-- Set to double width -->
             <div class="card text-center card-osy-gender">
                 <div class="card-body">
-                    <h5 class="card-title">Male and Female OSY</h5>
-                    <p class="card-text">Males: <?php echo $total_males; ?></p>
-                    <p class="card-text">Females: <?php echo $total_females; ?></p>
+                    <h5 class="card-title">OSY Genders</h5>
+                    <p class="card-text d-inline">Males: <?php echo $total_males; ?></p>
+                    <p class="card-text d-inline ms-3">Females: <?php echo $total_females; ?></p>
+                    <p class="card-text d-inline ms-3">Other: <?php echo $undefined_gender_count; ?></p>
                 </div>
             </div>
         </div>
@@ -393,6 +441,7 @@ $total_females = $gender_osy_data['total_females'];
         <?php endforeach; ?>
     </div>
 </div>
+
 
 
     <!-- Search Form -->

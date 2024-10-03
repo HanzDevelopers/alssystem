@@ -81,158 +81,14 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
 
 ?>
 
-<?php
-// District mapping
-$districts = [
-    'Tankulan' => 'District 1',
-    'Diklum' => 'District 1',
-    'San Miguel' => 'District 1',
-    'Ticala' => 'District 1',
-    'Lingion' => 'District 1',
-    'Alae' => 'District 2',
-    'Damilag' => 'District 2',
-    'Mambatangan' => 'District 2',
-    'Mantibugao' => 'District 2',
-    'Minsuro' => 'District 2',
-    'Lunocan' => 'District 2',
-    'Agusan canyon' => 'District 3',
-    'Mampayag' => 'District 3',
-    'Dahilayan' => 'District 3',
-    'Sankanan' => 'District 3',
-    'Kalugmanan' => 'District 3',
-    'Lindaban' => 'District 3',
-    'Dalirig' => 'District 4',
-    'Maluko' => 'District 4',
-    'Santiago' => 'District 4',
-    'Guilang2' => 'District 4'
-];
 
-// Connect to the database
-include '../../../src/db/db_connection.php';
-
-// Initialize search variable
-$searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
-
-// Get current year for default display
-$currentYear = date('Y');
-
-// Pagination variables
-$limit = 10; // Number of rows per page
-$page = isset($_GET['page']) ? $_GET['page'] : 1; // Current page
-$offset = ($page - 1) * $limit; // Offset for SQL
-
-// Build SQL query for counting total rows for pagination
-$countQuery = "
-    SELECT COUNT(*) as total_rows
-    FROM location_tbl l
-    JOIN members_tbl m ON l.record_id = m.record_id
-";
-
-// Build where clause
-$whereClauses = [];
-
-// If the search term is not empty, add conditions
-if (!empty($searchTerm)) {
-    $whereClauses[] = "(l.barangay IN ('" . implode("','", array_keys($districts)) . "') AND l.barangay LIKE '%$searchTerm%')";
-    $whereClauses[] = "(l.sitio_zone_purok LIKE '%$searchTerm%')";
-    $whereClauses[] = "(l.estimated_family_income LIKE '%$searchTerm%')";
-
-    // Check if the search term matches any district names
-    foreach ($districts as $barangay => $district) {
-        if (stripos($district, $searchTerm) !== false) {
-            $whereClauses[] = "(l.barangay = '$barangay')";
-        }
-    }
-
-    // Optionally check if the search term is a valid year
-    if (preg_match('/^\d{4}$/', $searchTerm) && $searchTerm <= $currentYear) {
-        $whereClauses[] = "(YEAR(l.date_encoded) = '$searchTerm')";
-    }
-}
-
-// If there are any where clauses, append them to the count query
-if (count($whereClauses) > 0) {
-    $countQuery .= " WHERE " . implode(' OR ', $whereClauses);
-}
-
-$countResult = $conn->query($countQuery);
-$totalRows = $countResult->fetch_assoc()['total_rows'];
-$totalPages = ceil($totalRows / $limit);
-
-// Build SQL query for paginated data
-$query = "
-    SELECT l.barangay, l.housenumber, l.sitio_zone_purok, l.estimated_family_income, l.date_encoded, m.household_members 
-    FROM location_tbl l
-    JOIN members_tbl m ON l.record_id = m.record_id
-";
-
-// Append the same where conditions to the main query
-if (count($whereClauses) > 0) {
-    $query .= " WHERE " . implode(' OR ', $whereClauses);
-}
-
-$query .= " LIMIT $limit OFFSET $offset"; // Add pagination
-
-// Fetch data from the database
-$result = $conn->query($query);
-
-// Handle download requests
-if (isset($_POST['download'])) {
-    $downloadType = $_POST['download_type'];
-
-    // Fetch the data to download
-    $downloadQuery = "
-        SELECT l.barangay, l.housenumber, l.sitio_zone_purok, l.estimated_family_income, l.date_encoded, m.household_members 
-        FROM location_tbl l
-        JOIN members_tbl m ON l.record_id = m.record_id
-    ";
-    
-    if (count($whereClauses) > 0) {
-        $downloadQuery .= " WHERE " . implode(' OR ', $whereClauses);
-    }
-
-    $downloadResult = $conn->query($downloadQuery);
-
-    if ($downloadType === 'csv') {
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="district_data.csv"');
-        
-        $output = fopen('php://output', 'w');
-        fputcsv($output, ['District', 'House Number', 'Sitio/Zone/Purok', 'Household Members', 'Estimated Family Income']);
-        
-        while ($row = $downloadResult->fetch_assoc()) {
-            $barangay = $row['barangay'];
-            $district = isset($districts[$barangay]) ? $districts[$barangay] : 'Unknown District';
-            fputcsv($output, [$district, $row['housenumber'], $row['sitio_zone_purok'], $row['household_members'], number_format($row['estimated_family_income'], 2)]);
-        }
-        
-        fclose($output);
-        exit();
-    } elseif ($downloadType === 'excel') {
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment; filename="district_data.xls"');
-        
-        $output = fopen('php://output', 'w');
-        fputcsv($output, ['District', 'House Number', 'Sitio/Zone/Purok', 'Household Members', 'Estimated Family Income']);
-        
-        while ($row = $downloadResult->fetch_assoc()) {
-            $barangay = $row['barangay'];
-            $district = isset($districts[$barangay]) ? $districts[$barangay] : 'Unknown District';
-            fputcsv($output, [$district, $row['housenumber'], $row['sitio_zone_purok'], $row['household_members'], number_format($row['estimated_family_income'], 2)]);
-        }
-        
-        fclose($output);
-        exit();
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
-    <title>District Population</title>
+    <title>OSY by Age</title>
     <!-- Bootstrap CSS CDN --> 
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
@@ -383,10 +239,10 @@ if (isset($_POST['download'])) {
                             <li class="sidebar-item">
                                 <a href="district_osy.php" class="sidebar-link">District OSY</a>
                             </li>
-                            <li class="sidebar-item active2">
+                            <li class="sidebar-item">
                                 <a href="district_population.php" class="sidebar-link">District Population</a>
                             </li>
-                            <li class="sidebar-item">
+                            <li class="sidebar-item active2">
                                 <a href="OSY_age.php" class="sidebar-link">OSY By Age</a>
                             </li>
                             <li class="sidebar-item">
@@ -455,7 +311,7 @@ if (isset($_POST['download'])) {
                 <button type="button" id="sidebarCollapse" class="btn menu-btn">
                     <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
                 </button>
-                <span class="menu-text">District Population</span>
+                <span class="menu-text">OSY by Age</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
             </div>
             
@@ -528,6 +384,7 @@ if (isset($_POST['download'])) {
         </div>
         <?php endforeach; ?>
     </div>
+</div>  
 </div>
 
 
@@ -535,86 +392,13 @@ if (isset($_POST['download'])) {
 
 
 
-    
-</div>
 
-<div class="container mt-5">
-    <h2 class="mb-4">District Population Data</h2>
 
-    <!-- Single Search Bar Form -->
-    <form method="GET" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Search by Year, District, Sitio/Zone/Purok, or Family Income" value="<?= htmlspecialchars($searchTerm) ?>">
-            <button type="submit" class="btn btn-primary">Search</button>
-            <a href="district_population.php" class="btn btn-secondary">Reset</a>
-        </div>
-    </form>
 
-    <P>TO DOWNLOAD SPECIFIC DATA, PLEASE USE THE SEARCH BAR</P>
-    <!-- Download Button -->
-    <form method="POST" class="mb-4">
-        <div class="input-group mb-3">
-            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                Download
-            </button>
-            <ul class="dropdown-menu">
-                <li>
-                    <form method="POST">
-                        <input type="hidden" name="download_type" value="csv">
-                        <button type="submit" name="download" class="dropdown-item">CSV</button>
-                    </form>
-                </li>
-                <li>
-                    <form method="POST">
-                        <input type="hidden" name="download_type" value="excel">
-                        <button type="submit" name="download" class="dropdown-item">Excel</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    </form>
 
-    <!-- Data Table -->
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>District</th>
-                <th>House Number</th>
-                <th>Sitio/Zone/Purok</th>
-                <th>Household Members</th>
-                <th>Estimated Family Income</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if ($result->num_rows > 0): ?>
-                <?php while ($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td><?= isset($districts[$row['barangay']]) ? $districts[$row['barangay']] : 'Unknown District' ?></td>
-                        <td><?= htmlspecialchars($row['housenumber']) ?></td>
-                        <td><?= htmlspecialchars($row['sitio_zone_purok']) ?></td>
-                        <td><?= htmlspecialchars($row['household_members']) ?></td>
-                        <td><?= number_format($row['estimated_family_income'], 2) ?></td>
-                    </tr>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="5" class="text-center">No records found.</td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
 
-    <!-- Pagination -->
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-                    <a class="page-link" href="?search=<?= urlencode($searchTerm) ?>&page=<?= $i ?>"><?= $i ?></a>
-                </li>
-            <?php endfor; ?>
-        </ul>
-    </nav>
-</div>
+
+
 </div>
             </div>
 <!-- jQuery CDN - Slim version (=without AJAX) -->
