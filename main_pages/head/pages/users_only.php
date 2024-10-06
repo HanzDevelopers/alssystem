@@ -13,8 +13,8 @@ $start_from = ($current_page - 1) * $results_per_page;
 // Search handling
 $search_term = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Query to get the total number of users with user_type = 'teacher' or 'head' in any case and matching the search criteria
-$search_query = "SELECT COUNT(*) AS total FROM user_tbl WHERE LOWER(user_type) IN ('volunteer', 'coordinator')";
+// Query to get the total number of users with user_type = 'user' and matching the search criteria
+$search_query = "SELECT COUNT(*) AS total FROM user_tbl WHERE user_type = 'user'";
 if (!empty($search_term)) {
     $search_query .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' OR status LIKE '%" . $conn->real_escape_string($search_term) . "%')";
 }
@@ -23,14 +23,12 @@ $row = $total_result->fetch_assoc();
 $total_users = $row['total'];
 $total_pages = ceil($total_users / $results_per_page);
 
-// Query to get the users for the current page, ordered by user_name in ascending order
-$sql = "SELECT user_id, user_name, email, phone_number, user_type, status, district FROM user_tbl WHERE LOWER(user_type) IN ('volunteer', 'coordinator')";
+// Query to get the users for the current page, ordered from newest to oldest
+$sql = "SELECT * FROM user_tbl WHERE user_type = 'user'";
 if (!empty($search_term)) {
-    $sql .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' 
-                 OR status LIKE '%" . $conn->real_escape_string($search_term) . "%' 
-                 OR district LIKE '%" . $conn->real_escape_string($search_term) . "%')";
+    $sql .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' OR status LIKE '%" . $conn->real_escape_string($search_term) . "%')";
 }
-$sql .= " ORDER BY user_name ASC LIMIT $start_from, $results_per_page";
+$sql .= " ORDER BY user_name asc LIMIT $start_from, $results_per_page";
 $result = $conn->query($sql);
 ?>
 
@@ -42,17 +40,12 @@ $result = $conn->query($sql);
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
     <!-- CORE CSS-->
+    <link rel="stylesheet" href="../../../src/css/dashboard.css">
     <link rel="stylesheet" href="../../../src/css/nav.css">
     <title>Records</title>
 </head>
 <style>
-    
-.active2{
-    background-color: #b9b9b9;
-    color: white;
-}
     .btn {
         margin: 0 5px; /* Add a uniform margin to both buttons */
         padding: 5px 10px; /* Adjust padding if needed */
@@ -62,17 +55,14 @@ $result = $conn->query($sql);
     }
 </style>
 <body>
-    <div class="wrapper">
-        <!-- Sidebar  -->
-        <nav id="sidebar">
+  <!-- Sidebar -->
+  <div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
                     <?php
                     session_start();
-                    if (!isset($_SESSION['username'])) {
-                        header('Location: ../../../index.php');
-                        exit();
-                    }
                     if (isset($_SESSION['username'])) {
                         echo '<a href="#">' . htmlspecialchars($_SESSION['username']) . '</a>';
                     } else {
@@ -96,11 +86,11 @@ $result = $conn->query($sql);
                         Tools & Components
                     </li>
                     <li class="sidebar-item">
-                <a href="#" id="formLink" class="sidebar-link">
-                    <i class="fa-regular fa-file-lines pe-2"></i>
-                    Form
-                </a>
-            </li>
+                        <a href="form.php" class="sidebar-link">
+                        <i class="fa-regular fa-file-lines pe-2"></i>
+                            Form
+                        </a>
+                    </li>
                     <li class="sidebar-item">
                         <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
                             aria-expanded="false" aria-controls="pages">
@@ -128,7 +118,7 @@ $result = $conn->query($sql);
                     <li class="sidebar-header">
                         Admin Action
                     </li>
-                    <li class="sidebar-item active2">
+                    <li class="sidebar-item">
                         <a href="users.php" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
                             Users
@@ -147,8 +137,7 @@ $result = $conn->query($sql);
                             Auth
                         </a>
                         <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                          
-                        <li class="sidebar-item">
+                           <li class="sidebar-item">
                                 <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
                             </li>
                             <li class="sidebar-item">
@@ -156,28 +145,8 @@ $result = $conn->query($sql);
                             </li>
                         </ul>
                     </li>
-                    
                 </ul>
         </nav>
-
-
-        <!-- Modal Structure -->
-    <div class="modal fade" id="csvModal" tabindex="-1" aria-labelledby="csvModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="csvModalLabel">Choose an Action</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p>What would you like to do?</p>
-                    <button type="button" id="uploadCsvBtn" class="btn btn-outline-primary btn-lg mb-3">Upload CSV File</button><br>
-                    <button type="button" id="goToFormBtn" class="btn btn-primary btn-lg">Go to Form</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
         <!-- Page Content  -->
         <div id="content">
@@ -205,71 +174,69 @@ $result = $conn->query($sql);
             </form>
             <a href="add_user.php" class="btn btn-success mb-3">Add</a>
             <div class="table-responsive">
-    <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>District</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone Number</th> <!-- Added Phone Number column -->
-                <th>User Type</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>
-                            <td>{$row['district']}</td>
-                            <td>{$row['user_name']}</td>
-                            <td>{$row['email']}</td>
-                            <td>{$row['phone_number']}</td> <!-- Display Phone Number -->
-                            <td>{$row['user_type']}</td>
-                            <td>{$row['status']}</td>
-                            <td>
-                                <button class='btn btn-sm btn-toggle-status'  
-                                    data-id='{$row['user_id']}' 
-                                    data-status='{$row['status']}' 
-                                    style='background-color: " . ($row['status'] === 'disable' ? 'green' : 'orange') . "; color: white;'>
-                                    " . ($row['status'] === 'disable' ? 'Enable' : 'Disable') . "
-                                </button>
-                                <a href='delete_user.php?id={$row['user_id']}' class='btn btn-danger btn-sm' onclick='return confirmDelete()'>Delete</a>
-                            </td>
-                          </tr>";
-                }
-            } else {
-                echo "<tr><td colspan='7'>No records found</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
-</div>
-
-<!-- Pagination Controls -->
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
-        <?php
-        if ($current_page > 1) {
-            echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page - 1) . '&search=' . urlencode($search_term) . '">Previous</a></li>';
-        }
-
-        for ($page = 1; $page <= $total_pages; $page++) {
-            if ($page == $current_page) {
-                echo '<li class="page-item active"><a class="page-link" href="#">' . $page . '</a></li>';
-            } else {
-                echo '<li class="page-item"><a class="page-link" href="users.php?page=' . $page . '&search=' . urlencode($search_term) . '">' . $page . '</a></li>';
-            }
-        }
-
-        if ($current_page < $total_pages) {
-            echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page + 1) . '&search=' . urlencode($search_term) . '">Next</a></li>';
-        }
-        ?>
-    </ul>
-</nav>
-
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>User Type</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- PHP code to fetch data from the database -->
+                        <?php
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>
+                                        <td>{$row['user_name']}</td>
+                                        <td>{$row['email']}</td>
+                                        <td>{$row['user_type']}</td>
+                                        <td>{$row['status']}</td>
+                                        <td>
+                                            <button class='btn btn-sm btn-toggle-status'  onclick='return disable()' 
+                                                data-id='{$row['user_id']}' 
+                                                data-status='{$row['status']}' 
+                                                style='background-color: " . ($row['status'] === 'disable' ? 'green' : 'orange') . "; color: white;'>
+                                                " . ($row['status'] === 'disable' ? 'Enable' : 'Disable') . "
+                                            </button>
+                                            <a href='delete_user.php?id={$row['user_id']}' class='btn btn-danger btn-sm' onclick='return confirmDelete()'>Delete</a>
+                                        </td>
+                                      </tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='5'>No records found</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <?php
+                    // Previous page button
+                    if ($current_page > 1) {
+                        echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page - 1) . '">Previous</a></li>';
+                    }
+                    
+                    // Page number buttons
+                    for ($page = 1; $page <= $total_pages; $page++) {
+                        if ($page == $current_page) {
+                            echo '<li class="page-item active"><a class="page-link" href="#">' . $page . '</a></li>';
+                        } else {
+                            echo '<li class="page-item"><a class="page-link" href="users.php?page=' . $page . '">' . $page . '</a></li>';
+                        }
+                    }
+                    
+                    // Next page button
+                    if ($current_page < $total_pages) {
+                        echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page + 1) . '">Next</a></li>';
+                    }
+                    ?>
+                </ul>
+            </nav>
         </div>
     </div>
   </div>
@@ -361,6 +328,5 @@ $result = $conn->query($sql);
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
       crossorigin="anonymous"></script>
-      <script src="../js/form.js"></script>
 </body>
 </html>

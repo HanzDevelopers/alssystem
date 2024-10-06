@@ -17,7 +17,8 @@ $total_osy_query = "SELECT COUNT(*) AS total_osy
                     FROM members_tbl m 
                     JOIN background_tbl b ON m.member_id = b.member_id 
                     JOIN location_tbl l ON l.record_id = m.record_id
-                    WHERE m.age BETWEEN 15 AND 30
+                    WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
+                    AND m.age BETWEEN 15 AND 30
                     AND YEAR(l.date_encoded) = $current_year";
 $total_osy_result = $conn->query($total_osy_query);
 $total_osy = $total_osy_result->fetch_assoc()['total_osy'];
@@ -36,7 +37,8 @@ $district_osy_query = "
     FROM members_tbl m
     JOIN background_tbl b ON m.member_id = b.member_id
     JOIN location_tbl l ON l.record_id = m.record_id
-    WHERE b.status IN ('Yes', 'YES', 'yes')  /* Filter for those interested in ALS */
+    WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
+    AND m.age BETWEEN 15 AND 30
     AND YEAR(l.date_encoded) = $current_year
     GROUP BY district";
 
@@ -46,161 +48,191 @@ while ($row = $district_osy_result->fetch_assoc()) {
     $district_data[$row['district']] = $row['total_osy'];
 }
 
-// Query to get the total number of people interested in ALS for the current year
-$interested_als_query = "SELECT COUNT(*) AS total_interested_als 
-                         FROM members_tbl m
-                         JOIN background_tbl b ON m.member_id = b.member_id
-                         JOIN location_tbl l ON l.record_id = m.record_id
-                         WHERE b.status IN ('Yes', 'YES', 'yes')  /* Filter for those interested in ALS */
-                         AND YEAR(l.date_encoded) = $current_year";
 
-$interested_als_result = $conn->query($interested_als_query);
-$total_interested_als = $interested_als_result->fetch_assoc()['total_interested_als'];
+// Query to get total number of males and females for the current year (case-insensitive, including 'm' and 'f')
+$gender_osy_query = "SELECT 
+                        SUM(CASE WHEN LOWER(m.gender) IN ('male', 'm') THEN 1 ELSE 0 END) AS total_males, 
+                        SUM(CASE WHEN LOWER(m.gender) IN ('female', 'f') THEN 1 ELSE 0 END) AS total_females
+                     FROM members_tbl m
+                     JOIN background_tbl b ON m.member_id = b.member_id
+                     JOIN location_tbl l ON l.record_id = m.record_id
+                     WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
+                     AND m.age BETWEEN 15 AND 30
+                     AND YEAR(l.date_encoded) = $current_year";
+
+$gender_osy_result = $conn->query($gender_osy_query);
+$gender_osy_data = $gender_osy_result->fetch_assoc();
+$total_males = $gender_osy_data['total_males'];
+$total_females = $gender_osy_data['total_females'];
+
+
+// Query to count records with undefined or invalid gender (excluding 'Male', 'Female', 'm', 'f')
+$undefined_gender_query = "SELECT COUNT(*) AS undefined_gender_count 
+                           FROM members_tbl m
+                           JOIN background_tbl b ON m.member_id = b.member_id
+                           JOIN location_tbl l ON l.record_id = m.record_id
+                           WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
+                           AND m.age BETWEEN 15 AND 30
+                           AND YEAR(l.date_encoded) = $current_year
+                           AND LOWER(m.gender) NOT IN ('male', 'female', 'm', 'f')";
+
+$undefined_gender_result = $conn->query($undefined_gender_query);
+$undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gender_count'];
+
 ?>
 
-
-
-
 <?php
-include '../../../src/db/db_connection.php';
-
-// District Mapping
-$district_mapping = [
-    // District 1
+// District mapping
+$districts = [
     'Tankulan' => 'District 1',
     'Diklum' => 'District 1',
     'San Miguel' => 'District 1',
     'Ticala' => 'District 1',
     'Lingion' => 'District 1',
-
-    // District 2
     'Alae' => 'District 2',
     'Damilag' => 'District 2',
     'Mambatangan' => 'District 2',
     'Mantibugao' => 'District 2',
     'Minsuro' => 'District 2',
     'Lunocan' => 'District 2',
-
-    // District 3
     'Agusan canyon' => 'District 3',
     'Mampayag' => 'District 3',
     'Dahilayan' => 'District 3',
     'Sankanan' => 'District 3',
     'Kalugmanan' => 'District 3',
     'Lindaban' => 'District 3',
-
-    // District 4
     'Dalirig' => 'District 4',
     'Maluko' => 'District 4',
     'Santiago' => 'District 4',
-    'Guilang2' => 'District 4',
+    'Guilang2' => 'District 4'
 ];
 
-// Set the number of results per page
-$results_per_page = 10;
+// Connect to the database
+include '../../../src/db/db_connection.php';
 
-// Get search query from user input
-$search_query = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+// Initialize search variable
+$searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Find out the number of results stored in the database
-$sql = "SELECT COUNT(*) AS total FROM members_tbl
-        JOIN background_tbl ON members_tbl.member_id = background_tbl.member_id
-        JOIN location_tbl ON members_tbl.record_id = location_tbl.record_id
-        AND YEAR(location_tbl.date_encoded) = YEAR(CURDATE())
-        AND background_tbl.status IN ('Yes', 'yes', 'YES')
-        AND (members_tbl.household_members LIKE '%$search_query%' 
-            OR members_tbl.age LIKE '%$search_query%' 
-            OR location_tbl.barangay LIKE '%$search_query%' 
-            OR (CASE 
-                    WHEN location_tbl.barangay = 'Tankulan' THEN 'District 1'
-                    WHEN location_tbl.barangay = 'Diklum' THEN 'District 1'
-                    WHEN location_tbl.barangay = 'San Miguel' THEN 'District 1'
-                    WHEN location_tbl.barangay = 'Ticala' THEN 'District 1'
-                    WHEN location_tbl.barangay = 'Lingion' THEN 'District 1'
-                    WHEN location_tbl.barangay = 'Alae' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Damilag' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Mambatangan' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Mantibugao' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Minsuro' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Lunocan' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Agusan canyon' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Mampayag' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Dahilayan' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Sankanan' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Kalugmanan' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Lindaban' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Dalirig' THEN 'District 4'
-                    WHEN location_tbl.barangay = 'Maluko' THEN 'District 4'
-                    WHEN location_tbl.barangay = 'Santiago' THEN 'District 4'
-                    WHEN location_tbl.barangay = 'Guilang2' THEN 'District 4'
-                END) LIKE '%$search_query%')"; 
-$result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result);
-$total_results = $row['total'];
+// Get current year for default display
+$currentYear = date('Y');
 
-// Determine number of pages available
-$number_of_pages = ceil($total_results / $results_per_page);
+// Pagination variables
+$limit = 10; // Number of rows per page
+$page = isset($_GET['page']) ? $_GET['page'] : 1; // Current page
+$offset = ($page - 1) * $limit; // Offset for SQL
 
-// Determine which page number visitor is currently on
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Default page
+// Build SQL query for counting total rows for pagination
+$countQuery = "
+    SELECT COUNT(*) as total_rows
+    FROM location_tbl l
+    JOIN members_tbl m ON l.record_id = m.record_id
+";
 
-// Calculate the starting number for the results on the displaying page
-$starting_limit = ($page - 1) * $results_per_page;
+// Build where clause
+$whereClauses = [];
 
-// Fetch data for the current page and order by age
-$sql = "SELECT 
-            members_tbl.household_members AS Name, 
-            members_tbl.age, 
-            location_tbl.barangay AS Address, 
-            background_tbl.highest_grade_completed AS Highest_Grade,
-            background_tbl.currently_attending_school,
-            background_tbl.work,
-            background_tbl.status AS Interested_in_ALS
-        FROM members_tbl
-        JOIN background_tbl ON members_tbl.member_id = background_tbl.member_id
-        JOIN location_tbl ON members_tbl.record_id = location_tbl.record_id
-        AND YEAR(location_tbl.date_encoded) = YEAR(CURDATE())
-        AND background_tbl.status IN ('Yes', 'yes', 'YES')
-        AND (members_tbl.household_members LIKE '%$search_query%' 
-            OR members_tbl.age LIKE '%$search_query%' 
-            OR location_tbl.barangay LIKE '%$search_query%' 
-            OR (CASE 
-                    WHEN location_tbl.barangay = 'Tankulan' THEN 'District 1'
-                    WHEN location_tbl.barangay = 'Diklum' THEN 'District 1'
-                    WHEN location_tbl.barangay = 'San Miguel' THEN 'District 1'
-                    WHEN location_tbl.barangay = 'Ticala' THEN 'District 1'
-                    WHEN location_tbl.barangay = 'Lingion' THEN 'District 1'
-                    WHEN location_tbl.barangay = 'Alae' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Damilag' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Mambatangan' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Mantibugao' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Minsuro' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Lunocan' THEN 'District 2'
-                    WHEN location_tbl.barangay = 'Agusan canyon' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Mampayag' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Dahilayan' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Sankanan' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Kalugmanan' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Lindaban' THEN 'District 3'
-                    WHEN location_tbl.barangay = 'Dalirig' THEN 'District 4'
-                    WHEN location_tbl.barangay = 'Maluko' THEN 'District 4'
-                    WHEN location_tbl.barangay = 'Santiago' THEN 'District 4'
-                    WHEN location_tbl.barangay = 'Guilang2' THEN 'District 4'
-                END) LIKE '%$search_query%')
-        ORDER BY members_tbl.age ASC  -- Order by age
-        LIMIT $starting_limit, $results_per_page";
+// If the search term is not empty, add conditions
+if (!empty($searchTerm)) {
+    $whereClauses[] = "(l.barangay IN ('" . implode("','", array_keys($districts)) . "') AND l.barangay LIKE '%$searchTerm%')";
+    $whereClauses[] = "(l.sitio_zone_purok LIKE '%$searchTerm%')";
+    $whereClauses[] = "(l.estimated_family_income LIKE '%$searchTerm%')";
 
-$result = mysqli_query($conn, $sql);
+    // Check if the search term matches any district names
+    foreach ($districts as $barangay => $district) {
+        if (stripos($district, $searchTerm) !== false) {
+            $whereClauses[] = "(l.barangay = '$barangay')";
+        }
+    }
 
+    // Optionally check if the search term is a valid year
+    if (preg_match('/^\d{4}$/', $searchTerm) && $searchTerm <= $currentYear) {
+        $whereClauses[] = "(YEAR(l.date_encoded) = '$searchTerm')";
+    }
+}
+
+// If there are any where clauses, append them to the count query
+if (count($whereClauses) > 0) {
+    $countQuery .= " WHERE " . implode(' OR ', $whereClauses);
+}
+
+$countResult = $conn->query($countQuery);
+$totalRows = $countResult->fetch_assoc()['total_rows'];
+$totalPages = ceil($totalRows / $limit);
+
+// Build SQL query for paginated data
+$query = "
+    SELECT l.barangay, l.housenumber, l.sitio_zone_purok, l.estimated_family_income, l.date_encoded, m.household_members 
+    FROM location_tbl l
+    JOIN members_tbl m ON l.record_id = m.record_id
+";
+
+// Append the same where conditions to the main query
+if (count($whereClauses) > 0) {
+    $query .= " WHERE " . implode(' OR ', $whereClauses);
+}
+
+$query .= " LIMIT $limit OFFSET $offset"; // Add pagination
+
+// Fetch data from the database
+$result = $conn->query($query);
+
+// Handle download requests
+if (isset($_POST['download'])) {
+    $downloadType = $_POST['download_type'];
+
+    // Fetch the data to download
+    $downloadQuery = "
+        SELECT l.barangay, l.housenumber, l.sitio_zone_purok, l.estimated_family_income, l.date_encoded, m.household_members 
+        FROM location_tbl l
+        JOIN members_tbl m ON l.record_id = m.record_id
+    ";
+    
+    if (count($whereClauses) > 0) {
+        $downloadQuery .= " WHERE " . implode(' OR ', $whereClauses);
+    }
+
+    $downloadResult = $conn->query($downloadQuery);
+
+    if ($downloadType === 'csv') {
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="district_data.csv"');
+        
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['District', 'House Number', 'Sitio/Zone/Purok', 'Household Members', 'Estimated Family Income']);
+        
+        while ($row = $downloadResult->fetch_assoc()) {
+            $barangay = $row['barangay'];
+            $district = isset($districts[$barangay]) ? $districts[$barangay] : 'Unknown District';
+            fputcsv($output, [$district, $row['housenumber'], $row['sitio_zone_purok'], $row['household_members'], number_format($row['estimated_family_income'], 2)]);
+        }
+        
+        fclose($output);
+        exit();
+    } elseif ($downloadType === 'excel') {
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="district_data.xls"');
+        
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['District', 'House Number', 'Sitio/Zone/Purok', 'Household Members', 'Estimated Family Income']);
+        
+        while ($row = $downloadResult->fetch_assoc()) {
+            $barangay = $row['barangay'];
+            $district = isset($districts[$barangay]) ? $districts[$barangay] : 'Unknown District';
+            fputcsv($output, [$district, $row['housenumber'], $row['sitio_zone_purok'], $row['household_members'], number_format($row['estimated_family_income'], 2)]);
+        }
+        
+        fclose($output);
+        exit();
+    }
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
-    <title>List of Interested in ALS</title>
+    <title>District Population</title>
     <!-- Bootstrap CSS CDN --> 
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
@@ -236,90 +268,64 @@ $result = mysqli_query($conn, $sql);
 
     /* Card Styles */
     .card-osy-total {
-    background-color: #ff6b6b; /* Soft Red */
-    color: white;
-}
+        background-color: #007bff; /* Blue */
+        color: white;
+    }
 
-.card-osy-gender {
-    background-color: #ffa94d; /* Soft Orange */
-    color: white;
-}
+    .card-osy-gender {
+        background-color: #6185ad; /* Blue */
+        color: white;
+    }
 
-.card-osy-district {
-    background-color: #ffd43b; /* Soft Yellow */
-    color: #333; /* Dark text for better contrast on yellow */
-}
+    .card-osy-district {
+        background-color: #28a745; /* Green */
+        color: white;
+    }
 
-.card-osy-district:nth-child(1) {
-    background-color: #51cf66; /* Soft Green */
-    color: white;
-}
+    .card-osy-district:nth-child(1) {
+        background-color: #dc3545; /* Red */
+    }
 
-.card-osy-district:nth-child(2) {
-    background-color: #74c0fc; /* Soft Blue */
-    color: white;
-}
+    .card-osy-district:nth-child(2) {
+        background-color: #ffc107; /* Yellow */
+    }
 
-.card-osy-district:nth-child(3) {
-    background-color: #9775fa; /* Soft Indigo */
-    color: white;
-}
+    .card-osy-district:nth-child(3) {
+        background-color: #17a2b8; /* Teal */
+    }
 
-/* New style for Total Population card */
-.card-total-population {
-    background-color: #f783ac; /* Soft Violet/Pink */
-    color: white;
-}
+    /* New style for Total Population card */
+    .card-total-population {
+        background-color: rgb(108 117 125);
+        color: white;
+    }
 
-   /* Ensure responsive card sizes */
-.card {
-    min-width: 220px;
-    height: 100%;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
+    /* Ensure responsive card sizes */
+    .card {
+        min-width: 200px; /* Minimum width for cards */
+        height: 100%; /* Full height to align cards */
+    }
 
-/* Margin below each card */
-.mb-3 {
-    margin-bottom: 1.5rem;
-}
+    /* Margin below each card */
+    .mb-3 {
+        margin-bottom: 1rem; /* Space below cards */
+    }
 
-.card-text {
-    color: white;
-}
-/* Larger spacing for better visual separation */
-.mt-4 {
-    margin-bottom: 60px;
-}
+    .card-text {
+        color: white;
+    }
 
-/* Headings inside cards */
-.card-body h5 {
-    font-size: 1rem;
-    color: #333; /* Dark text for readability */
-}
+    .mt-4 {
+        margin-bottom: 50px;
+    }
+    .card-body h5 {
+    font-size: 1.2rem;
+    color: darkslategray;
+    }
 
-/* Paragraphs inside cards */
-.card-body p {
-    font-size: 2rem;
-    color: #ffffff; /* Consistent white text */
-}
-
-
-
-/* Hover effect for interactive cards */
-.card:hover {
-    transform: translateY(-5px); /* Subtle lift effect */
-    background-color: #f1f3f5; /* Light grey on hover for contrast */
-    color: #333;
-}
-/* Target the age range labels to be black */
-.card:hover .card-body .age-range-label {
-    font-size: 2rem;
-    color: black; /* Black text for the age range labels */
-}
-
-
+    .card-body p {
+        font-size: 1.5rem;
+    }
 
 </style>
 
@@ -377,13 +383,13 @@ $result = mysqli_query($conn, $sql);
                             <li class="sidebar-item">
                                 <a href="district_osy.php" class="sidebar-link">District OSY</a>
                             </li>
-                            <li class="sidebar-item">
+                            <li class="sidebar-item active2">
                                 <a href="district_population.php" class="sidebar-link">District Population</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="OSY_age.php" class="sidebar-link">OSY By Age</a>
                             </li>
-                            <li class="sidebar-item active2">
+                            <li class="sidebar-item">
                                 <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
                             </li>
                         </ul>
@@ -449,7 +455,7 @@ $result = mysqli_query($conn, $sql);
                 <button type="button" id="sidebarCollapse" class="btn menu-btn">
                     <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
                 </button>
-                <span class="menu-text">List of Interested in ALS</span>
+                <span class="menu-text">District Population</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
             </div>
             
@@ -458,6 +464,20 @@ $result = mysqli_query($conn, $sql);
         
         <!-- Main Content Starts Here -->
         <div class="container-fluid">
+    <!-- <div class="content p-3">
+        <div class="row">
+            Container for charts
+            <div class="dashboard-container">
+    
+    Chart 1: District OSY Pie Chart
+    <div class="chart-card">
+        <div id="pie-chart" class="chart"></div>
+    </div>
+    
+</div>
+
+        </div>
+    </div> -->
     <div class="container mt-4">
     <!-- First Row: Total Population, Total OSY, and Gender Cards -->
     <div class="row justify-content-center mb-3">
@@ -466,7 +486,7 @@ $result = mysqli_query($conn, $sql);
             <div class="card text-center card-total-population">
                 <div class="card-body">
                     <h5 class="card-title">Total Population</h5>
-                    <p class="card-text"><span class="age-range-label"><?php echo $total_population; ?></span></p>
+                    <p class="card-text"><?php echo $total_population; ?></p>
                 </div>
             </div>
         </div>
@@ -476,22 +496,23 @@ $result = mysqli_query($conn, $sql);
             <div class="card text-center card-osy-total">
                 <div class="card-body">
                     <h5 class="card-title">Total OSY</h5>
-                    <p class="card-text"><span class="age-range-label"><?php echo $total_osy; ?></span></p>
+                    <p class="card-text"><?php echo $total_osy; ?></p>
                 </div>
             </div>
         </div>
 
         <!-- Gender OSY Card (Male, Female, Undefined) -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3"> <!-- Set to double width -->
+        <div class="col-12 col-sm-6 col-md-8 col-lg-6 mb-3"> <!-- Set to double width -->
             <div class="card text-center card-osy-gender">
                 <div class="card-body">
-            <h5 class="card-title">Interested in ALS</h5>
-            <p class="card-text"><span class="age-range-label"><?php echo $total_interested_als; ?></span></p>
+                    <h5 class="card-title">OSY Genders</h5>
+                    <p class="card-text d-inline">Males: <?php echo $total_males; ?></p>
+                    <p class="card-text d-inline ms-3">Females: <?php echo $total_females; ?></p>
+                    <p class="card-text d-inline ms-3">Other: <?php echo $undefined_gender_count; ?></p>
                 </div>
             </div>
         </div>
     </div>
-
 
     <!-- Second Row: District OSY Cards -->
     <div class="row justify-content-center">
@@ -501,13 +522,12 @@ $result = mysqli_query($conn, $sql);
             <div class="card text-center card-osy-district">
                 <div class="card-body">
                     <h5 class="card-title"><?php echo $district; ?></h5>
-                    <p class="card-text"><span class="age-range-label"><?php echo $count; ?></span></p>
+                    <p class="card-text"><?php echo $count; ?></p>
                 </div>
             </div>
         </div>
         <?php endforeach; ?>
     </div>
-</div>  
 </div>
 
 
@@ -515,93 +535,86 @@ $result = mysqli_query($conn, $sql);
 
 
 
-<div class="container mt-5">
-    <h2 class="mb-4">Interested in ALS</h2>
+    
+</div>
 
-    <!-- Search Bar -->
+<div class="container mt-5">
+    <h2 class="mb-4">District Population Data</h2>
+
+    <!-- Single Search Bar Form -->
     <form method="GET" class="mb-4">
         <div class="input-group">
-            <input type="text" class="form-control" name="search" placeholder="Search by Name, Age, District, or Address" value="<?php echo htmlspecialchars($search_query); ?>">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">Search</button>
-                <a href="interested.php" class="btn btn-secondary">Reset</a>
-            </div>
+            <input type="text" name="search" class="form-control" placeholder="Search by Year, District, Sitio/Zone/Purok, or Family Income" value="<?= htmlspecialchars($searchTerm) ?>">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="district_population.php" class="btn btn-secondary">Reset</a>
         </div>
     </form>
 
-
-<P>TO DOWNLOAD SPECIFIC DATA, PLEASE USE THE SEARCH BAR</P>
+    <P>TO DOWNLOAD SPECIFIC DATA, PLEASE USE THE SEARCH BAR</P>
     <!-- Download Button -->
-    <div class="text-right mb-3">
-        <div class="btn-group">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Download Data
+    <form method="POST" class="mb-4">
+        <div class="input-group mb-3">
+            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Download
             </button>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" href="../download_functions/interested_download.php?format=csv&search=<?php echo urlencode($search_query); ?>">Download CSV</a>
-                <a class="dropdown-item" href="../download_functions/interested_download.php?format=excel&search=<?php echo urlencode($search_query); ?>">Download Excel</a>
-            </div>
-        </div>
-    </div>
-
-
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>District</th>
-                    <th>Address</th>
-                    <th>Highest Grade/Year Completed</th>
-                    <th>Currently Attending School</th>
-                    <th>Work</th>
-                    <th>Interested in ALS</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $district = '';
-                    foreach ($district_mapping as $barangay => $mapped_district) {
-                        if ($row['Address'] == $barangay) {
-                            $district = $mapped_district;
-                            break;
-                        }
-                    }
-                    echo "<tr>
-                            <td>{$row['Name']}</td>
-                            <td>{$row['age']}</td>
-                            <td>{$district}</td>
-                            <td>{$row['Address']}</td>
-                            <td>{$row['Highest_Grade']}</td>
-                            <td>{$row['currently_attending_school']}</td>
-                            <td>{$row['work']}</td>
-                            <td>{$row['Interested_in_ALS']}</td>
-                          </tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-
-        <nav>
-            <ul class="pagination justify-content-center">
-                <?php
-                for ($page = 1; $page <= $number_of_pages; $page++) {
-                    echo '<li class="page-item' . ($page == (isset($_GET['page']) ? $_GET['page'] : 1) ? ' active' : '') . '">
-                              <a class="page-link" href="?page=' . $page . '&search=' . urlencode($search_query) . '">' . $page . '</a>
-                          </li>';
-                }
-                ?>
+            <ul class="dropdown-menu">
+                <li>
+                    <form method="POST">
+                        <input type="hidden" name="download_type" value="csv">
+                        <button type="submit" name="download" class="dropdown-item">CSV</button>
+                    </form>
+                </li>
+                <li>
+                    <form method="POST">
+                        <input type="hidden" name="download_type" value="excel">
+                        <button type="submit" name="download" class="dropdown-item">Excel</button>
+                    </form>
+                </li>
             </ul>
-        </nav>
-    </div>
+        </div>
+    </form>
 
+    <!-- Data Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>District</th>
+                <th>House Number</th>
+                <th>Sitio/Zone/Purok</th>
+                <th>Household Members</th>
+                <th>Estimated Family Income</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if ($result->num_rows > 0): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= isset($districts[$row['barangay']]) ? $districts[$row['barangay']] : 'Unknown District' ?></td>
+                        <td><?= htmlspecialchars($row['housenumber']) ?></td>
+                        <td><?= htmlspecialchars($row['sitio_zone_purok']) ?></td>
+                        <td><?= htmlspecialchars($row['household_members']) ?></td>
+                        <td><?= number_format($row['estimated_family_income'], 2) ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="5" class="text-center">No records found.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
 
-
-
-
-
-
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
+                    <a class="page-link" href="?search=<?= urlencode($searchTerm) ?>&page=<?= $i ?>"><?= $i ?></a>
+                </li>
+            <?php endfor; ?>
+        </ul>
+    </nav>
+</div>
 </div>
             </div>
 <!-- jQuery CDN - Slim version (=without AJAX) -->

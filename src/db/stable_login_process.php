@@ -28,14 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $log_stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $login_time);
                     $log_stmt->execute();
 
-                    // Check user type for redirection
-                    $user_type = strtolower($user['user_type']);
-                    if ($user_type == 'supervisor') {
+                    if (strtolower($user['user_type']) == 'admin') {
                         header("Location: ../../main_pages/admin/pages/dashboard.php");
-                    } elseif ($user_type == 'volunteer') {
+                    } elseif (strtolower($user['user_type']) == 'user') {
                         header("Location: ../../main_pages/user/pages/dashboard.php");
-                    } elseif ($user_type == 'coordinator') {
-                        header("Location: ../../main_pages/head/pages/dashboard.php");
                     } else {
                         echo "Invalid user type.";
                     }
@@ -56,3 +52,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Error</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="alert alert-danger mt-5">
+            <?php echo isset($error) ? $error : "Unknown error."; ?>
+        </div>
+        <a href="../../login.php" class="btn btn-primary">Back to Login</a>
+    </div>
+</body>
+</html>

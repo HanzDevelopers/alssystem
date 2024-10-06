@@ -138,50 +138,51 @@ if (!isset($_SESSION['username'])) {
                             <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next</button>
                         </div>
                     </div>
-<!-- Step 2 -->
-<div class="form-step" id="step2" style="display:none;">
-    <div class="table-responsive">
-        <table id="dynamicTable">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Household Members:</th>
-                    <th>Relationship to Head:</th>
-                    <th>Birthdate:</th>
-                    <th>Age:</th>
-                    <th>Gender:</th>
-                    <th>Civil Status:</th>
-                    <th>Person w/ Disability:</th>
-                    <th>Ethnicity:</th>
-                    <th>Religion:</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td data-label="No.">1</td>
-                    <td data-label="Household Members"><input type="text" name="household_members[]" placeholder="Name of Member"></td>
-                    <td data-label="Relationship to Head"><input type="text" name="relationship_to_head[]" placeholder="Relationship to Head"></td>
-                    <td data-label="Birthdate"><input type="date" name="birthdate[]" onchange="calculateAge(this)"></td>
-                    <td data-label="Age"><input type="number" name="age[]" placeholder="Age" readonly></td>
-                    <td data-label="Gender"><input type="text" name="gender[]" placeholder="Gender"></td>
-                    <td data-label="Civil Status"><input type="text" name="civil_status[]" placeholder="Civil Status"></td>
-                    <td data-label="Person w/ Disability"><input type="text" name="disability[]" placeholder="Person w/ Disability"></td>
-                    <td data-label="Ethnicity"><input type="text" name="ethnicity[]" placeholder="Ethnicity"></td>
-                    <td data-label="Religion"><input type="text" name="religion[]" placeholder="Religion"></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="button-group-start" style="margin-top: 10px;">
+
+                    <!-- Step 2 -->
+                    <div class="form-step" id="step2" style="display:none;">
+                        <div class="table-responsive">
+                            <table id="dynamicTable">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Household Members:</th>
+                                        <th>Relationship to Head:</th>
+                                        <th>Birthdate:</th>
+                                        <th>Age:</th>
+                                        <th>Gender:</th>
+                                        <th>Civil Status:</th>
+                                        <th>Person w/ Disability:</th>
+                                        <th>Ethnicity:</th>
+                                        <th>Religion:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-label="No.">1</td>
+                                        <td data-label="Household Members"><input type="text" name="household_members[]"placeholder="Name of Member"></td>
+                                        <td data-label="Relationship to Head"><input type="text" name="relationship_to_head[]"placeholder="Relationship to Head"></td>
+                                        <td data-label="Birthdate"><input type="date" name="birthdate[]"></td>
+                                        <td data-label="Age"><input type="number" name="age[]" placeholder="Age"></td>
+                                        <td data-label="Gender"><input type="text" name="gender[]" placeholder="Gender"></td>
+                                        <td data-label="Civil Status"><input type="text" name="civil_status[]" placeholder="Civil Status"></td>
+                                        <td data-label="Person w/ Disability"><input type="text" name="disability[]" placeholder="Person w/ Disability"></td>
+                                        <td data-label="Ethnicity"><input type="text" name="ethnicity[]" placeholder="Ethnicity"></td>
+                                        <td data-label="Religion"><input type="text" name="religion[]" placeholder="Religion"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="button-group-start" style="margin-top: 10px;">
         <button type="button" class="btn btn-add" onclick="addRow()">Add Member</button>
         <button type="button" class="btn btn-danger btn-sm" onclick="deleteLastRow()">Delete Last Row</button>
     </div>
     <div class="button-group">
-        <button type="button" class="btn btn-secondary" onclick="previousStep(1)">Previous</button>
-        <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next</button>
-    </div>
+    <button type="button" class="btn btn-secondary" onclick="previousStep(1)">Previous</button>
+    <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next</button>
 </div>
 
+                    </div>
 
                     <!-- Step 3 -->
 <div class="form-step" id="step3" style="display:none;">
@@ -226,22 +227,6 @@ if (!isset($_SESSION['username'])) {
     </div>
 
     <script>
-        function calculateAge(birthdateInput) {
-    const birthdate = new Date(birthdateInput.value);
-    const today = new Date();
-    let age = today.getFullYear() - birthdate.getFullYear();
-    const monthDiff = today.getMonth() - birthdate.getMonth();
-
-    // Adjust age if birth month hasn't been reached or if it's the birth month but the birthdate hasn't occurred yet
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
-        age--;
-    }
-
-    // Find the corresponding age input field and set its value
-    const ageInput = birthdateInput.closest('tr').querySelector('input[name="age[]"]');
-    ageInput.value = age;
-}
-
         function goToStep(step) {
     document.getElementById('step' + currentStep).style.display = 'none';  // Hide the current step
     currentStep = step;  // Update current step

@@ -184,62 +184,95 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
         margin-top: 1px;
         margin-bottom: 50px;
     }
-
-     /* Card Styles */
-     .card-osy-total {
-        background-color: #007bff; /* Blue */
-        color: white;
-    }
-    .card-osy-gender {
-        background-color: #6185ad; /* Blue */
-        color: white;
+    /* Card Styles */
+.card-osy-total {
+    background-color: #ff6b6b; /* Soft Red */
+    color: white;
 }
 
-    .card-osy-district {
-        background-color: #28a745; /* Green */
-        color: white;
-    }
-    .card-osy-district:nth-child(1) {
-        background-color: #dc3545; /* Red */
-    }
-    .card-osy-district:nth-child(2) {
-        background-color: #ffc107; /* Yellow */
-    }
-    .card-osy-district:nth-child(3) {
-        background-color: #17a2b8; /* Teal */
-    }
-    
-    /* New style for Total Population card */
-    .card-total-population {
-        background-color: rgb(108 117 125);
-        color: white;
-    }
-    /* Ensure responsive card sizes */
-    .card {
-        min-width: 200px; /* Minimum width for cards */
-        height: 100%; /* Full height to align cards */
-    }
+.card-osy-gender {
+    background-color: #ffa94d; /* Soft Orange */
+    color: white;
+}
 
-    /* Margin below each card */
-    .mb-3 {
-        margin-bottom: 1rem; /* Space below cards */
-    }
-    .card-text{
-        color: white;
-    }
-    .mt-4{
-        margin-bottom: 50px;
-    }
+.card-osy-district {
+    background-color: #ffd43b; /* Soft Yellow */
+    color: #333; /* Dark text for better contrast on yellow */
+}
 
-    .card-body h5 {
-    font-size: 1.2rem;
-    color: darkslategray;
-    }
+.card-osy-district:nth-child(1) {
+    background-color: #51cf66; /* Soft Green */
+    color: white;
+}
 
-    .card-body p {
-        font-size: 1.5rem;
-    }
+.card-osy-district:nth-child(2) {
+    background-color: #74c0fc; /* Soft Blue */
+    color: white;
+}
 
+.card-osy-district:nth-child(3) {
+    background-color: #9775fa; /* Soft Indigo */
+    color: white;
+}
+
+/* New style for Total Population card */
+.card-total-population {
+    background-color: #f783ac; /* Soft Violet/Pink */
+    color: white;
+}
+
+/* Ensure responsive card sizes */
+.card {
+    min-width: 220px;
+    height: 100%;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Margin below each card */
+.mb-3 {
+    margin-bottom: 1.5rem;
+}
+
+.card-text {
+    color: white;
+}
+
+/* Larger spacing for better visual separation */
+.mt-4 {
+    margin-bottom: 60px;
+}
+
+/* Headings inside cards */
+.card-body h5 {
+    font-size: 1rem;
+    color: #333; /* Dark text for readability */
+}
+
+/* Paragraphs inside cards */
+.card-body p {
+    font-size: 2rem;
+    color: #ffffff; /* Consistent white text */
+}
+
+/* Target the age range labels to be black */
+.card-body .age-range-label {
+    font-size: 1rem;
+    color: #000000; /* Black text for the age range labels */
+}
+
+/* Hover effect for interactive cards */
+.card:hover {
+    transform: translateY(-5px); /* Subtle lift effect */
+    background-color: #f1f3f5; /* Light grey on hover for contrast */
+    color: #333;
+}
+
+/* Change the paragraph text color to black on hover */
+.card:hover .card-body p {
+    color: #000000; /* Black text on hover */
+}
 </style>
 
 <body>
@@ -418,9 +451,12 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
             <div class="card text-center card-osy-gender">
                 <div class="card-body">
                     <h5 class="card-title">OSY Genders</h5>
-                    <p class="card-text d-inline">Males: <?php echo $total_males; ?></p>
-                    <p class="card-text d-inline ms-3">Females: <?php echo $total_females; ?></p>
-                    <p class="card-text d-inline ms-3">Other: <?php echo $undefined_gender_count; ?></p>
+                    <p class="card-text d-inline">
+                    <span class="age-range-label">Males:</span> <?php echo $total_males; ?></p>
+                    <p class="card-text d-inline ms-3">
+                    <span class="age-range-label">Females:</span> <?php echo $total_females; ?></p>
+                    <p class="card-text d-inline ms-3">
+                    <span class="age-range-label">Other:</span> <?php echo $undefined_gender_count; ?></p>
                 </div>
             </div>
         </div>

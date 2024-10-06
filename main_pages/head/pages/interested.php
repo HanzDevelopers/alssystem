@@ -36,7 +36,7 @@ $district_osy_query = "
     FROM members_tbl m
     JOIN background_tbl b ON m.member_id = b.member_id
     JOIN location_tbl l ON l.record_id = m.record_id
-    WHERE b.status IN ('Yes', 'YES', 'yes')  /* Filter for those interested in ALS */
+    WHERE m.age BETWEEN 15 AND 30
     AND YEAR(l.date_encoded) = $current_year
     GROUP BY district";
 
@@ -236,90 +236,64 @@ $result = mysqli_query($conn, $sql);
 
     /* Card Styles */
     .card-osy-total {
-    background-color: #ff6b6b; /* Soft Red */
-    color: white;
-}
+        background-color: #007bff; /* Blue */
+        color: white;
+    }
 
-.card-osy-gender {
-    background-color: #ffa94d; /* Soft Orange */
-    color: white;
-}
+    .card-osy-gender {
+        background-color: #6185ad; /* Blue */
+        color: white;
+    }
 
-.card-osy-district {
-    background-color: #ffd43b; /* Soft Yellow */
-    color: #333; /* Dark text for better contrast on yellow */
-}
+    .card-osy-district {
+        background-color: #28a745; /* Green */
+        color: white;
+    }
 
-.card-osy-district:nth-child(1) {
-    background-color: #51cf66; /* Soft Green */
-    color: white;
-}
+    .card-osy-district:nth-child(1) {
+        background-color: #dc3545; /* Red */
+    }
 
-.card-osy-district:nth-child(2) {
-    background-color: #74c0fc; /* Soft Blue */
-    color: white;
-}
+    .card-osy-district:nth-child(2) {
+        background-color: #ffc107; /* Yellow */
+    }
 
-.card-osy-district:nth-child(3) {
-    background-color: #9775fa; /* Soft Indigo */
-    color: white;
-}
+    .card-osy-district:nth-child(3) {
+        background-color: #17a2b8; /* Teal */
+    }
 
-/* New style for Total Population card */
-.card-total-population {
-    background-color: #f783ac; /* Soft Violet/Pink */
-    color: white;
-}
+    /* New style for Total Population card */
+    .card-total-population {
+        background-color: rgb(108 117 125);
+        color: white;
+    }
 
-   /* Ensure responsive card sizes */
-.card {
-    min-width: 220px;
-    height: 100%;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
+    /* Ensure responsive card sizes */
+    .card {
+        min-width: 200px; /* Minimum width for cards */
+        height: 100%; /* Full height to align cards */
+    }
 
-/* Margin below each card */
-.mb-3 {
-    margin-bottom: 1.5rem;
-}
+    /* Margin below each card */
+    .mb-3 {
+        margin-bottom: 1rem; /* Space below cards */
+    }
 
-.card-text {
-    color: white;
-}
-/* Larger spacing for better visual separation */
-.mt-4 {
-    margin-bottom: 60px;
-}
+    .card-text {
+        color: white;
+    }
 
-/* Headings inside cards */
-.card-body h5 {
-    font-size: 1rem;
-    color: #333; /* Dark text for readability */
-}
+    .mt-4 {
+        margin-bottom: 50px;
+    }
+    .card-body h5 {
+    font-size: 1.2rem;
+    color: darkslategray;
+    }
 
-/* Paragraphs inside cards */
-.card-body p {
-    font-size: 2rem;
-    color: #ffffff; /* Consistent white text */
-}
-
-
-
-/* Hover effect for interactive cards */
-.card:hover {
-    transform: translateY(-5px); /* Subtle lift effect */
-    background-color: #f1f3f5; /* Light grey on hover for contrast */
-    color: #333;
-}
-/* Target the age range labels to be black */
-.card:hover .card-body .age-range-label {
-    font-size: 2rem;
-    color: black; /* Black text for the age range labels */
-}
-
-
+    .card-body p {
+        font-size: 1.5rem;
+    }
 
 </style>
 
@@ -458,6 +432,20 @@ $result = mysqli_query($conn, $sql);
         
         <!-- Main Content Starts Here -->
         <div class="container-fluid">
+    <!-- <div class="content p-3">
+        <div class="row">
+            Container for charts
+            <div class="dashboard-container">
+    
+    Chart 1: District OSY Pie Chart
+    <div class="chart-card">
+        <div id="pie-chart" class="chart"></div>
+    </div>
+    
+</div>
+
+        </div>
+    </div> -->
     <div class="container mt-4">
     <!-- First Row: Total Population, Total OSY, and Gender Cards -->
     <div class="row justify-content-center mb-3">
@@ -466,7 +454,7 @@ $result = mysqli_query($conn, $sql);
             <div class="card text-center card-total-population">
                 <div class="card-body">
                     <h5 class="card-title">Total Population</h5>
-                    <p class="card-text"><span class="age-range-label"><?php echo $total_population; ?></span></p>
+                    <p class="card-text"><?php echo $total_population; ?></p>
                 </div>
             </div>
         </div>
@@ -476,17 +464,17 @@ $result = mysqli_query($conn, $sql);
             <div class="card text-center card-osy-total">
                 <div class="card-body">
                     <h5 class="card-title">Total OSY</h5>
-                    <p class="card-text"><span class="age-range-label"><?php echo $total_osy; ?></span></p>
+                    <p class="card-text"><?php echo $total_osy; ?></p>
                 </div>
             </div>
         </div>
 
         <!-- Gender OSY Card (Male, Female, Undefined) -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3"> <!-- Set to double width -->
+        <div class="col-12 col-sm-6 col-md-8 col-lg-6 mb-3"> <!-- Set to double width -->
             <div class="card text-center card-osy-gender">
                 <div class="card-body">
             <h5 class="card-title">Interested in ALS</h5>
-            <p class="card-text"><span class="age-range-label"><?php echo $total_interested_als; ?></span></p>
+            <p class="card-text">Total: <?php echo $total_interested_als; ?></p>
                 </div>
             </div>
         </div>
@@ -501,7 +489,7 @@ $result = mysqli_query($conn, $sql);
             <div class="card text-center card-osy-district">
                 <div class="card-body">
                     <h5 class="card-title"><?php echo $district; ?></h5>
-                    <p class="card-text"><span class="age-range-label"><?php echo $count; ?></span></p>
+                    <p class="card-text"><?php echo $count; ?></p>
                 </div>
             </div>
         </div>

@@ -23,8 +23,8 @@ $total_osy_query = "SELECT COUNT(*) AS total_osy
 $total_osy_result = $conn->query($total_osy_query);
 $total_osy = $total_osy_result->fetch_assoc()['total_osy'];
 
-// Query to get total number of OSY for each district for the current year
-$district_osy_query = "
+// Query to get total number of household members for each district for the current year
+$district_household_query = "
     SELECT 
         CASE 
             WHEN l.barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
@@ -33,19 +33,16 @@ $district_osy_query = "
             WHEN l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') THEN 'District 4'
             ELSE 'Unknown District'
         END AS district,
-        COUNT(*) AS total_osy
+        COUNT(*) AS total_household_members
     FROM members_tbl m
-    JOIN background_tbl b ON m.member_id = b.member_id
     JOIN location_tbl l ON l.record_id = m.record_id
-    WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
-    AND m.age BETWEEN 15 AND 30
-    AND YEAR(l.date_encoded) = $current_year
+    WHERE YEAR(l.date_encoded) = $current_year
     GROUP BY district";
 
-$district_osy_result = $conn->query($district_osy_query);
+$district_household_result = $conn->query($district_household_query);
 $district_data = [];
-while ($row = $district_osy_result->fetch_assoc()) {
-    $district_data[$row['district']] = $row['total_osy'];
+while ($row = $district_household_result->fetch_assoc()) {
+    $district_data[$row['district']] = $row['total_household_members'];
 }
 
 
@@ -56,9 +53,7 @@ $gender_osy_query = "SELECT
                      FROM members_tbl m
                      JOIN background_tbl b ON m.member_id = b.member_id
                      JOIN location_tbl l ON l.record_id = m.record_id
-                     WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
-                     AND m.age BETWEEN 15 AND 30
-                     AND YEAR(l.date_encoded) = $current_year";
+                     WHERE YEAR(l.date_encoded) = $current_year";
 
 $gender_osy_result = $conn->query($gender_osy_query);
 $gender_osy_data = $gender_osy_result->fetch_assoc();
@@ -265,68 +260,95 @@ if (isset($_POST['download'])) {
         margin-top: 1px;
         margin-bottom: 50px;
     }
-
     /* Card Styles */
-    .card-osy-total {
-        background-color: #007bff; /* Blue */
-        color: white;
-    }
+.card-osy-total {
+    background-color: #ff6b6b; /* Soft Red */
+    color: white;
+}
 
-    .card-osy-gender {
-        background-color: #6185ad; /* Blue */
-        color: white;
-    }
+.card-osy-gender {
+    background-color: #ffa94d; /* Soft Orange */
+    color: white;
+}
 
-    .card-osy-district {
-        background-color: #28a745; /* Green */
-        color: white;
-    }
+.card-osy-district {
+    background-color: #ffd43b; /* Soft Yellow */
+    color: #333; /* Dark text for better contrast on yellow */
+}
 
-    .card-osy-district:nth-child(1) {
-        background-color: #dc3545; /* Red */
-    }
+.card-osy-district:nth-child(1) {
+    background-color: #51cf66; /* Soft Green */
+    color: white;
+}
 
-    .card-osy-district:nth-child(2) {
-        background-color: #ffc107; /* Yellow */
-    }
+.card-osy-district:nth-child(2) {
+    background-color: #74c0fc; /* Soft Blue */
+    color: white;
+}
 
-    .card-osy-district:nth-child(3) {
-        background-color: #17a2b8; /* Teal */
-    }
+.card-osy-district:nth-child(3) {
+    background-color: #9775fa; /* Soft Indigo */
+    color: white;
+}
 
-    /* New style for Total Population card */
-    .card-total-population {
-        background-color: rgb(108 117 125);
-        color: white;
-    }
+/* New style for Total Population card */
+.card-total-population {
+    background-color: #f783ac; /* Soft Violet/Pink */
+    color: white;
+}
 
-    /* Ensure responsive card sizes */
-    .card {
-        min-width: 200px; /* Minimum width for cards */
-        height: 100%; /* Full height to align cards */
-    }
+/* Ensure responsive card sizes */
+.card {
+    min-width: 220px;
+    height: 100%;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
 
-    /* Margin below each card */
-    .mb-3 {
-        margin-bottom: 1rem; /* Space below cards */
-    }
+/* Margin below each card */
+.mb-3 {
+    margin-bottom: 1.5rem;
+}
 
-    .card-text {
-        color: white;
-    }
+.card-text {
+    color: white;
+}
 
-    .mt-4 {
-        margin-bottom: 50px;
-    }
-    .card-body h5 {
-    font-size: 1.2rem;
-    color: darkslategray;
-    }
+/* Larger spacing for better visual separation */
+.mt-4 {
+    margin-bottom: 60px;
+}
 
-    .card-body p {
-        font-size: 1.5rem;
-    }
+/* Headings inside cards */
+.card-body h5 {
+    font-size: 1rem;
+    color: #333; /* Dark text for readability */
+}
 
+/* Paragraphs inside cards */
+.card-body p {
+    font-size: 2rem;
+    color: #ffffff; /* Consistent white text */
+}
+
+/* Target the age range labels to be black */
+.card-body .age-range-label {
+    font-size: 1rem;
+    color: #000000; /* Black text for the age range labels */
+}
+
+/* Hover effect for interactive cards */
+.card:hover {
+    transform: translateY(-5px); /* Subtle lift effect */
+    background-color: #f1f3f5; /* Light grey on hover for contrast */
+    color: #333;
+}
+
+/* Change the paragraph text color to black on hover */
+.card:hover .card-body p {
+    color: #000000; /* Black text on hover */
+}
 </style>
 
 
@@ -491,24 +513,27 @@ if (isset($_POST['download'])) {
             </div>
         </div>
 
+
+        <!-- Gender OSY Card (Male, Female, Undefined) -->
+        <div class="col-12 col-sm-6 col-md-8 col-lg-6 mb-3"> <!-- Set to double width -->
+            <div class="card text-center card-osy-gender">
+                <div class="card-body">
+                    <h5 class="card-title">Population Gender density</h5>
+                    <p class="card-text d-inline">
+                    <span class="age-range-label">Males:</span> <?php echo $total_males; ?></p>
+                    <p class="card-text d-inline ms-3">
+                    <span class="age-range-label">Females:</span> <?php echo $total_females; ?></p>
+                    <p class="card-text d-inline ms-3">
+                    <span class="age-range-label"> Other:</span> <?php echo $undefined_gender_count; ?></p>
+                </div>
+            </div>
+        </div>
         <!-- Total OSY Card -->
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
             <div class="card text-center card-osy-total">
                 <div class="card-body">
                     <h5 class="card-title">Total OSY</h5>
                     <p class="card-text"><?php echo $total_osy; ?></p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Gender OSY Card (Male, Female, Undefined) -->
-        <div class="col-12 col-sm-6 col-md-8 col-lg-6 mb-3"> <!-- Set to double width -->
-            <div class="card text-center card-osy-gender">
-                <div class="card-body">
-                    <h5 class="card-title">OSY Genders</h5>
-                    <p class="card-text d-inline">Males: <?php echo $total_males; ?></p>
-                    <p class="card-text d-inline ms-3">Females: <?php echo $total_females; ?></p>
-                    <p class="card-text d-inline ms-3">Other: <?php echo $undefined_gender_count; ?></p>
                 </div>
             </div>
         </div>

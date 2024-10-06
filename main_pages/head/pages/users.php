@@ -13,8 +13,8 @@ $start_from = ($current_page - 1) * $results_per_page;
 // Search handling
 $search_term = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Query to get the total number of users with user_type = 'teacher' or 'head' in any case and matching the search criteria
-$search_query = "SELECT COUNT(*) AS total FROM user_tbl WHERE LOWER(user_type) IN ('volunteer', 'coordinator')";
+// Query to get the total number of users with user_type = 'user' or 'head' in any case and matching the search criteria
+$search_query = "SELECT COUNT(*) AS total FROM user_tbl WHERE LOWER(user_type) IN ('user', 'head')";
 if (!empty($search_term)) {
     $search_query .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' OR status LIKE '%" . $conn->real_escape_string($search_term) . "%')";
 }
@@ -24,14 +24,13 @@ $total_users = $row['total'];
 $total_pages = ceil($total_users / $results_per_page);
 
 // Query to get the users for the current page, ordered by user_name in ascending order
-$sql = "SELECT user_id, user_name, email, phone_number, user_type, status, district FROM user_tbl WHERE LOWER(user_type) IN ('volunteer', 'coordinator')";
+$sql = "SELECT * FROM user_tbl WHERE LOWER(user_type) IN ('user', 'head')";
 if (!empty($search_term)) {
-    $sql .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' 
-                 OR status LIKE '%" . $conn->real_escape_string($search_term) . "%' 
-                 OR district LIKE '%" . $conn->real_escape_string($search_term) . "%')";
+    $sql .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' OR status LIKE '%" . $conn->real_escape_string($search_term) . "%')";
 }
 $sql .= " ORDER BY user_name ASC LIMIT $start_from, $results_per_page";
 $result = $conn->query($sql);
+
 ?>
 
 <!DOCTYPE html>
@@ -205,71 +204,69 @@ $result = $conn->query($sql);
             </form>
             <a href="add_user.php" class="btn btn-success mb-3">Add</a>
             <div class="table-responsive">
-    <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>District</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone Number</th> <!-- Added Phone Number column -->
-                <th>User Type</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>
-                            <td>{$row['district']}</td>
-                            <td>{$row['user_name']}</td>
-                            <td>{$row['email']}</td>
-                            <td>{$row['phone_number']}</td> <!-- Display Phone Number -->
-                            <td>{$row['user_type']}</td>
-                            <td>{$row['status']}</td>
-                            <td>
-                                <button class='btn btn-sm btn-toggle-status'  
-                                    data-id='{$row['user_id']}' 
-                                    data-status='{$row['status']}' 
-                                    style='background-color: " . ($row['status'] === 'disable' ? 'green' : 'orange') . "; color: white;'>
-                                    " . ($row['status'] === 'disable' ? 'Enable' : 'Disable') . "
-                                </button>
-                                <a href='delete_user.php?id={$row['user_id']}' class='btn btn-danger btn-sm' onclick='return confirmDelete()'>Delete</a>
-                            </td>
-                          </tr>";
-                }
-            } else {
-                echo "<tr><td colspan='7'>No records found</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
-</div>
-
-<!-- Pagination Controls -->
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
-        <?php
-        if ($current_page > 1) {
-            echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page - 1) . '&search=' . urlencode($search_term) . '">Previous</a></li>';
-        }
-
-        for ($page = 1; $page <= $total_pages; $page++) {
-            if ($page == $current_page) {
-                echo '<li class="page-item active"><a class="page-link" href="#">' . $page . '</a></li>';
-            } else {
-                echo '<li class="page-item"><a class="page-link" href="users.php?page=' . $page . '&search=' . urlencode($search_term) . '">' . $page . '</a></li>';
-            }
-        }
-
-        if ($current_page < $total_pages) {
-            echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page + 1) . '&search=' . urlencode($search_term) . '">Next</a></li>';
-        }
-        ?>
-    </ul>
-</nav>
-
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>User Type</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- PHP code to fetch data from the database -->
+                        <?php
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>
+                                        <td>{$row['user_name']}</td>
+                                        <td>{$row['email']}</td>
+                                        <td>{$row['user_type']}</td>
+                                        <td>{$row['status']}</td>
+                                        <td>
+                                            <button class='btn btn-sm btn-toggle-status'  onclick='return disable()' 
+                                                data-id='{$row['user_id']}' 
+                                                data-status='{$row['status']}' 
+                                                style='background-color: " . ($row['status'] === 'disable' ? 'green' : 'orange') . "; color: white;'>
+                                                " . ($row['status'] === 'disable' ? 'Enable' : 'Disable') . "
+                                            </button>
+                                            <a href='delete_user.php?id={$row['user_id']}' class='btn btn-danger btn-sm' onclick='return confirmDelete()'>Delete</a>
+                                        </td>
+                                      </tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='5'>No records found</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <?php
+                    // Previous page button
+                    if ($current_page > 1) {
+                        echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page - 1) . '">Previous</a></li>';
+                    }
+                    
+                    // Page number buttons
+                    for ($page = 1; $page <= $total_pages; $page++) {
+                        if ($page == $current_page) {
+                            echo '<li class="page-item active"><a class="page-link" href="#">' . $page . '</a></li>';
+                        } else {
+                            echo '<li class="page-item"><a class="page-link" href="users.php?page=' . $page . '">' . $page . '</a></li>';
+                        }
+                    }
+                    
+                    // Next page button
+                    if ($current_page < $total_pages) {
+                        echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page + 1) . '">Next</a></li>';
+                    }
+                    ?>
+                </ul>
+            </nav>
         </div>
     </div>
   </div>

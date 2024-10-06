@@ -150,6 +150,7 @@
             
     
 
+        </div>
 
         <!-- Modal Structure -->
         <div class="modal fade" id="csvModal" tabindex="-1" aria-labelledby="csvModalLabel" aria-hidden="true">
@@ -181,12 +182,6 @@
                         <input type="file" class="form-control-file" name="file" accept=".csv" required>
                     </div>
                     <button type="submit" name="upload" class="btn btn-success btn-block">Upload</button>
-                    
-                    <h4 class="text-center"><br>or</h4>
-                <!-- Download CSV template -->
-                <div class="mt-4 text-center">
-                    <a href="../download_functions/template.csv" class="btn btn-info">Download CSV Template</a>
-                </div>
                 </form>
 
                 <!-- Example CSV format table -->
@@ -229,7 +224,7 @@
                             <tbody>
                                 <tr>
                                     <td>John Doe</td>
-                                    <td>09-28-2023</td>
+                                    <td>2023-09-28</td>
                                     <td>Province A</td>
                                     <td>City B</td>
                                     <td>Barangay C</td>
@@ -239,7 +234,7 @@
                                     <td>Sample note</td>
                                     <td>Jane Doe</td>
                                     <td>Spouse</td>
-                                    <td>01-21-1990</td>
+                                    <td>1990-01-01</td>
                                     <td>33</td>
                                     <td>Female</td>
                                     <td>Married</td>

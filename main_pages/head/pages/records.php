@@ -233,11 +233,7 @@ if ($result->num_rows > 0) {
                 <td>" . htmlspecialchars($row["birthdate"]) . "</td>
                 <td>" . htmlspecialchars($row["age"]) . "</td>
                 <td>" . htmlspecialchars($row["address"]) . "</td>
-                <td>
-                    <button class='btn btn-primary' onclick='viewInfo(" . $row["member_id"] . ")'>View Info</button>
-                    <button class='btn btn-danger' onclick='deleteMember(" . $row["member_id"] . ")'>Delete</button>
-                </td>
-
+                <td><button class='btn btn-primary' onclick='viewInfo(" . $row["member_id"] . ")'>View Info</button></td>
               </tr>";
     }
     echo '</tbody></table>';
@@ -281,16 +277,6 @@ echo '</nav>';
         // Redirect to the member's detailed information page
         // You need to create this page and handle the memberId parameter
         window.location.href = 'member_info.php?member_id=' + memberId;
-    }
-    function viewInfo(member_id) {
-    window.location.href = 'household_members.php?member_id=' + member_id;
-}
-
-    function deleteMember(memberId) {
-        if (confirm("Are you sure you want to delete this record?")) {
-            // Redirect to the PHP script that handles deletion
-            window.location.href = 'delete_member.php?member_id=' + memberId;
-        }
     }
 </script>
 
