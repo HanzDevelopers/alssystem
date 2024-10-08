@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!empty($username) && !empty($password)) {
         // Making the username comparison case-sensitive
-        $stmt = $conn->prepare("SELECT * FROM user_tbl WHERE BINARY user_name = ? LIMIT 1");
+        $stmt = $conn->prepare("SELECT user_id, user_name, user_type, pass, district, status FROM user_tbl WHERE BINARY user_name = ? LIMIT 1");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -17,9 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user = $result->fetch_assoc();
 
             if (password_verify($password, $user['pass'])) {
+                // Setting session variables
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['username'] = $user['user_name'];
                 $_SESSION['user_type'] = $user['user_type'];
+                $_SESSION['district'] = $user['district']; // Include district in session
+
+                // Debug line to check if the district is correctly set
+                var_dump($_SESSION);
 
                 // Check user status
                 if (empty($user['status']) || strtolower($user['status']) == 'enable') {

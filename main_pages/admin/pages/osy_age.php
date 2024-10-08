@@ -111,7 +111,7 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Base query
 $query = "SELECT m.household_members AS name, m.age, l.barangay, l.sitio_zone_purok, l.housenumber, 
-                 b.highest_grade_completed, b.currently_attending_school, b.reasons_for_not_attending_school 
+                 b.highest_grade_completed, b.currently_attending_school, b.reasons_for_not_attending_school, b.status
           FROM members_tbl m
           JOIN location_tbl l ON m.record_id = l.record_id
           JOIN background_tbl b ON m.member_id = b.member_id
@@ -127,7 +127,7 @@ if (!empty($search)) {
     } else {
         $query .= " AND (m.age LIKE '%$search%' OR l.barangay LIKE '%$search%' 
                          OR LOWER(b.currently_attending_school) LIKE '%$search%' 
-                         OR LOWER(b.reasons_for_not_attending_school) LIKE '%$search%')";
+                         OR LOWER(b.status) LIKE '%$search%')";
     }
 } else {
     // If no search term is provided, filter by the current year
@@ -150,7 +150,7 @@ if (!empty($search)) {
     } else {
         $total_query .= " AND (m.age LIKE '%$search%' OR l.barangay LIKE '%$search%' 
                               OR LOWER(b.currently_attending_school) LIKE '%$search%' 
-                              OR LOWER(b.reasons_for_not_attending_school) LIKE '%$search%')";
+                              OR LOWER(b.status) LIKE '%$search%')";
     }
 } else {
     // If no search term is provided, filter by the current year
@@ -352,7 +352,7 @@ $result = $conn->query($query);
                                 <a href="district_population.php" class="sidebar-link">District Population</a>
                             </li>
                             <li class="sidebar-item active2">
-                                <a href="OSY_age.php" class="sidebar-link">OSY By Age</a>
+                                <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
@@ -542,6 +542,7 @@ $result = $conn->query($query);
             <th>Address</th>
             <th>Highest Grade/Year Completed</th>
             <th>Currently Attending School</th>
+            <th>Reasons For Not Attending School</th>
             <th>Interested in ALS</th>
         </tr>
         </thead>
@@ -555,7 +556,8 @@ $result = $conn->query($query);
                     <td><?php echo htmlspecialchars($row['sitio_zone_purok'] . ', ' . $row['housenumber']); ?></td>
                     <td><?php echo htmlspecialchars($row['highest_grade_completed']); ?></td>
                     <td><?php echo htmlspecialchars($row['currently_attending_school']); ?></td>
-                    <td><?php echo htmlspecialchars(stripos($row['reasons_for_not_attending_school'], 'ALS') !== false ? 'Yes' : 'No'); ?></td>
+                    <td><?php echo htmlspecialchars($row['reasons_for_not_attending_school']); ?></td>
+                    <td><?php echo htmlspecialchars($row['status']); ?></td>
                 </tr>
             <?php endwhile; ?>
         <?php else: ?>

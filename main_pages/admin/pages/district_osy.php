@@ -25,6 +25,7 @@ if (!empty($search)) {
 
 // SQL query with LIMIT and OFFSET for pagination, including search
 $query = "SELECT 
+            m.member_id,   /* Add this line to include member_id in the result set */
             CASE 
                 WHEN l.barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
                 WHEN l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') THEN 'District 2'
@@ -47,6 +48,7 @@ $query = "SELECT
             AND m.age BETWEEN 15 AND 30
             $search_query
           LIMIT $limit OFFSET $offset";
+
 
 $result = $conn->query($query);
 
@@ -332,7 +334,7 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
                                 <a href="district_population.php" class="sidebar-link">District Population</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="OSY_age.php" class="sidebar-link">OSY By Age</a>
+                                <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
@@ -511,18 +513,23 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
             <th>Sitio/Zone/Purok</th>
             <th>Household Members</th>
             <th>Estimated Family Income</th>
-            <th>Household Info</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         <?php while ($row = $result->fetch_assoc()): ?>
         <tr>
-            <td><?php echo $row['district']; ?></td>
-            <td><?php echo $row['housenumber']; ?></td>
-            <td><?php echo $row['sitio_zone_purok']; ?></td>
-            <td><?php echo $row['household_members']; ?></td>
-            <td><?php echo $row['estimated_family_income']; ?></td>
-            <td><button class="btn btn-info">View Household Info</button></td>
+            <td><?php echo htmlspecialchars($row['district']); ?></td>
+            <td><?php echo htmlspecialchars($row['housenumber']); ?></td>
+            <td><?php echo htmlspecialchars($row['sitio_zone_purok']); ?></td>
+            <td><?php echo htmlspecialchars($row['household_members']); ?></td>
+            <td><?php echo htmlspecialchars($row['estimated_family_income']); ?></td>
+            <td>
+                <!-- View Info Button -->
+                <button class='btn btn-primary view-info-btn' data-member-id='<?php echo $row["member_id"]; ?>'>View Info</button>
+                <!-- Delete Button -->
+                <button class='btn btn-danger delete-member-btn' data-member-id='<?php echo $row["member_id"]; ?>'>Delete</button>
+            </td>
         </tr>
         <?php endwhile; ?>
     </tbody>
@@ -538,8 +545,9 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
         <?php endfor; ?>
     </ul>
 </nav>
-</div>
 
+
+</div>
 </div>
 <!-- jQuery CDN - Slim version (=without AJAX) -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -562,6 +570,34 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
             });
         });
     </script>
+
+<!-- JavaScript to handle the View Info button click event -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const viewInfoButtons = document.querySelectorAll('.view-info-btn');
+        
+        viewInfoButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const memberId = this.getAttribute('data-member-id');
+                window.location.href = 'district_osy_household_members.php?member_id=' + memberId;
+            });
+        });
+    });
+
+    // JavaScript function to handle the Delete button
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteButtons = document.querySelectorAll('.delete-member-btn');
+        
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const memberId = this.getAttribute('data-member-id');
+                if (confirm("Are you sure you want to delete this record?")) {
+                    window.location.href = 'district_osy_delete_member.php?member_id=' + memberId;
+                }
+            });
+        });
+    });
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>

@@ -409,7 +409,7 @@ if (isset($_POST['download'])) {
                                 <a href="district_population.php" class="sidebar-link">District Population</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="OSY_age.php" class="sidebar-link">OSY By Age</a>
+                                <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>

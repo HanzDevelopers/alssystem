@@ -80,7 +80,6 @@ include '../api/fetch_summary_data.php';
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
-
 /* Margin below each card */
 .mb-3 {
     margin-bottom: 1.5rem;
@@ -207,7 +206,7 @@ $conn->close();
                                 <a href="district_population.php" class="sidebar-link">District Population</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="OSY_age.php" class="sidebar-link">OSY By Age</a>
+                                <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>

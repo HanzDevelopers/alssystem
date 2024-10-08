@@ -44,6 +44,10 @@ if ($result->num_rows > 0) {
                 <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>" required>
             </div>
             <div class="mb-3">
+                <label for="phone_number" class="form-label">Phone Number</label>
+                <input type="text" class="form-control" id="phone_number" name="phone_number" value="<?php echo htmlspecialchars($row['phone_number']); ?>" required>
+            </div>
+            <div class="mb-3">
                 <label for="pass" class="form-label">Password</label>
                 <div class="input-group">
                     <input type="password" class="form-control" id="pass" name="pass" placeholder="Enter new password if you want to change it">
@@ -59,9 +63,10 @@ if ($result->num_rows > 0) {
         $user_id = intval($_POST['user_id']);
         $user_name = $conn->real_escape_string($_POST['user_name']);
         $email = $conn->real_escape_string($_POST['email']);
+        $phone_number = $conn->real_escape_string($_POST['phone_number']); // New line for phone number
 
         // Update SQL query
-        $sql = "UPDATE user_tbl SET user_name='$user_name', email='$email'";
+        $sql = "UPDATE user_tbl SET user_name='$user_name', email='$email', phone_number='$phone_number'"; // Updated query to include phone_number
 
         // Update password if provided
         if (!empty($_POST['pass'])) {
