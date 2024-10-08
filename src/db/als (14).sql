@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2024 at 11:57 PM
+-- Generation Time: Oct 09, 2024 at 12:37 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -64,8 +64,8 @@ INSERT INTO `background_tbl` (`background_id`, `member_id`, `highest_grade_compl
 (68, 68, 'Elementary Graduate', 'No', 'N/A', 'N/A', 'Yes', 'Yes', 'Housekeeper', 'No'),
 (69, 69, 'Grade 11', 'Yes', 'Grade 12', 'N/A', 'Yes', 'No', 'N/A', 'No'),
 (70, 70, 'Grade 8', 'No', 'N/A', 'N/A', 'Yes', 'No', 'N/A', 'No'),
-(71, 71, 'ALS Grade 11', 'Yes', 'ALS Grade 12', 'N/A', 'Yes', 'No', 'N/A', 'Yes'),
-(72, 72, 'Grade 3', 'Yes', 'Grade 4', 'N/A', 'Yes', 'No', 'N/A', 'No'),
+(71, 71, 'ALS Grade 11', 'No', 'ALS Grade 12', 'N/A', 'Yes', 'No', 'N/A', 'Yes'),
+(72, 72, 'Grade 3', 'No', 'Grade 4', 'N/A', 'Yes', 'No', 'N/A', 'No'),
 (73, 73, 'Grade 8', 'No', 'N/A', 'N/A', 'Yes', 'No', 'N/A', 'No'),
 (74, 74, 'ALS Grade 11', 'Yes', 'ALS Grade 12', 'N/A', 'Yes', 'No', 'N/A', 'Yes'),
 (75, 75, 'Grade 3', 'Yes', 'Grade 4', 'N/A', 'Yes', 'No', 'N/A', 'No'),
@@ -74,7 +74,6 @@ INSERT INTO `background_tbl` (`background_id`, `member_id`, `highest_grade_compl
 (78, 78, 'Grade 9 ', 'No', 'Grade 10', 'Discrimination', 'Yes', 'N/A', 'N/A', 'Yes'),
 (79, 79, 'College Grad', 'no', 'n/a', 'n/a', 'Yes', 'Police ', 'Police', 'No'),
 (80, 80, '3rd Year College', 'Yes', '4th Year College ', 'n/a', 'Yes', 'Housewife', 'Housewife', 'No'),
-(81, 81, 'Grade 9 ', 'No', 'Grade 10', 'Discrimination', 'Yes', 'N/A', 'N/A', 'Yes'),
 (82, 82, 'Grade 10', 'Yes', 'Grade 11', 'Financial problem ', 'Yes', 'Maid', 'Maid', 'Yes'),
 (83, 83, 'Grade 10', 'Yes', 'Grade 11', 'Financial problem ', 'Yes', 'Maid', 'Maid', 'Yes'),
 (84, 84, 'Elementary Level', 'no', 'n/a', 'Family Problem', 'No', 'farmer', 'Farmer', 'Yes'),
@@ -101,13 +100,9 @@ INSERT INTO `background_tbl` (`background_id`, `member_id`, `highest_grade_compl
 (110, 110, 'College grad', 'No', 'N/A', 'N/A', 'Yes', 'Engineer', 'Construction', 'No'),
 (111, 111, '4th year college', 'No', 'N/A', 'N/A', 'Yes', 'N/A', 'N/A', 'Yes'),
 (112, 112, '1st year college', 'Yes', '2nd year college', 'N/A', 'Yes', 'N/A', 'N/A', 'No'),
-(113, 113, 'Grade 9', 'Yes', 'Grade 10', 'N/A', 'Yes', 'N/A', 'N/A', 'Yes'),
+(113, 113, 'Grade 9', 'No', 'Grade 10', 'N/A', 'Yes', 'N/A', 'N/A', 'Yes'),
 (114, 114, '3rd year college', 'yes', '4th year college', 'n/a', 'yes', 'n/a', 'n/a', 'no'),
 (115, 115, '1st year college', 'yes', '2nd year college', 'n/a', 'yes', 'n/a', 'n/a', 'no'),
-(116, 116, '3th year college', 'No', '4th year', 'N/A', 'Yes', 'N/A', 'N/A', 'Yes'),
-(117, 117, '3rd year college', 'no', 'n/a', 'n/a', 'yes', 'n/a', 'n/a', 'yes'),
-(118, 118, '3rd year college', 'no', 'n/a', 'n/a', 'yes', 'n/a', 'n/a', 'yes'),
-(120, 120, '3rd year college', 'yes', 'n/a', 'n/a', 'yes', 'n/a', 'n/a', 'yes'),
 (125, 125, '3th year college', 'Yes', '4th year', 'N/A', 'Yes', 'N/A', 'N/A', 'No');
 
 -- --------------------------------------------------------
@@ -210,9 +205,9 @@ INSERT INTO `members_tbl` (`member_id`, `record_id`, `household_members`, `relat
 (67, 26, 'Wilson Mag-aso', 'Father', '1969-07-17', 55, 'Male', 'Married', 'N/A', 'N', 'Roman Catholic'),
 (68, 26, 'Jellie Mag-aso', 'Mother', '1976-08-19', 48, 'Female', 'Married', 'N/A', 'N/A', 'Roman Catholic'),
 (69, 26, 'Wilson Mag-aso Jr. ', 'Son', '2004-02-19', 20, 'Male', 'Single', 'N/A', 'N/A', 'Roman Catholic'),
-(70, 27, 'Arlo Abejuela', 'Father', '1988-04-12', 36, 'Male', 'Married', 'N/A', 'N/A', 'Roman Catholic'),
-(71, 27, 'Christine Abejuela', 'Mother', '1993-10-31', 31, 'Female', 'Married', 'N/A', 'N/A', 'Roman Catholic'),
-(72, 27, 'Inigo Abejuela', 'Son', '2014-03-21', 10, 'Male', 'Single', 'N/A', 'N/A', 'Roman Catholic'),
+(70, 27, 'Arlo Abejuela', 'Father', '1988-04-12', 36, 'Male', 'Married', 'Yes', 'N/A', 'Roman Catholic'),
+(71, 27, 'Christine Abejuela', 'Mother', '1993-10-31', 31, 'Female', 'Married', 'Yes', 'N/A', 'Roman Catholic'),
+(72, 27, 'Inigo Abejuela', 'Son', '2014-03-21', 10, 'Male', 'Single', 'Yes', 'N/A', 'Roman Catholic'),
 (73, 28, 'Arlo Abejuela', 'Father', '1988-04-12', 36, 'Male', 'Married', 'N/A', 'N/A', 'Roman Catholic'),
 (74, 28, 'Christine Abejuela', 'Mother', '1993-10-31', 31, 'Female', 'Married', 'N/A', 'N/A', 'Roman Catholic'),
 (75, 28, 'Inigo Abejuela', 'Son', '2014-03-21', 10, 'Male', 'Single', 'N/A', 'N/A', 'Roman Catholic'),
@@ -221,7 +216,6 @@ INSERT INTO `members_tbl` (`member_id`, `record_id`, `household_members`, `relat
 (78, 29, 'Vina Cinco', 'Daughter ', '2000-05-04', 24, 'Female', 'Single', 'N/A', 'Bukidnon', 'Baptist'),
 (79, 30, 'Warvin Cinco', 'Father ', '1976-02-19', 48, 'Male', 'Married', 'N/A', 'Bukidnon', 'Baptist'),
 (80, 30, 'Flor T. Cinco', 'Mother', '1978-12-19', 46, 'Female', 'Married', 'N/A', 'Bukidnon', 'Baptist'),
-(81, 30, 'Vina Cinco', 'Daughter ', '2000-05-04', 24, 'Female', 'Single', 'N/A', 'Bukidnon', 'Baptist'),
 (82, 31, 'lalay', 'N/A', '2024-09-19', 24, 'F', 'Single ', 'N/A', 'Filipino ', 'RC'),
 (83, 32, 'lalay', 'N/A', '2024-09-19', 24, 'F', 'Single ', 'N/A', 'Filipino ', 'RC'),
 (84, 33, 'Onel Turay', 'Father ', '1993-01-26', 31, 'Male', 'Married', 'N/A', 'Bukidnon', 'Catholic'),
@@ -244,17 +238,13 @@ INSERT INTO `members_tbl` (`member_id`, `record_id`, `household_members`, `relat
 (101, 42, 'Jane Garcia', 'Sister', '2001-05-17', 23, 'F', 'Single ', 'No', 'Talaandig ', 'RC'),
 (102, 43, 'Jenny Beno', 'Sister ', '1997-09-21', 27, 'F', 'Maried', 'No', 'Visaya', 'Rc'),
 (103, 44, 'Jenny Beno', 'Sister ', '1997-09-21', 27, 'F', 'Maried', 'No', 'Visaya', 'Rc'),
-(109, 46, 'Liam Bennett', 'Father', '1982-03-14', 42, 'Male', 'married', 'N/A', 'lomad', 'R-Catholic'),
-(110, 46, 'Evelyn Harper Bennett', 'Mother', '1984-07-22', 40, 'FEMALE', 'married', 'N/A', 'lomad', 'R-Catholic'),
-(111, 46, 'Isabella Bennett', 'Daughter', '2003-11-05', 20, 'FEMALE', 'single', 'N/A', 'lomad', 'R-Catholic'),
-(112, 46, 'Noah Bennett', 'Son', '2006-04-28', 18, 'Male', 'single', 'N/A', 'lomad', 'R-Catholic'),
-(113, 46, 'Sophia Bennett', 'Daughter', '2009-09-16', 14, 'FEMALE', 'single', 'N/A', 'lomad', 'R-Catholic'),
+(109, 46, 'Liam Bennett', 'Father', '1982-03-14', 42, 'Male', 'Single', 'Yes', 'lomad', 'R-Catholic'),
+(110, 46, 'Evelyn Harper Bennett', 'Mother', '1984-07-22', 40, 'Male', 'Single', 'Yes', 'lomad', 'R-Catholic'),
+(111, 46, 'Isabella Bennett', 'Daughter', '2003-11-05', 20, 'Male', 'Single', 'Yes', 'lomad', 'R-Catholic'),
+(112, 46, 'Noah Bennett', 'Son', '2006-04-28', 18, 'Male', 'Single', 'Yes', 'lomad', 'R-Catholic'),
+(113, 46, 'Sophia Bennett', 'Daughter', '2007-01-16', 17, 'Male', 'Single', 'Yes', 'lomad', 'R-Catholic'),
 (114, 47, 'Bimbo', 'son', '2024-09-25', 19, 'male', 'single', 'None', 'manobo', 'r-catholic'),
 (115, 47, 'sample', 'son', '2024-09-25', 26, 'male', 'single', 'None', 'manobo', 'r-catholic'),
-(116, 48, 'Merlinda Magno', 'DAUGTHER', '2024-09-01', 26, 'FEMALE', 'SINGLE', 'N/A', 'Manolo Fortich', 'R-Catholic'),
-(117, 49, 'Bimbo', 'son', '2024-09-25', 23, 'male', 'single', 'None', 'manobo', 'r-catholic'),
-(118, 49, 'sample', 'son', '2024-09-25', 18, 'male', 'single', 'None', 'manobo', 'r-catholic'),
-(120, 49, 'Bimbo1', 'son', '2024-09-25', 23, 'male', 'single', 'None', 'manobo', 'r-catholic'),
 (125, 54, 'Bimbo Escodero', 'na', '2001-08-27', 23, 'MALE', 'SINGLE', 'N/A', 'Manolo Fortich', 'R-Catholic');
 
 -- --------------------------------------------------------
@@ -285,7 +275,26 @@ INSERT INTO `user_log` (`log_id`, `user_id`, `user_name`, `login_date`, `logout_
 (162, 2, 'admin Bimbo', '2024-10-05 17:33:55', NULL),
 (163, 2, 'admin Bimbo', '2024-10-06 12:12:06', '2024-10-06 18:27:24'),
 (164, 41, 'head', '2024-10-06 12:27:32', '2024-10-06 18:28:19'),
-(165, 2, 'admin Bimbo', '2024-10-06 12:28:27', NULL);
+(165, 2, 'admin Bimbo', '2024-10-06 12:28:27', NULL),
+(166, 2, 'admin Bimbo', '2024-10-08 03:59:13', '2024-10-08 11:54:45'),
+(167, 41, 'head', '2024-10-08 05:54:52', NULL),
+(168, 2, 'admin Bimbo', '2024-10-08 05:56:58', NULL),
+(170, 50, 'head1', '2024-10-08 07:19:06', NULL),
+(171, 2, 'admin Bimbo', '2024-10-08 14:17:56', '2024-10-08 20:18:03'),
+(172, 41, 'head', '2024-10-08 14:18:10', NULL),
+(173, 41, 'head', '2024-10-08 14:25:16', '2024-10-08 21:46:58'),
+(174, 41, 'head', '2024-10-08 14:30:21', '2024-10-08 21:14:48'),
+(175, 41, 'head', '2024-10-08 15:15:16', '2024-10-08 21:22:23'),
+(176, 42, 'teacher', '2024-10-08 15:23:01', '2024-10-08 21:25:51'),
+(177, 42, 'teacher', '2024-10-08 15:26:03', NULL),
+(178, 42, 'teacher', '2024-10-08 15:26:48', '2024-10-08 21:32:26'),
+(179, 2, 'admin Bimbo', '2024-10-08 15:30:56', NULL),
+(181, 51, 'user', '2024-10-08 15:34:31', NULL),
+(182, 41, 'head', '2024-10-08 15:47:04', '2024-10-09 01:32:41'),
+(183, 41, 'head', '2024-10-08 19:32:48', '2024-10-09 01:33:43'),
+(184, 41, 'head', '2024-10-08 19:33:49', '2024-10-09 01:48:31'),
+(185, 41, 'head', '2024-10-08 19:48:36', '2024-10-09 05:33:22'),
+(186, 41, 'head', '2024-10-08 23:33:27', NULL);
 
 -- --------------------------------------------------------
 
@@ -309,10 +318,12 @@ CREATE TABLE `user_tbl` (
 --
 
 INSERT INTO `user_tbl` (`user_id`, `user_name`, `email`, `phone_number`, `pass`, `district`, `user_type`, `status`) VALUES
-(2, 'admin Bimbo', 'admin@gmail.com', '0', '$2y$10$TWyAZbbDQcms2lAoXPvqzOsotVJHvS/Cc9Ef5gi1MxrnXIhMqEHQm', '1', 'supervisor', ''),
-(41, 'head', 'head@gmail.com', '0', '$2y$10$Pkug3hdG5k1N3ulIyCc.R.0HW2Jq9b3rMArtcuEiz4frPYHU1r26K', 'District 1', 'coordinator', ''),
+(2, 'admin Bimbo', 'admin@gmail.com', '0556282485', '$2y$10$TWyAZbbDQcms2lAoXPvqzOsotVJHvS/Cc9Ef5gi1MxrnXIhMqEHQm', '1', 'supervisor', ''),
+(41, 'head', 'head@gmail.com', '0', '$2y$10$Pkug3hdG5k1N3ulIyCc.R.0HW2Jq9b3rMArtcuEiz4frPYHU1r26K', 'District 1', 'coordinator', 'enable'),
 (42, 'teacher', 'teacher@gmail.com', '0', '$2y$10$fSy0.UXmf0caJjNZT2I/MOj4yWApbWGuGFYu986fDvNFAsnQFLucm', 'District 2', 'volunteer', ''),
-(49, 'user', 'user@gmail.com', '09123456789', '$2y$10$5ckh2AJaugfvGUc4Us/Cv.rAmfPoEMZ9ly4lxrz6AJCyHe/ZU4w8u', 'District 4', 'Coordinator', '');
+(50, 'head1', 'bimbovillaganas10@gmail.com', '09999999999', '$2y$10$.q5BkZJQDpUvhxQFsFMZ6.pOwTFAG/r1fIxfxyDi4n2WKGUBVXdla', 'District 3', 'Coordinator', ''),
+(51, 'user', 'user@gmail.com', '09123456789', '$2y$10$t5s1OamaFxb/lfKweuNyQeNYAUo/GOXgxDapPsMdj2LNqFv3ZMa22', 'District 1', 'volunteer', 'enable'),
+(52, 'vol', 'vol@gmail.com', '09912122111', '$2y$10$GcEwMYw9YTUSS7G01GfFH.bs4abGXGwoXs3xD/HeNCtUlfxplCoNS', 'District 1', 'Volunteer', 'enable');
 
 --
 -- Indexes for dumped tables
@@ -378,13 +389,13 @@ ALTER TABLE `members_tbl`
 -- AUTO_INCREMENT for table `user_log`
 --
 ALTER TABLE `user_log`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=166;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=187;
 
 --
 -- AUTO_INCREMENT for table `user_tbl`
 --
 ALTER TABLE `user_tbl`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- Constraints for dumped tables
