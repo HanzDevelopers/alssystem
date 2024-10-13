@@ -12,7 +12,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : 'csv';
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Default query
-$export_query = "SELECT m.household_members AS name, m.age, l.barangay, l.sitio_zone_purok, l.housenumber, 
+$export_query = "SELECT m.household_members AS name, m.age, m.gender, l.barangay, l.sitio_zone_purok, l.housenumber, 
                         b.highest_grade_completed, b.currently_attending_school, b.reasons_for_not_attending_school 
                  FROM members_tbl m
                  JOIN location_tbl l ON m.record_id = l.record_id
@@ -49,13 +49,14 @@ if ($result->num_rows > 0) {
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="members_data.csv"');
         $output = fopen('php://output', 'w');
-        fputcsv($output, ['Name', 'Age', 'District', 'Address', 'Highest Grade/Year Completed', 'Currently Attending School', 'Interested in ALS']);
+        fputcsv($output, ['Name', 'Age', 'Gender', 'District', 'Address', 'Highest Grade/Year Completed', 'Currently Attending School', 'Interested in ALS']);
         
         while ($row = $result->fetch_assoc()) {
             $district = isset($district_mapping[$row['barangay']]) ? $district_mapping[$row['barangay']] : 'Unknown';
             fputcsv($output, [
                 $row['name'], 
-                $row['age'], 
+                $row['age'],
+                $row['gender'], 
                 $district, 
                 $row['sitio_zone_purok'] . ', ' . $row['housenumber'], 
                 $row['highest_grade_completed'], 
@@ -71,13 +72,14 @@ if ($result->num_rows > 0) {
         
         // Begin outputting the Excel file
         echo "<table>";
-        echo "<tr><th>Name</th><th>Age</th><th>District</th><th>Address</th><th>Highest Grade/Year Completed</th><th>Currently Attending School</th><th>Interested in ALS</th></tr>";
+        echo "<tr><th>Name</th><th>Age</th><th>Gender</th><th>District</th><th>Address</th><th>Highest Grade/Year Completed</th><th>Currently Attending School</th><th>Interested in ALS</th></tr>";
         
         while ($row = $result->fetch_assoc()) {
             $district = isset($district_mapping[$row['barangay']]) ? $district_mapping[$row['barangay']] : 'Unknown';
             echo "<tr>
                     <td>" . htmlspecialchars($row['name']) . "</td>
                     <td>" . htmlspecialchars($row['age']) . "</td>
+                    <td>" . htmlspecialchars($row['gender']) . "</td>
                     <td>" . htmlspecialchars($district) . "</td>
                     <td>" . htmlspecialchars($row['sitio_zone_purok'] . ', ' . $row['housenumber']) . "</td>
                     <td>" . htmlspecialchars($row['highest_grade_completed']) . "</td>

@@ -4,7 +4,7 @@
     height: 450px; /* Set a fixed height for consistency */
     width: 100%; /* Set to 100% of the column or container */
     max-width: 600px; /* Adjust this value to control the card's width */
-    margin-top: 70px;
+    margin-top: 00px;
     display: flex;
     flex-direction: column;
     

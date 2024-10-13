@@ -34,15 +34,17 @@ function getSummaryData($conn) {
     ";
     $totalInterestedInAls = getCount($conn, $interestedInAlsQuery);
 
-    // Number of persons with disability (Yes/yes)
-    $personsWithDisabilityQuery = "
-        SELECT COUNT(*) AS count
-        FROM members_tbl m
-        JOIN location_tbl l ON m.record_id = l.record_id
-        WHERE m.person_with_disability IN ('YES', 'Yes', 'yes')
-        AND YEAR(l.date_encoded) = YEAR(CURDATE());
-    ";
-    $totalPersonsWithDisability = getCount($conn, $personsWithDisabilityQuery);
+   // Number of persons with disability (excluding N/A)
+   $personsWithDisabilityQuery = "
+   SELECT COUNT(*) AS count
+   FROM members_tbl m
+   JOIN location_tbl l ON m.record_id = l.record_id
+   WHERE LOWER(m.person_with_disability) NOT IN ('n/a', 'no', 'none')
+   AND YEAR(l.date_encoded) = YEAR(CURDATE());
+   ";
+   
+   $totalPersonsWithDisability = getCount($conn, $personsWithDisabilityQuery);
+   
 
     // Number of people with no occupation (NO/no)
     $noOccupationQuery = "

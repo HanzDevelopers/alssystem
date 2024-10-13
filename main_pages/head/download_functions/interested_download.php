@@ -1,34 +1,32 @@
-<?php 
+<?php
 include '../../../src/db/db_connection.php';
-session_start();
-
-// Check if the user is logged in and retrieve the user's district
-if (!isset($_SESSION['username']) || !isset($_SESSION['district'])) {
-    header('Location: ../../../index.php'); // Redirect to login if not authenticated
-    exit();
-}
-
-$logged_in_district = $_SESSION['district'];
 
 // District Mapping
 $district_mapping = [
+    // District 1
     'Tankulan' => 'District 1',
     'Diklum' => 'District 1',
     'San Miguel' => 'District 1',
     'Ticala' => 'District 1',
     'Lingion' => 'District 1',
+
+    // District 2
     'Alae' => 'District 2',
     'Damilag' => 'District 2',
     'Mambatangan' => 'District 2',
     'Mantibugao' => 'District 2',
     'Minsuro' => 'District 2',
     'Lunocan' => 'District 2',
+
+    // District 3
     'Agusan canyon' => 'District 3',
     'Mampayag' => 'District 3',
     'Dahilayan' => 'District 3',
     'Sankanan' => 'District 3',
     'Kalugmanan' => 'District 3',
     'Lindaban' => 'District 3',
+
+    // District 4
     'Dalirig' => 'District 4',
     'Maluko' => 'District 4',
     'Santiago' => 'District 4',
@@ -39,16 +37,7 @@ $district_mapping = [
 $search_query = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
 $format = isset($_GET['format']) ? $_GET['format'] : '';
 
-// Prepare the barangay condition based on the logged-in user's district
-$barangay_conditions = [];
-foreach ($district_mapping as $barangay => $mapped_district) {
-    if ($mapped_district === $logged_in_district) {
-        $barangay_conditions[] = "location_tbl.barangay = '" . mysqli_real_escape_string($conn, $barangay) . "'";
-    }
-}
-$barangay_condition_sql = implode(' OR ', $barangay_conditions);
-
-// Base SQL query for fetching the data
+// Fetch data based on the search query and order by age
 $sql = "SELECT 
             members_tbl.household_members AS Name, 
             members_tbl.age, 
@@ -60,21 +49,14 @@ $sql = "SELECT
         FROM members_tbl
         JOIN background_tbl ON members_tbl.member_id = background_tbl.member_id
         JOIN location_tbl ON members_tbl.record_id = location_tbl.record_id
-        AND background_tbl.status IN ('Yes', 'YES', 'yes')
+        WHERE members_tbl.age BETWEEN 15 AND 30
+        AND background_tbl.currently_attending_school IN ('No', 'no', 'NO')
+        AND background_tbl.status IN ('Yes', 'YES', 'yes')  /* Filter for Interested in ALS */
         AND YEAR(location_tbl.date_encoded) = YEAR(CURDATE())
-        AND ($barangay_condition_sql)";
-
-// Fetch data based on the search query or all data if no search query is provided
-if (empty($search_query)) {
-    // No search query provided; fetch all data for the logged-in district
-    $sql .= " ORDER BY members_tbl.age ASC";
-} else {
-    // Search query provided; fetch filtered data
-    $sql .= " AND (members_tbl.household_members LIKE '%$search_query%' 
-                OR members_tbl.age LIKE '%$search_query%' 
-                OR location_tbl.barangay LIKE '%$search_query%')
-              ORDER BY members_tbl.age ASC";
-}
+        AND (members_tbl.household_members LIKE '%$search_query%' 
+            OR members_tbl.age LIKE '%$search_query%' 
+            OR location_tbl.barangay LIKE '%$search_query%')
+        ORDER BY members_tbl.age ASC";
 
 $result = mysqli_query($conn, $sql);
 

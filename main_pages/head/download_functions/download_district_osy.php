@@ -1,30 +1,6 @@
 <?php
 include '../../../src/db/db_connection.php';
 
-// Start the session to access the logged-in user's district
-session_start();
-if (!isset($_SESSION['district'])) {
-    die("District not set in session.");
-}
-
-// Get the logged-in user's district
-$logged_in_district = $_SESSION['district'];
-
-// Define the barangay to district mapping
-$district_mapping = [
-    'District 1' => ['Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion'],
-    'District 2' => ['Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan'],
-    'District 3' => ['Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban'],
-    'District 4' => ['Dalirig', 'Maluko', 'Santiago', 'Guilang2'],
-];
-
-// Create a condition based on the district mapping
-$barangay_conditions = [];
-foreach ($district_mapping[$logged_in_district] as $barangay) {
-    $barangay_conditions[] = "l.barangay = '" . mysqli_real_escape_string($conn, $barangay) . "'";
-}
-$barangay_condition_sql = implode(' OR ', $barangay_conditions);
-
 // Get the file type (Excel or CSV)
 $file_type = isset($_GET['type']) ? $_GET['type'] : 'csv';
 $search = isset($_GET['search']) ? $_GET['search'] : '';
@@ -32,19 +8,19 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 // Construct search query
 $search_query = '';
 if (!empty($search)) {
-    $search_query = " AND (m.household_members LIKE '%" . mysqli_real_escape_string($conn, $search) . "%' 
-                        OR l.housenumber LIKE '%" . mysqli_real_escape_string($conn, $search) . "%' 
-                        OR l.date_encoded LIKE '%" . mysqli_real_escape_string($conn, $search) . "%'
+    $search_query = " AND (m.household_members LIKE '%$search%' 
+                        OR l.housenumber LIKE '%$search%' 
+                        OR l.date_encoded LIKE '%$search%'
                         OR (CASE 
                             WHEN l.barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
                             WHEN l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') THEN 'District 2'
                             WHEN l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') THEN 'District 3'
                             WHEN l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') THEN 'District 4'
                             ELSE 'Unknown District'
-                        END) LIKE '%" . mysqli_real_escape_string($conn, $search) . "%')";
+                        END) LIKE '%$search%')";
 }
 
-// Query to get filtered data based on the user's district
+// Query to get filtered data
 $query = "SELECT 
             CASE 
                 WHEN l.barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
@@ -66,7 +42,6 @@ $query = "SELECT
           WHERE 
             b.currently_attending_school IN ('No', 'no', 'NO')
             AND m.age BETWEEN 15 AND 30
-            AND ($barangay_condition_sql)
             $search_query";
 
 $result = $conn->query($query);

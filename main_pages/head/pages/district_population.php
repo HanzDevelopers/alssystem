@@ -1,55 +1,25 @@
 <?php
 include '../../../src/db/db_connection.php';
-
-// Start the session to access the logged-in user's district
-session_start();
-if (!isset($_SESSION['district'])) {
-    die("District not set in session.");
-}
-
-// Get the logged-in user's district
-$logged_in_district = $_SESSION['district'];
-
-// Define the barangay to district mapping
-$district_mapping = [
-    'District 1' => ['Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion'],
-    'District 2' => ['Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan'],
-    'District 3' => ['Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban'],
-    'District 4' => ['Dalirig', 'Maluko', 'Santiago', 'Guilang2'],
-];
-
-// Create a condition to filter barangays based on the user's district
-$barangay_conditions = [];
-if (array_key_exists($logged_in_district, $district_mapping)) {
-    foreach ($district_mapping[$logged_in_district] as $barangay) {
-        $barangay_conditions[] = "l.barangay = '" . mysqli_real_escape_string($conn, $barangay) . "'";
-    }
-}
-
-$barangay_condition_sql = implode(' OR ', $barangay_conditions);
-
 // Get the current year
 $current_year = date("Y");
 
-// Query to get total number of household members for the current year for the logged-in user's district
+// Query to get total number of household members for the current year
 $total_population_query = "
     SELECT COUNT(*) AS total_population
     FROM members_tbl m
     JOIN location_tbl l ON l.record_id = m.record_id
-    WHERE YEAR(l.date_encoded) = $current_year
-    AND ($barangay_condition_sql)";
+    WHERE YEAR(l.date_encoded) = $current_year";
 $total_population_result = $conn->query($total_population_query);
 $total_population = $total_population_result->fetch_assoc()['total_population'];
 
-// Query to get total number of OSY for the current year for the logged-in user's district
+// Query to get total number of OSY for the current year regardless of district
 $total_osy_query = "SELECT COUNT(*) AS total_osy 
                     FROM members_tbl m 
                     JOIN background_tbl b ON m.member_id = b.member_id 
                     JOIN location_tbl l ON l.record_id = m.record_id
                     WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
                     AND m.age BETWEEN 15 AND 30
-                    AND YEAR(l.date_encoded) = $current_year
-                    AND ($barangay_condition_sql)";
+                    AND YEAR(l.date_encoded) = $current_year";
 $total_osy_result = $conn->query($total_osy_query);
 $total_osy = $total_osy_result->fetch_assoc()['total_osy'];
 
@@ -67,7 +37,6 @@ $district_household_query = "
     FROM members_tbl m
     JOIN location_tbl l ON l.record_id = m.record_id
     WHERE YEAR(l.date_encoded) = $current_year
-    AND ($barangay_condition_sql)
     GROUP BY district";
 
 $district_household_result = $conn->query($district_household_query);
@@ -76,22 +45,23 @@ while ($row = $district_household_result->fetch_assoc()) {
     $district_data[$row['district']] = $row['total_household_members'];
 }
 
-// Query to get total number of males and females for the current year for the logged-in user's district
+
+// Query to get total number of males and females for the current year (case-insensitive, including 'm' and 'f')
 $gender_osy_query = "SELECT 
                         SUM(CASE WHEN LOWER(m.gender) IN ('male', 'm') THEN 1 ELSE 0 END) AS total_males, 
                         SUM(CASE WHEN LOWER(m.gender) IN ('female', 'f') THEN 1 ELSE 0 END) AS total_females
                      FROM members_tbl m
                      JOIN background_tbl b ON m.member_id = b.member_id
                      JOIN location_tbl l ON l.record_id = m.record_id
-                     WHERE YEAR(l.date_encoded) = $current_year
-                     AND ($barangay_condition_sql)";
+                     WHERE YEAR(l.date_encoded) = $current_year";
 
 $gender_osy_result = $conn->query($gender_osy_query);
 $gender_osy_data = $gender_osy_result->fetch_assoc();
 $total_males = $gender_osy_data['total_males'];
 $total_females = $gender_osy_data['total_females'];
 
-// Query to count records with undefined or invalid gender for the current year for the logged-in user's district
+
+// Query to count records with undefined or invalid gender (excluding 'Male', 'Female', 'm', 'f')
 $undefined_gender_query = "SELECT COUNT(*) AS undefined_gender_count 
                            FROM members_tbl m
                            JOIN background_tbl b ON m.member_id = b.member_id
@@ -99,44 +69,110 @@ $undefined_gender_query = "SELECT COUNT(*) AS undefined_gender_count
                            WHERE b.currently_attending_school IN ('No', 'no', 'NO') 
                            AND m.age BETWEEN 15 AND 30
                            AND YEAR(l.date_encoded) = $current_year
-                           AND ($barangay_condition_sql)
                            AND LOWER(m.gender) NOT IN ('male', 'female', 'm', 'f')";
 
 $undefined_gender_result = $conn->query($undefined_gender_query);
 $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gender_count'];
+
 ?>
 
 <?php
 // District mapping
 $districts = [
     'Tankulan' => 'District 1',
+    'Tankulan ' => 'District 1',
+    'tankulan' => 'District 1',
+    'tankulan ' => 'District 1',
     'Diklum' => 'District 1',
+    'Diklum ' => 'District 1',
+    'diklum' => 'District 1',
+    'diklum ' => 'District 1',
     'San Miguel' => 'District 1',
+    'San Miguel ' => 'District 1',
+    'san Miguel' => 'District 1',
+    'san Miguel ' => 'District 1',
+    'san miguel' => 'District 1',
+    'san miguel ' => 'District 1',
     'Ticala' => 'District 1',
+    'Ticala ' => 'District 1',
+    'ticala' => 'District 1',
+    'ticala ' => 'District 1',
     'Lingion' => 'District 1',
+    'Lingion ' => 'District 1',
+    'lingion' => 'District 1',
+    'lingion ' => 'District 1',
     'Alae' => 'District 2',
+    'Alae ' => 'District 2',
+    'alae' => 'District 2',
+    'alae ' => 'District 2',
     'Damilag' => 'District 2',
+    'Damilag ' => 'District 2',
+    'damilag' => 'District 2',
+    'damilag ' => 'District 2',
     'Mambatangan' => 'District 2',
     'Mantibugao' => 'District 2',
+    'Mantibugao ' => 'District 2',
+    'mantibugao' => 'District 2',
+    'mantibugao ' => 'District 2',
     'Minsuro' => 'District 2',
+    'Minsuro ' => 'District 2',
+    'minsuro' => 'District 2',
+    'minsuro ' => 'District 2',
     'Lunocan' => 'District 2',
+    'Lunocan ' => 'District 2',
+    'lunocan ' => 'District 2',
+    'lunocan' => 'District 2',
+    'Agusan canyon ' => 'District 3',
+    'Agusan Canyon ' => 'District 3',
+    'Agusan-canyon ' => 'District 3',
+    'Agusan-Canyon ' => 'District 3',
     'Agusan canyon' => 'District 3',
+    'Agusan Canyon' => 'District 3',
+    'Agusan-canyon' => 'District 3',
+    'Agusan-Canyon' => 'District 3',
     'Mampayag' => 'District 3',
+    'Mampayag ' => 'District 3',
+    'mampayag' => 'District 3',
+    'mampayag ' => 'District 3',
     'Dahilayan' => 'District 3',
+    'Dahilayan ' => 'District 3',
+    'dahilayan' => 'District 3',
+    'dahilayan ' => 'District 3',
     'Sankanan' => 'District 3',
+    'Sankanan ' => 'District 3',
+    'sankanan' => 'District 3',
+    'sankanan ' => 'District 3',
     'Kalugmanan' => 'District 3',
+    'Kalugmanan ' => 'District 3',
+    'kalugmanan' => 'District 3',
+    'kalugmanan ' => 'District 3',
     'Lindaban' => 'District 3',
+    'Lindaban ' => 'District 3',
+    'lindaban' => 'District 3',
+    'lindaban ' => 'District 3',
     'Dalirig' => 'District 4',
+    'Dalirig ' => 'District 4',  // Ensure this is added
+    'dalirig' => 'District 4',
+    'dalirig ' => 'District 4',
     'Maluko' => 'District 4',
+    'Maluko ' => 'District 4',
+    'maluko' => 'District 4',
+    'maluko ' => 'District 4',
     'Santiago' => 'District 4',
-    'Guilang2' => 'District 4'
+    'santiago' => 'District 4',
+    'Santiago ' => 'District 4',
+    'santiago ' => 'District 4',
+    'Guilang2' => 'District 4',
+    'Guilang-Guilang' => 'District 4',
+    'guilang-guilang' => 'District 4',
+    'Guilang-guilang' => 'District 4',
+    'Guilang-Guilang ' => 'District 4',
+    'guilang-guilang ' => 'District 4',
+    'Guilang-guilang ' => 'District 4',
 ];
 
 // Connect to the database
 include '../../../src/db/db_connection.php';
-
-// Fetch district of the logged-in user
-$userDistrict = $_SESSION['district'] ?? '';
 
 // Initialize search variable
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
@@ -154,7 +190,6 @@ $countQuery = "
     SELECT COUNT(*) as total_rows
     FROM location_tbl l
     JOIN members_tbl m ON l.record_id = m.record_id
-    WHERE l.barangay IN ('" . implode("','", array_keys($districts, $userDistrict)) . "')
 ";
 
 // Build where clause
@@ -162,9 +197,16 @@ $whereClauses = [];
 
 // If the search term is not empty, add conditions
 if (!empty($searchTerm)) {
-    $whereClauses[] = "(l.barangay LIKE '%$searchTerm%')";
+    $whereClauses[] = "(l.barangay IN ('" . implode("','", array_keys($districts)) . "') AND l.barangay LIKE '%$searchTerm%')";
     $whereClauses[] = "(l.sitio_zone_purok LIKE '%$searchTerm%')";
     $whereClauses[] = "(l.estimated_family_income LIKE '%$searchTerm%')";
+
+    // Check if the search term matches any district names
+    foreach ($districts as $barangay => $district) {
+        if (stripos($district, $searchTerm) !== false) {
+            $whereClauses[] = "(l.barangay = '$barangay')";
+        }
+    }
 
     // Optionally check if the search term is a valid year
     if (preg_match('/^\d{4}$/', $searchTerm) && $searchTerm <= $currentYear) {
@@ -174,7 +216,7 @@ if (!empty($searchTerm)) {
 
 // If there are any where clauses, append them to the count query
 if (count($whereClauses) > 0) {
-    $countQuery .= " AND (" . implode(' OR ', $whereClauses) . ")";
+    $countQuery .= " WHERE " . implode(' OR ', $whereClauses);
 }
 
 $countResult = $conn->query($countQuery);
@@ -186,12 +228,11 @@ $query = "
     SELECT l.barangay, l.housenumber, l.sitio_zone_purok, l.estimated_family_income, l.date_encoded, m.household_members 
     FROM location_tbl l
     JOIN members_tbl m ON l.record_id = m.record_id
-    WHERE l.barangay IN ('" . implode("','", array_keys($districts, $userDistrict)) . "')
 ";
 
 // Append the same where conditions to the main query
 if (count($whereClauses) > 0) {
-    $query .= " AND (" . implode(' OR ', $whereClauses) . ")";
+    $query .= " WHERE " . implode(' OR ', $whereClauses);
 }
 
 $query .= " LIMIT $limit OFFSET $offset"; // Add pagination
@@ -208,11 +249,10 @@ if (isset($_POST['download'])) {
         SELECT l.barangay, l.housenumber, l.sitio_zone_purok, l.estimated_family_income, l.date_encoded, m.household_members 
         FROM location_tbl l
         JOIN members_tbl m ON l.record_id = m.record_id
-        WHERE l.barangay IN ('" . implode("','", array_keys($districts, $userDistrict)) . "')
     ";
     
     if (count($whereClauses) > 0) {
-        $downloadQuery .= " AND (" . implode(' OR ', $whereClauses) . ")";
+        $downloadQuery .= " WHERE " . implode(' OR ', $whereClauses);
     }
 
     $downloadResult = $conn->query($downloadQuery);
@@ -232,31 +272,24 @@ if (isset($_POST['download'])) {
         
         fclose($output);
         exit();
-    } 
-    // For Excel download (corrected version)
-    elseif ($downloadType === 'excel') {
+    } elseif ($downloadType === 'excel') {
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment; filename="district_data.xls"');
         
-        // Echo the column headers, with tabs separating the fields
-        echo "District\tHouse Number\tSitio/Zone/Purok\tHousehold Members\tEstimated Family Income\n";
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['District', 'House Number', 'Sitio/Zone/Purok', 'Household Members', 'Estimated Family Income']);
         
-        // Output each row of data
         while ($row = $downloadResult->fetch_assoc()) {
             $barangay = $row['barangay'];
             $district = isset($districts[$barangay]) ? $districts[$barangay] : 'Unknown District';
-            
-            // Echo the data with tabs between each value
-            echo "{$district}\t{$row['housenumber']}\t{$row['sitio_zone_purok']}\t{$row['household_members']}\t" . number_format($row['estimated_family_income'], 2) . "\n";
+            fputcsv($output, [$district, $row['housenumber'], $row['sitio_zone_purok'], $row['household_members'], number_format($row['estimated_family_income'], 2)]);
         }
-    
+        
+        fclose($output);
         exit();
     }
-    
-    }
+}
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -335,7 +368,7 @@ if (isset($_POST['download'])) {
 
 /* Ensure responsive card sizes */
 .card {
-    min-width: 220px;
+    min-width: 150px;
     height: 100%;
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
@@ -358,7 +391,7 @@ if (isset($_POST['download'])) {
 
 /* Headings inside cards */
 .card-body h5 {
-    font-size: 1rem;
+    font-size: 9px;
     color: #333; /* Dark text for readability */
 }
 
@@ -370,7 +403,7 @@ if (isset($_POST['download'])) {
 
 /* Target the age range labels to be black */
 .card-body .age-range-label {
-    font-size: 1rem;
+    font-size: 8px;
     color: #000000; /* Black text for the age range labels */
 }
 
@@ -395,7 +428,7 @@ if (isset($_POST['download'])) {
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
                     <?php
-                    
+                    session_start();
                     if (!isset($_SESSION['username'])) {
                         header('Location: ../../../index.php');
                         exit();
@@ -408,84 +441,96 @@ if (isset($_POST['download'])) {
                 ?>
             </h3>
                 
-            </div>
-
-            <li class="sidebar-header">
-                        Key Performans Indicator
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="dashboard.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="sidebar-header">
-                        Tools & Components
-                    </li>
-                    <li class="sidebar-item">
-                <a href="#" id="formLink" class="sidebar-link">
-                    <i class="fa-regular fa-file-lines pe-2"></i>
-                    Form
-                </a>
-            </li>
-                    <li class="sidebar-item">
-                        <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
-                            aria-expanded="false" aria-controls="pages">
-                            <i class="fa-solid fa-list pe-2"></i>
-                            Reports
-                        </a>
-                        <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                </div>
+    
+                <li class="sidebar-header title" style="
+        font-weight: bold; color:gray;">
+                            Key Performans Indicator
+                        </li>
+                        <li class="sidebar-item active4">
+                            <a href="dashboard.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            Tools & Components
+                        </li>
                         <li class="sidebar-item">
-                                <a href="records.php" class="sidebar-link">Household Records</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
-                            </li>
-                            <li class="sidebar-item active2">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-header">
-                        Admin Action
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="users.php" class="sidebar-link">
+                    <a href="#" id="formLink" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
-                            Users
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="user_log.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            User Log
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
-                            aria-expanded="false" aria-controls="auth">
-                            <i class="fa-regular fa-user pe-2"></i>
-                            Auth
-                        </a>
-                        <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                          
+                        Form
+                    </a>
+                </li>
                         <li class="sidebar-item">
-                                <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
-                            </li>
+                            <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
+                                aria-expanded="false" aria-controls="pages">
+                                <i class="fa-solid fa-list pe-2"></i>
+                                Reports
+                            </a>
+                            <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                            <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                </ul>
-        </nav>
+                                    <a href="records.php" class="sidebar-link">Household Records</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                </li>
+                                <li class="sidebar-item active2">
+                                    <a href="district_population.php" class="sidebar-link">District Population</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="persons_with_disability.php" class="sidebar-link">Persons with Disability</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            Admin Action
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="users.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                Users
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="user_log.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                User Log
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
+                                aria-expanded="false" aria-controls="auth">
+                                <i class="fa-regular fa-user pe-2"></i>
+                                Account Settings
+                            </a>
+                            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                              
+                            <li class="sidebar-item">
+                                    <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
+                                </li>
+                                <li class="sidebar-item">
+                                <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                    </ul>
+            </nav>
 
 
         <!-- Modal Structure -->
@@ -536,60 +581,66 @@ if (isset($_POST['download'])) {
 
         </div>
     </div> -->
+    
     <div class="container mt-4">
-    <!-- First Row: Total Population, Total OSY, and Gender Cards -->
+    <!-- Single Row: Total Population, Total OSY, and Gender Cards -->
     <div class="row justify-content-center mb-3">
         <!-- Total Population Card -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-            <div class="card text-center card-total-population">
+        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <div class="card text-center card-total-population"style="width: 100px; cursor: pointer;" onclick="window.location.href='records.php';">
                 <div class="card-body">
-                    <h5 class="card-title">District Total Population</h5>
+                    <h5 class="card-title">Manolo Fortich Population *District 1 to 4*</h5>
                     <p class="card-text"><?php echo $total_population; ?></p>
                 </div>
             </div>
         </div>
 
         <!-- Total OSY Card -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-            <div class="card text-center card-osy-total">
+        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <div class="card text-center card-osy-total" style="width: 100px; cursor: pointer;" onclick="window.location.href='district_osy.php';">
                 <div class="card-body">
-                    <h5 class="card-title">District Total OSY</h5>
+                    <h5 class="card-title">Out-of-school Youth <br>
+                    *Age 15-30*</h5>
                     <p class="card-text"><?php echo $total_osy; ?></p>
                 </div>
             </div>
         </div>
 
-        <!-- Gender OSY Card (Male, Female, Undefined) -->
-        <div class="col-12 col-sm-6 col-md-8 col-lg-6 mb-3"> <!-- Set to double width -->
-            <div class="card text-center card-osy-gender">
+        <!-- Gender OSY Card -->
+        <div class="col-12 col-sm-4 col-md-6 col-lg-4 mb-3"> <!-- Set to double width -->
+            <div class="card text-center card-osy-gender" style="cursor: pointer;" onclick="window.location.href='records.php';">
                 <div class="card-body">
-                    <h5 class="card-title">District Population Gender Density</h5>
-                    <p class="card-text d-inline">
+                    <h5 class="card-title">Population Gender density</h5>
+                    <p class="card-text d-inline" style="font-weight: bold; font-size: 20px;">
                     <span class="age-range-label">Males:</span> <?php echo $total_males; ?></p>
-                    <p class="card-text d-inline ms-3">
+                    <p class="card-text d-inline ms-3" style="font-weight: bold; font-size: 20px;">
                     <span class="age-range-label">Females:</span> <?php echo $total_females; ?></p>
-                    <p class="card-text d-inline ms-3">
-                    <span class="age-range-label"> Other:</span> <?php echo $undefined_gender_count; ?></p>
+                    <p class="card-text d-inline ms-3" style="font-weight: bold; font-size: 20px;">
+                    <span class="age-range-label">Other:</span> <?php echo $undefined_gender_count; ?></p>
                 </div>
             </div>
         </div>
+        <!-- District OSY Cards -->
+        <div class="col-12 col-sm-4 col-md-6 col-lg-4 mb-3"> <!-- Set to double width -->
+    <div class="card text-center card-osy-district"style="cursor: pointer;" onclick="window.location.href='records.php';">
+        <div class="card-body">
+            <h5 class="card-title">Manolo Fortich District's Population Counts</h5>
+            <?php foreach ($district_data as $district => $count): ?>
+                <p class="card-text d-inline-block" style="font-size: 9px;">
+                    <span class="age-range-label"><?php echo $district; ?>:</span>
+                    <span  style="font-weight: bold; font-size: 20px;"><?php echo $count; ?></span>
+                </p>
+                <!-- Add space between items -->
+                <span class="ms-3"></span>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
 
     </div>
-    <!-- Second Row: District OSY Cards
-    <div class="row justify-content-center">
-        <!-- District OSY Cards
-        <?php foreach ($district_data as $district => $count): ?>
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-            <div class="card text-center card-osy-district">
-                <div class="card-body">
-                    <h5 class="card-title"><?php echo $district; ?></h5>
-                    <p class="card-text"><?php echo $count; ?></p>
-                </div>
-            </div>
-        </div>
-        <?php endforeach; ?>
-    </div> -->
 </div>
+
 
 
 
@@ -603,13 +654,13 @@ if (isset($_POST['download'])) {
     <h2 class="mb-4">District Population Data</h2>
 
     <!-- Single Search Bar Form -->
-<form method="GET" class="mb-4">
-    <div class="input-group">
-        <input type="text" name="search" class="form-control" placeholder="Search by Sitio/Zone/Purok, or Family Income" value="<?= htmlspecialchars($searchTerm) ?>">
-        <button type="submit" class="btn btn-primary">Search</button>
-        <a href="district_population.php" class="btn btn-secondary">Reset</a>
-    </div>
-</form>
+    <form method="GET" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search by Year, District, Sitio/Zone/Purok, or Family Income" value="<?= htmlspecialchars($searchTerm) ?>">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="district_population.php" class="btn btn-secondary">Reset</a>
+        </div>
+    </form>
 
     <P>TO DOWNLOAD SPECIFIC DATA, PLEASE USE THE SEARCH BAR</P>
     <!-- Download Button -->
@@ -675,7 +726,45 @@ if (isset($_POST['download'])) {
             <?php endfor; ?>
         </ul>
     </nav>
+    
 </div>
+<footer class="footer" style="margin-top: 100px; padding: 0px 110px 0px 110px;">
+    <div class="container">
+        <div class="footer-content">
+            <!-- Partnership Logos and Description -->
+            <div class="footer-section about">
+                <div class="logos">
+                    <img src="../../../assets/images/logo.png" alt="Your Logo" class="partner-logo">
+                    <img src="../../../assets/images/logo1.png" alt="ALS Logo" class="partner-logo">
+                </div>
+                <p>In partnership with the <strong>Alternative Learning System (ALS)</strong>, we aim to collect and analyze profiles of out-of-school youth, helping create better programs and initiatives tailored to their needs.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="footer-section links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="about-us.html">About Us</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="footer-section contact">
+                <h4>Contact Us</h4>
+                <p><i class="fas fa-phone-alt"></i> +63 123 4567 890</p>
+                <p><i class="fas fa-envelope"></i> info@household-info-system.com</p>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p>&copy; 2024 Household Information System in Manolo Fortich. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
 </div>
             </div>
 <!-- jQuery CDN - Slim version (=without AJAX) -->
