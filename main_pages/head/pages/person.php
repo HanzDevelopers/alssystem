@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
-    <title>Records</title>
+    <title>Dashboard</title>
     <!-- Bootstrap CSS CDN --> 
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
@@ -190,126 +190,7 @@
         <!-- Main Content Starts Here -->
 <div class="container-fluid">
     <div class="container mt-4">
-        
-    <!-- Search Bar -->
-    <form id="searchForm" class="mb-3">
-        <div class="input-group">
-            <input type="text" class="form-control" name="search" id="searchInput" placeholder="Search By Encoder Name, Household Member, or Birthdate" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-            <button class="btn btn-primary" type="submit">Search</button>
-            <a href="records.php" class="btn btn-secondary">Reset</a>
-        </div>
-    </form>
-    <div class="container mt-5">
-    <!-- Export Dropdown -->
-    <div class="mb-3">
-    <div class="dropdown">
-        <P>TO DOWNLOAD SPECIFIC DATA, PLEASE USE THE SEARCH BAR</P>
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #01c635; border-color: #01c635;">
-        Download H.R As
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li><a class="dropdown-item" href="#" onclick="downloadCSV()">CSV</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Excel</a></li>
-    </ul>
-</div>
-
-    </div>
-    <!-- Table -->
-    <?php
-   // Database connection
-include '../../../src/db/db_connection.php';
-
-// Get the search query, if any
-$search = isset($_GET['search']) ? $_GET['search'] : '';
-
-// Get the current page number from the URL, if none set, default to 1
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = 10; // Number of entries to show per page
-$offset = ($page - 1) * $limit; // Calculate the offset for the query
-
-// Fetch the total number of records in the household table that match the search criteria
-$total_sql = "
-    SELECT COUNT(*) AS total 
-    FROM members_tbl m 
-    JOIN location_tbl l ON m.record_id = l.record_id 
-    WHERE /*l.encoder_name LIKE '%$search%' */
-       m.household_members LIKE '%$search%' 
-       OR m.birthdate LIKE '%$search%' 
-       OR m.gender LIKE '%$search%'
-       OR m.age LIKE '%$search%'  
-       OR CONCAT(l.province, ', ', l.city_municipality, ', ', l.barangay) LIKE '%$search%'
-";
-$total_result = $conn->query($total_sql);
-$total_row = $total_result->fetch_assoc();
-$total_records = $total_row['total'];
-
-// Fetch data from the household table, filtered by search query, ordered by birthdate (newest to oldest) with LIMIT and OFFSET
-$sql = "
-    SELECT m.*, l.encoder_name, m.gender, CONCAT(l.barangay, ', ', l.city_municipality, ', ',l.province ) AS address
-    FROM members_tbl m 
-    JOIN location_tbl l ON m.record_id = l.record_id 
-    WHERE /*l.encoder_name LIKE '%$search%' */
-       m.household_members LIKE '%$search%' 
-       OR m.birthdate LIKE '%$search%'
-       OR m.gender LIKE '%$search%' 
-       OR m.age LIKE '%$search%' 
-       OR CONCAT(l.province, ', ', l.city_municipality, ', ', l.barangay) LIKE '%$search%'
-    ORDER BY m.age ASC 
-    LIMIT $limit OFFSET $offset
-";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    echo '<table class="table table-striped">';
-    echo '<thead><tr><th>Encoder Name</th><th>Household Member</th><th>Birthdate</th><th>Age</th><th>Gender</th><th>Address</th><th>Actions</th></tr></thead>';
-    echo '<tbody>';
-    // Output data of each row
-    while ($row = $result->fetch_assoc()) {
-        echo "<tr>
-                <td>" . htmlspecialchars($row["encoder_name"]) . "</td>
-                <td>" . htmlspecialchars($row["household_members"]) . "</td>
-                <td>" . htmlspecialchars($row["birthdate"]) . "</td>
-                <td>" . htmlspecialchars($row["age"]) . "</td>
-                <td>" . htmlspecialchars($row["gender"]) . "</td>
-                <td>" . htmlspecialchars($row["address"]) . "</td>
-                <td>
-                    <button class='btn btn-primary' style='font-size: 13px; width: 80px' onclick='viewInfo(" . $row["member_id"] . ")'>View Info</button>
-                    <button class='btn btn-danger' style='font-size: 13px;' onclick='deleteMember(" . $row["member_id"] . ")'>Delete</button>
-                </td>
-
-              </tr>";
-    }
-    echo '</tbody></table>';
-} else {
-    echo "<p>No records found.</p>";
-}
-
-// Calculate total number of pages
-$total_pages = ceil($total_records / $limit);
-
-// Display pagination buttons
-echo '<nav aria-label="Page navigation">';
-echo '<ul class="pagination justify-content-center">';
-
-// Previous page button
-if ($page > 1) {
-    echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '&search=' . htmlspecialchars($search) . '">Previous</a></li>';
-}
-
-// Page number buttons
-for ($i = 1; $i <= $total_pages; $i++) {
-    echo '<li class="page-item ' . ($i == $page ? 'active' : '') . '"><a class="page-link" href="?page=' . $i . '&search=' . htmlspecialchars($search) . '">' . $i . '</a></li>';
-}
-
-// Next page button
-if ($page < $total_pages) {
-    echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '&search=' . htmlspecialchars($search) . '">Next</a></li>';
-}
-
-echo '</ul>';
-echo '</nav>';
-?>
-    </div>
+        hello
 
     </div>
     </div>

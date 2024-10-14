@@ -3,6 +3,7 @@
 header('Content-Type: application/json');
 include '../../../src/db/db_connection.php';
 include 'barangay_district_map.php';
+session_start();  // Start session to get logged-in user info
 
 // Get the current year
 $current_year = date("Y");
@@ -15,7 +16,27 @@ if ($conn->connect_error) {
     die(json_encode(['error' => 'Database connection failed: ' . $conn->connect_error]));
 }
 
-// Updated SQL Query to count household members for the current year based on comma-separated names
+// Get logged-in user's district from the session (assuming it's stored during login)
+$user_district = $_SESSION['district'];
+
+// Barangay-district mapping
+$district_barangays = [
+    'District 1' => ['Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion'],
+    'District 2' => ['Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan'],
+    'District 3' => ['Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban'],
+    'District 4' => ['Dalirig', 'Maluko', 'Santiago', 'Guilang2']
+];
+
+// Ensure the user's district is valid
+if (!array_key_exists($user_district, $district_barangays)) {
+    echo json_encode(['error' => 'Invalid district for the logged-in user']);
+    exit();
+}
+
+// Get the barangays for the user's district
+$user_barangays = $district_barangays[$user_district];
+
+// Updated SQL Query to count household members for the current year based on comma-separated names, only for user's barangays
 $sql = "SELECT 
             l.barangay, 
             SUM(
@@ -27,33 +48,25 @@ $sql = "SELECT
             location_tbl l 
             ON m.record_id = l.record_id
         WHERE 
-            YEAR(l.date_encoded) = $current_year
+            l.barangay IN ('" . implode("','", $user_barangays) . "')
+            AND YEAR(l.date_encoded) = $current_year
         GROUP BY 
             l.barangay";
 
 $result = $conn->query($sql);
 
-$district_population = [
-    'District 1' => 0,
-    'District 2' => 0,
-    'District 3' => 0,
-    'District 4' => 0,
-    'Unknown District' => 0 // To capture any unmapped barangays
-];
+// Initialize an array to store the counts per barangay
+$barangay_population = array_fill_keys($user_barangays, 0);
 
 if ($result) {
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $barangay = $row['barangay'];
             $total_population = $row['total_population'];
-            $district = getDistrict($barangay);
 
-            if (array_key_exists($district, $district_population)) {
-                $district_population[$district] += intval($total_population);
-            } else {
-                $district_population['Unknown District'] += intval($total_population);
-                // Log unmapped barangays for debugging
-                error_log("Unmapped Barangay: $barangay with population: $total_population");
+            // Ensure the barangay is in the current user's district and count the population
+            if (array_key_exists($barangay, $barangay_population)) {
+                $barangay_population[$barangay] += intval($total_population);
             }
         }
     }
@@ -66,15 +79,8 @@ if ($result) {
 $conn->close();
 
 // Prepare data for JSON response
-$districts = array_keys($district_population);
-$counts = array_values($district_population);
-
-// Optionally, remove 'Unknown District' from the response if not needed
-$index = array_search('Unknown District', $districts);
-if ($index !== false) {
-    unset($districts[$index]);
-    unset($counts[$index]);
-}
+$barangays = array_keys($barangay_population);
+$counts = array_values($barangay_population);
 
 // Calculate basic statistics
 $mean = array_sum($counts) / count($counts);
@@ -93,7 +99,7 @@ $std_dev = standard_deviation($counts);
 
 // Add statistics to the response
 echo json_encode([
-    'districts' => $districts,
+    'barangays' => $barangays,
     'counts' => $counts,
     'statistics' => [
         'mean' => $mean,

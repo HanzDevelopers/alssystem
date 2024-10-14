@@ -1,64 +1,41 @@
 // data.js
-// Function to fetch and plot OSY Pie Chart by Barangay
+// Function to fetch and plot District OSY Pie Chart
+// Function to fetch and plot Barangay OSY Pie Chart
 function plotBarangayOSY() {
-    fetch('../api/osy_pie_chart.php')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Check if data has error
-        if (data.error) {
-            console.error('Error in data:', data.error);
-            return; // Exit the function if there's an error
-        }
-
-        const ctx = document.getElementById('myPieChart').getContext('2d');
-        const chart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: data.barangays,  // Barangay names from the backend
-                datasets: [{
-                    data: data.counts,   // Corresponding OSY counts for each barangay
-                    backgroundColor: [
-                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', 
-                        '#FF9F40', '#C9CBCF', '#7B68EE', '#8A2BE2', '#FF5733'
-                    ],
-                }]
-            },
-            options: {
-                legend: {
-                    display: true,       // Ensure the legend is displayed
-                    position: 'bottom',  // Set the legend's position
-                    labels: {
-                        fontSize: 12,    // Optional: Adjust font size if needed
-                        boxWidth: 20,    // Set width for color boxes in the legend
-                        padding: 15,     // Add padding between labels and color boxes
-                    }
-                },
-                title: {
-                    display: true,
-                    text: 'OSY Count per Barangay'  // Customize the title
-                }
+    fetch('../api/osy_pie_chart.php') // Update the path as needed
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error(data.error);
+                return;
             }
-        });
-        
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error); // Log any errors
-    });
+
+            const pieData = data.counts; // OSY counts by barangay
+            const pieLabels = data.barangays; // Barangay names
+            
+            console.log(pieLabels); // Check if barangay names are coming in correctly
+
+            const pieChart = {
+                values: pieData,
+                labels: pieLabels, // Assign the barangay names to the labels
+                type: 'pie'
+            };
+
+            const pieLayout = { 
+                title: 'OSY Distribution by Barangay',
+                showlegend: true
+            };
+
+            // Render the pie chart in the 'pie-chart' div
+            Plotly.newPlot('pie-chart', [pieChart], pieLayout);
+        })
+        .catch(error => console.error('Error fetching Barangay OSY data:', error));
 }
 
-// Call the function once the page has loaded
-window.onload = function() {
-    plotBarangayOSY();
-};
+// Call the function to plot the chart
+plotBarangayOSY();
 
 
-
-// Function to fetch and plot District Population Bar Chart
 function plotDistrictPopulation() {
     fetch('../api/district_population.php') // Update the path as needed
         .then(response => response.json())
@@ -67,34 +44,41 @@ function plotDistrictPopulation() {
                 console.error(data.error);
                 return;
             }
-            const barData1 = data.counts;
-            const barLabels1 = data.districts;
 
-            // Optionally, exclude 'Unknown District' if it's present
-            const filteredLabels = [];
-            const filteredData = [];
-            for (let i = 0; i < barLabels1.length; i++) {
-                if (barLabels1[i] !== 'Unknown District') { // Adjust condition as needed
-                    filteredLabels.push(barLabels1[i]);
-                    filteredData.push(barData1[i]);
-                }
-            }
+            const barData = data.counts; // Population counts for each barangay
+            const barLabels = data.barangays; // Barangay names
 
-            const barChart1 = {
-                x: filteredLabels,
-                y: filteredData,
+            // Debugging logs
+            console.log('Barangay Names:', barLabels);
+            console.log('Population Counts:', barData);
+
+            const barChart = {
+                x: barLabels, // Use barangay names for the x-axis
+                y: barData, // Population counts for the y-axis
                 type: 'bar',
                 marker: {
                     color: 'rgba(55,128,191,0.6)',
                     width: 1
-                }
+                },
+                text: barData.map(String), // Optional: Display counts as text on bars
+                textposition: 'auto' // Position text on the bars
             };
 
-            const barLayout1 = { title: 'District Population' };
-            Plotly.newPlot('bar-chart1', [barChart1], barLayout1);
+            const barLayout = {
+                title: 'District Population',
+                xaxis: { title: 'Barangays' }, // Change to 'Barangays'
+                yaxis: { title: 'Total Population' } // Add y-axis title
+            };
+
+            // Render the bar chart in the 'bar-chart1' div
+            Plotly.newPlot('bar-chart1', [barChart], barLayout);
         })
         .catch(error => console.error('Error fetching District Population data:', error));
 }
+
+// Call the function to plot the chart
+plotDistrictPopulation();
+
 
 // Function to fetch and plot OSY By Age Bar Chart
 function plotOSYByAge() {
@@ -135,7 +119,7 @@ function plotOSYByAge() {
             const layout = {
                 title: 'OSY by Age',
                 barmode: 'group',  // Group the bars side by side
-                xaxis: { title: 'Year' },
+                xaxis: { title: 'Year' }, // Keep x-axis title as Year
                 yaxis: { title: 'OSY Count', tickformat: ',d' },
                 margin: { t: 40, b: 40, l: 40, r: 40 },
                 showlegend: true
@@ -145,6 +129,10 @@ function plotOSYByAge() {
         })
         .catch(error => console.error('Error fetching OSY By Age data:', error));
 }
+
+// Call the function to plot the chart
+plotOSYByAge();
+
 
 
 // Initialize all charts

@@ -2,7 +2,7 @@
 // osy_pie_chart.php
 header('Content-Type: application/json');
 include '../../../src/db/db_connection.php';
-include 'barangay_district_map.php';
+session_start();  // Start session to get logged-in user info
 
 // Get the current year
 $current_year = date("Y");
@@ -15,31 +15,48 @@ if ($conn->connect_error) {
     die(json_encode(['error' => 'Database connection failed: ' . $conn->connect_error]));
 }
 
-// SQL Query to fetch barangay and count of OSY (age 15-30) for the current year, who are not attending school
+// Get logged-in user's district from the session (assuming it's stored during login)
+$user_district = $_SESSION['district'];
+
+// Barangay-district mapping
+$district_barangays = [
+    'District 1' => ['Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion'],
+    'District 2' => ['Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan'],
+    'District 3' => ['Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban'],
+    'District 4' => ['Dalirig', 'Maluko', 'Santiago', 'Guilang2']
+];
+
+// Ensure the user's district is valid
+if (!array_key_exists($user_district, $district_barangays)) {
+    echo json_encode(['error' => 'Invalid district for the logged-in user']);
+    exit();
+}
+
+// Get the barangays for the user's district
+$user_barangays = $district_barangays[$user_district];
+
+// SQL Query to fetch barangay and count of OSY (age 15-30) for the current year, who are not attending school, within the user's district
 $sql = "SELECT l.barangay, COUNT(m.member_id) AS osy_count
         FROM members_tbl m
         JOIN location_tbl l ON m.record_id = l.record_id
         JOIN background_tbl b ON m.member_id = b.member_id
         WHERE m.age BETWEEN 15 AND 30
         AND b.currently_attending_school IN ('No', 'no', 'NO')
+        AND l.barangay IN ('" . implode("','", $user_barangays) . "')
         AND YEAR(l.date_encoded) = $current_year
         GROUP BY l.barangay";
 
 $result = $conn->query($sql);
 
-$district_counts = [
-    'District 1' => 0,
-    'District 2' => 0,
-    'District 3' => 0,
-    'District 4' => 0
-];
+// Initialize an array to store the counts per barangay
+$barangay_counts = array_fill_keys($user_barangays, 0);
 
 if ($result) {
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $district = getDistrict($row['barangay']);
-            if (array_key_exists($district, $district_counts)) {
-                $district_counts[$district] += intval($row['osy_count']);
+            $barangay = $row['barangay'];
+            if (array_key_exists($barangay, $barangay_counts)) {
+                $barangay_counts[$barangay] += intval($row['osy_count']);
             }
         }
     }
@@ -52,8 +69,8 @@ if ($result) {
 $conn->close();
 
 // Prepare data for JSON response
-$districts = array_keys($district_counts);
-$counts = array_values($district_counts);
+$barangays = array_keys($barangay_counts);
+$counts = array_values($barangay_counts);
 
 // Calculate basic statistics
 $mean = array_sum($counts) / count($counts);
@@ -72,7 +89,7 @@ $std_dev = standard_deviation($counts);
 
 // Add statistics to the response
 echo json_encode([
-    'districts' => $districts,
+    'barangays' => $barangays,
     'counts' => $counts,
     'statistics' => [
         'mean' => $mean,

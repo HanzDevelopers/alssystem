@@ -75,7 +75,7 @@ include '../api/fetch_summary_data.php';
 
    /* Ensure responsive card sizes */
 .card {
-    min-width: 220px;
+    min-width: 150px;
     height: 100%;
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
@@ -95,19 +95,25 @@ include '../api/fetch_summary_data.php';
 }
 
 /* Headings inside cards */
-.card-body h5 {
-    font-size: 1rem;
+.card-body h6 {
+    font-size: 9px;
     color: #333; /* Dark text for readability */
 }
 
+
 /* Paragraphs inside cards */
 .card-body p {
+    font-weight: bold;
     font-size: 2rem;
     color: #ffffff; /* Consistent white text */
 }
+h5{
+    text-align: center;
+}
 
-
-
+.sub{
+    font-size: 8px;
+}
 /* Hover effect for interactive cards */
 .card:hover {
     transform: translateY(-5px); /* Subtle lift effect */
@@ -119,6 +125,19 @@ include '../api/fetch_summary_data.php';
     font-size: 2rem;
     color: black; /* Black text for the age range labels */
 }
+.chart {
+    width: 100%;
+    height: 300px;
+}
+h5{
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+}
+h5.mb-4{
+    margin-top: -35px;
+}
+
 
 
 </style>
@@ -213,6 +232,21 @@ $conn->close();
                             </li>
                         </ul>
                     </li>
+                    <li class="sidebar-header">
+                        Admin Action
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="users.php" class="sidebar-link">
+                        <i class="fa-regular fa-file-lines pe-2"></i>
+                            Users
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="user_log.php" class="sidebar-link">
+                        <i class="fa-regular fa-file-lines pe-2"></i>
+                            User Log
+                        </a>
+                    </li>
                     <li class="sidebar-item">
                         <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
                             aria-expanded="false" aria-controls="auth">
@@ -277,83 +311,77 @@ $conn->close();
     
         <!--remove responsive
         </div>-->
+<!-- Main Content Starts Here -->
+<div class="container-fluid">
+    <div class="container mt-4">
+        <!-- First Row: Data Summary Cards in a Single Row -->
+        <div class="row justify-content-center mb-3">
+            <h5 class="mb-4">Data Summary</h5>
 
-        <!-- Main Content Starts Here -->
-        <div class="container-fluid">
-        <div class="container mt-4">
-    <!-- First Row: Total Population, Total OSY, and Gender Cards -->
-    <div class="row justify-content-center mb-3">
-    <h1 class="mb-4">Data Summary</h1>
-<div class="row justify-content-center">
-    <!-- Total Population (District 1 to 4) -->
-<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-    <div class="card text-center card-total-population">
-        <div class="card-body">
-            <h5 class="card-title">Total Population of District</h5>
-            <p class="card-text"><span class="age-range-label"><?php echo $summaryData['total_population']; ?></span></p>
-        </div>
-    </div>
-</div>
+            <!-- Total Population (District 1 to 4) -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
+                <div class="card text-center card-total-population" onclick="window.location.href='records.php';" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h6 class="card-title">Total Population of District</h6>
+                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['total_population']; ?></span></p>
+                    </div>
+                </div>
+            </div>
 
-<!-- Not Attending School (Age 15-30) -->
-<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-    <div class="card text-center card-osy-total">
-        <div class="card-body">
-            <h5 class="card-title">Not Attending School (Age 15-30)</h5>
-            <p class="card-text"><span class="age-range-label"><?php echo $summaryData['not_attending_school']; ?></span></p>
-        </div>
-    </div>
-</div>
 
-<!-- Interested in ALS -->
-<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-    <div class="card text-center card-osy-gender">
-        <div class="card-body">
-            <h5 class="card-title">Interested in ALS</h5>
-            <p class="card-text"><span class="age-range-label"><?php echo $summaryData['interested_in_als']; ?></span></p>
-        </div>
-    </div>
-</div>
+            <!-- Not Attending School (Age 15-30) -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
+                <div class="card text-center card-osy-total" onclick="window.location.href='district_osy.php';" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h6 class="card-title">Out-of-school Youth <br><span class="sub">*Age 15-30*</span></h6>
+                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['not_attending_school']; ?></span></p>
+                    </div>
+                </div>
+            </div>
 
-<!-- Second Row: District OSY Cards -->
-<div class="row justify-content-center">
-    <!-- Persons with Disability -->
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-        <div class="card text-center card-osy-district">
-            <div class="card-body">
-                <h5 class="card-title">Persons with Disability</h5>
-                <p class="card-text"><span class="age-range-label"><?php echo $summaryData['persons_with_disability']; ?></span></p>
+            <!-- Interested in ALS -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
+                <div class="card text-center card-osy-gender" onclick="window.location.href='interested.php';" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h6 class="card-title">Interested in ALS</h6>
+                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['interested_in_als']; ?></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Persons with Disability -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
+                <div class="card text-center card-osy-district" onclick="window.location.href='persons_with_disability.php';" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h6 class="card-title">Persons with Disability</h6>
+                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['persons_with_disability']; ?></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Occupation -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
+                <div class="card text-center card-osy-district" onclick="window.location.href='no_occupation.php';" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h6 class="card-title">No Occupation</h6>
+                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['no_occupation']; ?></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Families with Income Below 20,000 -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
+                <div class="card text-center card-osy-district" onclick="window.location.href='income_below_20,000.php';" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h6 class="card-title">Families with Income Below 20,000</h>
+                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['low_income_families']; ?></span></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- No Occupation -->
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-        <div class="card text-center card-osy-district">
-            <div class="card-body">
-                <h5 class="card-title">No Occupation</h5>
-                <p class="card-text"><span class="age-range-label"><?php echo $summaryData['no_occupation']; ?></span></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Families with Income Below 20,000 -->
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-        <div class="card text-center card-osy-district">
-            <div class="card-body">
-                <h5 class="card-title">Families with Income Below 20,000</h5>
-                <p class="card-text"><span class="age-range-label"><?php echo $summaryData['low_income_families']; ?></span></p>
-            </div>
-        </div>
-    </div>
 </div>
-
-</div>
-
         
-    </div>
-    </div>
-</div>
 
 
 
@@ -383,7 +411,7 @@ $conn->close();
 
 <div class="dashboard-container">
     <!-- Chart 1: District OSY Pie Chart -->
-<div class="chart-card">
+<div class="chart-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; width: 30%; min-width: 300px; text-align: center;">
     <div id="pie-chart" class="chart">
         <canvas id="myPieChart"></canvas> <!-- This is where the pie chart will be rendered -->
     </div>
@@ -396,7 +424,7 @@ $conn->close();
 
 
     <!-- Chart 2: District Population Bar Chart -->
-    <div class="chart-card">
+    <div class="chart-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; width: 30%; min-width: 300px; text-align: center;">
         <div id="bar-chart1" class="chart"></div>
         <!-- View Info Button for Bar Chart 1 -->
         <a href="district_population.php" class="sidebar-link btn btn-primary mt-2">
@@ -406,7 +434,7 @@ $conn->close();
     </div>
 
     <!-- Chart 3: OSY By Age Bar Chart -->
-    <div class="chart-card">
+    <div class="chart-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; width: 30%; min-width: 300px; text-align: center;">
         <div id="bar-chart2" class="chart"></div>
         <!-- View Info Button for Bar Chart 2 -->
         <a href="interested.php" class="sidebar-link btn btn-primary mt-2">
