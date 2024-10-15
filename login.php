@@ -41,9 +41,6 @@
                     <a href="index.php" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
-            <div class="mt-3 text-center">
-                <a href="request.php" class="request-account-link">Request Account</a>
-            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
