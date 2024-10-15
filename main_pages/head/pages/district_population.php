@@ -298,12 +298,12 @@ if (isset($_POST['download'])) {
     }
     /* Card Styles */
 .card-osy-total {
-    background-color: #ff6b6b; /* Soft Red */
+    background-color: #90D5ff; /* Soft Red */
     color: white;
 }
 
 .card-osy-gender {
-    background-color: #ffa94d; /* Soft Orange */
+    background-color: #90D5ff; /* Soft Orange */
     color: white;
 }
 
@@ -313,7 +313,7 @@ if (isset($_POST['download'])) {
 }
 
 .card-osy-district:nth-child(1) {
-    background-color: #51cf66; /* Soft Green */
+    background-color: #90D5ff; /* Soft Green */
     color: white;
 }
 
@@ -329,7 +329,7 @@ if (isset($_POST['download'])) {
 
 /* New style for Total Population card */
 .card-total-population {
-    background-color: #f783ac; /* Soft Violet/Pink */
+    background-color: #90D5ff; /* Soft Violet/Pink */
     color: white;
 }
 
@@ -358,7 +358,7 @@ if (isset($_POST['download'])) {
 
 /* Headings inside cards */
 .card-body h5 {
-    font-size: 1rem;
+    font-size: 15px;
     color: #333; /* Dark text for readability */
 }
 
@@ -370,7 +370,7 @@ if (isset($_POST['download'])) {
 
 /* Target the age range labels to be black */
 .card-body .age-range-label {
-    font-size: 1rem;
+    font-size: 12px;
     color: #000000; /* Black text for the age range labels */
 }
 
@@ -395,7 +395,6 @@ if (isset($_POST['download'])) {
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
                     <?php
-                    
                     if (!isset($_SESSION['username'])) {
                         header('Location: ../../../index.php');
                         exit();
@@ -408,84 +407,96 @@ if (isset($_POST['download'])) {
                 ?>
             </h3>
                 
-            </div>
-
-            <li class="sidebar-header">
-                        Key Performans Indicator
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="dashboard.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="sidebar-header">
-                        Tools & Components
-                    </li>
-                    <li class="sidebar-item">
-                <a href="#" id="formLink" class="sidebar-link">
-                    <i class="fa-regular fa-file-lines pe-2"></i>
-                    Form
-                </a>
-            </li>
-                    <li class="sidebar-item">
-                        <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
-                            aria-expanded="false" aria-controls="pages">
-                            <i class="fa-solid fa-list pe-2"></i>
-                            Reports
-                        </a>
-                        <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                </div>
+    
+                <li class="sidebar-header title" style="
+        font-weight: bold; color:gray;">
+                            Key Performans Indicator
+                        </li>
+                        <li class="sidebar-item active4">
+                            <a href="dashboard.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            Tools & Components
+                        </li>
                         <li class="sidebar-item">
-                                <a href="records.php" class="sidebar-link">Household Records</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
-                            </li>
-                            <li class="sidebar-item active2">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-header">
-                        Admin Action
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="users.php" class="sidebar-link">
+                    <a href="#" id="formLink" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
-                            Users
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="user_log.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            User Log
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
-                            aria-expanded="false" aria-controls="auth">
-                            <i class="fa-regular fa-user pe-2"></i>
-                            Auth
-                        </a>
-                        <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                          
+                        Form
+                    </a>
+                </li>
                         <li class="sidebar-item">
-                                <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
-                            </li>
+                            <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
+                                aria-expanded="false" aria-controls="pages">
+                                <i class="fa-solid fa-list pe-2"></i>
+                                Reports
+                            </a>
+                            <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                            <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                </ul>
-        </nav>
+                                    <a href="records.php" class="sidebar-link">Household Records</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                </li>
+                                <li class="sidebar-item active2">
+                                    <a href="district_population.php" class="sidebar-link">District Population</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="persons_with_disability.php" class="sidebar-link">Persons with Disability</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            Admin Action
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="users.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                Users
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="user_log.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                User Log
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
+                                aria-expanded="false" aria-controls="auth">
+                                <i class="fa-regular fa-user pe-2"></i>
+                                Account Settings
+                            </a>
+                            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                              
+                            <li class="sidebar-item">
+                                    <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
+                                </li>
+                                <li class="sidebar-item">
+                                <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                    </ul>
+            </nav>
 
 
         <!-- Modal Structure -->
@@ -536,6 +547,9 @@ if (isset($_POST['download'])) {
 
         </div>
     </div> -->
+    
+    
+    
     <div class="container mt-4">
     <!-- First Row: Total Population, Total OSY, and Gender Cards -->
     <div class="row justify-content-center mb-3">
@@ -596,6 +610,7 @@ if (isset($_POST['download'])) {
 
 
 
+
     
 </div>
 
@@ -603,13 +618,13 @@ if (isset($_POST['download'])) {
     <h2 class="mb-4">District Population Data</h2>
 
     <!-- Single Search Bar Form -->
-<form method="GET" class="mb-4">
-    <div class="input-group">
-        <input type="text" name="search" class="form-control" placeholder="Search by Sitio/Zone/Purok, or Family Income" value="<?= htmlspecialchars($searchTerm) ?>">
-        <button type="submit" class="btn btn-primary">Search</button>
-        <a href="district_population.php" class="btn btn-secondary">Reset</a>
-    </div>
-</form>
+    <form method="GET" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search by Year, District, Sitio/Zone/Purok, or Family Income" value="<?= htmlspecialchars($searchTerm) ?>">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="district_population.php" class="btn btn-secondary">Reset</a>
+        </div>
+    </form>
 
     <P>TO DOWNLOAD SPECIFIC DATA, PLEASE USE THE SEARCH BAR</P>
     <!-- Download Button -->
@@ -675,7 +690,45 @@ if (isset($_POST['download'])) {
             <?php endfor; ?>
         </ul>
     </nav>
+    
 </div>
+<footer class="footer" style="margin-top: 100px; padding: 0px 110px 0px 110px;">
+    <div class="container">
+        <div class="footer-content">
+            <!-- Partnership Logos and Description -->
+            <div class="footer-section about">
+                <div class="logos">
+                    <img src="../../../assets/images/logo.png" alt="Your Logo" class="partner-logo">
+                    <img src="../../../assets/images/logo1.png" alt="ALS Logo" class="partner-logo">
+                </div>
+                <p>In partnership with the <strong>Alternative Learning System (ALS)</strong>, we aim to collect and analyze profiles of out-of-school youth, helping create better programs and initiatives tailored to their needs.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="footer-section links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="about-us.html">About Us</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="footer-section contact">
+                <h4>Contact Us</h4>
+                <p><i class="fas fa-phone-alt"></i> +63 123 4567 890</p>
+                <p><i class="fas fa-envelope"></i> info@household-info-system.com</p>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p>&copy; 2024 Household Information System in Manolo Fortich. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
 </div>
             </div>
 <!-- jQuery CDN - Slim version (=without AJAX) -->

@@ -38,12 +38,12 @@ include '../api/fetch_summary_data.php';
     
     /* Card Styles */
     .card-osy-total {
-    background-color: #ff6b6b; /* Soft Red */
+    background-color: #51cf66; /* Soft Red */
     color: white;
 }
 
 .card-osy-gender {
-    background-color: #ffa94d; /* Soft Orange */
+    background-color: #51cf66; /* Soft Orange */
     color: white;
 }
 
@@ -53,7 +53,7 @@ include '../api/fetch_summary_data.php';
 }
 
 .card-osy-district:nth-child(1) {
-    background-color: #51cf66; /* Soft Green */
+    background-color: #90D5ff; /* Soft Green */
     color: white;
 }
 
@@ -66,16 +66,21 @@ include '../api/fetch_summary_data.php';
     background-color: #9775fa; /* Soft Indigo */
     color: white;
 }
+h5{
+    text-align: center;
+    font-weight: bold;
+    font-size: 25px;
+}
 
 /* New style for Total Population card */
 .card-total-population {
-    background-color: #f783ac; /* Soft Violet/Pink */
+    background-color: #51cf66; /* Soft Violet/Pink */
     color: white;
 }
 
    /* Ensure responsive card sizes */
 .card {
-    min-width: 150px;
+    min-width: 220px;
     height: 100%;
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
@@ -95,25 +100,24 @@ include '../api/fetch_summary_data.php';
 }
 
 /* Headings inside cards */
-.card-body h6 {
-    font-size: 9px;
+.card-body h5 {
+    font-size: 1rem;
     color: #333; /* Dark text for readability */
 }
 
-
 /* Paragraphs inside cards */
 .card-body p {
-    font-weight: bold;
     font-size: 2rem;
     color: #ffffff; /* Consistent white text */
 }
-h5{
-    text-align: center;
+
+h5.card-title{
+    font-size: 15px;
+}
+p.card-text{
+    font-weight: bold;
 }
 
-.sub{
-    font-size: 8px;
-}
 /* Hover effect for interactive cards */
 .card:hover {
     transform: translateY(-5px); /* Subtle lift effect */
@@ -125,19 +129,6 @@ h5{
     font-size: 2rem;
     color: black; /* Black text for the age range labels */
 }
-.chart {
-    width: 100%;
-    height: 300px;
-}
-h5{
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 30px;
-}
-h5.mb-4{
-    margin-top: -35px;
-}
-
 </style>
 
 <body>
@@ -221,10 +212,10 @@ $conn->close();
                             </li>
                             
                             <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                <a href="district_osy.php" class="sidebar-link">Manolo Fortich OSY</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
+                                <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
@@ -325,73 +316,85 @@ $conn->close();
         </div>-->
 
         <!-- Main Content Starts Here -->
-<div class="container-fluid">
-    <div class="container mt-4">
-        <!-- First Row: Data Summary Cards in a Single Row -->
-        <div class="row justify-content-center mb-3">
-            <h5 class="mb-4">Data Summary</h5>
-
-            <!-- Total Population (District 1 to 4) -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-total-population" onclick="window.location.href='records.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Manolo Fortich Population <span class="sub">*District 1 to 4*</span></h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['totalPopulation']; ?></span></p>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Not Attending School (Age 15-30) -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-total" onclick="window.location.href='district_osy.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Out-of-school Youth <br><span class="sub">*Age 15-30*</span></h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['notAttendingSchool']; ?></span></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Interested in ALS -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-gender" onclick="window.location.href='interested.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Interested in ALS</h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['interestedInAls']; ?></span></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Persons with Disability -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-district" onclick="window.location.href='persons_with_disability.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Persons with Disability</h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['personsWithDisability']; ?></span></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- No Occupation -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-district" onclick="window.location.href='no_occupation.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">No Occupation</h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['noOccupation']; ?></span></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Families with Income Below 20,000 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-district" onclick="window.location.href='income_below_20,000.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Families with Income Below 20,000</h>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['lowIncomeFamilies']; ?></span></p>
-                    </div>
+        <div class="container-fluid">
+        <div class="container mt-4">
+    <!-- First Row: Total Population, Total OSY, and Gender Cards -->
+    <div class="row justify-content-center mb-3">
+    <h5 class="mb-4">Data Summary</h5>
+        <!-- Total Population (District 1 to 4) -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-total-population" style="cursor: pointer;" onclick="window.location.href='district_population.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Manolo Fortich Population <br><span style="font-size:12px;">*District 1 to 4*</span></h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $data['totalPopulation'];?></span></p>
                 </div>
             </div>
         </div>
+
+
+        
+        <!-- Not Attending School (Age 15-30) -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-total" style="cursor: pointer;" onclick="window.location.href='district_osy.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Manolo Fortich OSY <br><span style="font-size:12px;">*Age 15-30*</span></h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $data['notAttendingSchool']; ?></span></p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Interested in ALS -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3"> <!-- Set to double width -->
+            <div class="card text-center card-osy-gender" style="cursor: pointer;" onclick="window.location.href='interested.php';">
+                <div class="card-body">
+            <h5 class="card-title">Interested in ALS</h5>
+            <p class="card-text"><span class="age-range-label"><?php echo $data['interestedInAls']; ?></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Second Row: District OSY Cards -->
+    <div class="row justify-content-center">
+
+    
+        <!-- Persons with Disability -->
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='persons_with_disability.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Persons with Disability</h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $data['personsWithDisability']; ?></span></p>
+                </div>
+            </div>
+        </div>
+
+
+        
+        <!-- No Occupation -->
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='no_occupation.php';">
+                <div class="card-body">
+                    <h5 class="card-title">No Occupation</h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $data['noOccupation']; ?></span></p>
+                </div>
+            </div>
+        </div>
+
+
+        
+        <!-- Families with Income Below 20,000 -->
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='income_below_20,000.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Families with Income Below 20,000</h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $data['lowIncomeFamilies']; ?></span></p>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
     </div>
 </div>
 

@@ -177,7 +177,7 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
     color: white;
 }
 
-.active1{
+a.active1{
     background-color: #515151;
     color: white;
 }
@@ -186,14 +186,14 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
         margin-top: 1px;
         margin-bottom: 50px;
     }
-    /* Card Styles */
+     /* Card Styles */
 .card-osy-total {
-    background-color: #ff6b6b; /* Soft Red */
+    background-color: #51cf66; /* Soft Red */
     color: white;
 }
 
 .card-osy-gender {
-    background-color: #ffa94d; /* Soft Orange */
+    background-color: #51cf66; /* Soft Orange */
     color: white;
 }
 
@@ -203,7 +203,7 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
 }
 
 .card-osy-district:nth-child(1) {
-    background-color: #51cf66; /* Soft Green */
+    background-color: #90D5ff; /* Soft Green */
     color: white;
 }
 
@@ -219,13 +219,13 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
 
 /* New style for Total Population card */
 .card-total-population {
-    background-color: #f783ac; /* Soft Violet/Pink */
+    background-color: #51cf66; /* Soft Violet/Pink */
     color: white;
 }
 
 /* Ensure responsive card sizes */
 .card {
-    min-width: 150px;
+    min-width: 220px;
     height: 100%;
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
@@ -239,6 +239,7 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
 
 .card-text {
     color: white;
+    font-weight: bold;
 }
 
 /* Larger spacing for better visual separation */
@@ -248,20 +249,19 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
 
 /* Headings inside cards */
 .card-body h5 {
-    font-size: 9px;
+    font-size: 15px;
     color: #333; /* Dark text for readability */
 }
 
 /* Paragraphs inside cards */
 .card-body p {
-    font-weight: bold;
     font-size: 2rem;
     color: #ffffff; /* Consistent white text */
 }
 
 /* Target the age range labels to be black */
 .card-body .age-range-label {
-    font-size: 8px;
+    font-size: 12px;
     color: #000000; /* Black text for the age range labels */
 }
 
@@ -331,10 +331,10 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
                                     <a href="records.php" class="sidebar-link">Household Records</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a href="district_osy.php" class="sidebar-link active2">District OSY</a>
+                                    <a href="district_osy.php" class="sidebar-link active2">Manolo Fortich OSY</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a href="district_population.php" class="sidebar-link">District Population</a>
+                                    <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
                                 </li>
                                 <li class="sidebar-item">
                                     <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
@@ -440,61 +440,57 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
         </div>
     </div> -->
     <div class="container mt-4">
-    <!-- Single Row: Total Population, Total OSY, and Gender Cards -->
+    <!-- First Row: Total Population, Total OSY, and Gender Cards -->
     <div class="row justify-content-center mb-3">
         <!-- Total Population Card -->
-        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
-            <div class="card text-center card-total-population" style="width: 100px; cursor: pointer;" onclick="window.location.href='records.php';">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-total-population" style="cursor: pointer;" onclick="window.location.href='district_population.php';">
                 <div class="card-body">
-                    <h5 class="card-title">Manolo Fortich Population *District 1 to 4*</h5>
+                    <h5 class="card-title" style="font-weight: bold;">Manolo Fortich Population <br><span style="font-size:12px;">*District 1 to 4*</span></h5>
                     <p class="card-text"><?php echo $total_population; ?></p>
                 </div>
             </div>
         </div>
 
         <!-- Total OSY Card -->
-        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
-            <div class="card text-center card-osy-total" style="width: 100px; cursor: pointer;" onclick="window.location.href='district_osy.php';">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-total" style="cursor: pointer;" onclick="window.location.href='district_osy.php';">
                 <div class="card-body">
-                    <h5 class="card-title">Out-of-school Youth <br>
-                    *Age 15-30*</h5>
+                    <h5 class="card-title" style="font-weight: bold;">Manolo Fortich OSY <br><span style="font-size:12px;">*Age 15-30*</span></h5>
                     <p class="card-text"><?php echo $total_osy; ?></p>
                 </div>
             </div>
         </div>
 
-        <!-- Gender OSY Card -->
-        <div class="col-12 col-sm-4 col-md-6 col-lg-4 mb-3"> <!-- Set to double width -->
-            <div class="card text-center card-osy-gender" onclick="window.location.href='osy_age.php';" style="cursor: pointer;">
+        <!-- Gender OSY Card (Male, Female, Undefined) -->
+        <div class="col-12 col-sm-6 col-md-8 col-lg-6 mb-3"> <!-- Set to double width -->
+            <div class="card text-center card-osy-gender" style="cursor: pointer;" onclick="window.location.href='osy_age.php';">
                 <div class="card-body">
-                    <h5 class="card-title">OSY Genders</h5>
-                    <p class="card-text d-inline" style="font-weight: bold; font-size: 20px;">
-                    <span class="age-range-label">Males:</span> <?php echo $total_males; ?></p>
-                    <p class="card-text d-inline ms-3" style="font-weight: bold; font-size: 20px;">
-                    <span class="age-range-label">Females:</span> <?php echo $total_females; ?></p>
-                    <p class="card-text d-inline ms-3" style="font-weight: bold; font-size: 20px;">
-                    <span class="age-range-label">Other:</span> <?php echo $undefined_gender_count; ?></p>
+                    <h5 class="card-title" style="font-weight:bold;">OSY Genders</h5>
+                    <p class="card-text d-inline">
+                    <span class="age-range-label" style="font-size:12px;">Males:</span> <?php echo $total_males; ?></p>
+                    <p class="card-text d-inline ms-3">
+                    <span class="age-range-label" style="font-size:12px;">Females:</span> <?php echo $total_females; ?></p>
+                    <p class="card-text d-inline ms-3">
+                    <span class="age-range-label" style="font-size:12px;">Other:</span> <?php echo $undefined_gender_count; ?></p>
                 </div>
             </div>
         </div>
-        <!-- District OSY Cards -->
-        <div class="col-12 col-sm-4 col-md-6 col-lg-4 mb-3"> <!-- Set to double width -->
-    <div class="card text-center card-osy-district" onclick="window.location.href='district_osy.php';" style="cursor: pointer;">
-        <div class="card-body">
-            <h5 class="card-title">Manolo Fortich OSY Counts</h5>
-            <?php foreach ($district_data as $district => $count): ?>
-                <p class="card-text d-inline-block" style="font-size: 18px;">
-                    <span class="age-range-label"><?php echo $district; ?>:</span>
-                    <span  style="font-weight: bold; font-size: 20px;"><?php echo $count; ?></span>
-                </p>
-                <!-- Add space between items -->
-                <span class="ms-3"></span>
-            <?php endforeach; ?>
-        </div>
     </div>
-</div>
 
-
+    <!-- Second Row: District OSY Cards -->
+    <div class="row justify-content-center">
+        <!-- District OSY Cards -->
+        <?php foreach ($district_data as $district => $count): ?>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='district_osy.php';">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;"><?php echo $district; ?></h5>
+                    <p class="card-text"><?php echo $count; ?></p>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
     </div>
 </div>
 </div>
@@ -605,6 +601,8 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
         </div>
     </div>
 </footer>
+</div>
+
 </div>
 <!-- jQuery CDN - Slim version (=without AJAX) -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

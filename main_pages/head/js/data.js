@@ -1,7 +1,6 @@
 // data.js
 // Function to fetch and plot District OSY Pie Chart
-// Function to fetch and plot Barangay OSY Pie Chart
-function plotBarangayOSY() {
+function plotDistrictOSY() {
     fetch('../api/osy_pie_chart.php') // Update the path as needed
         .then(response => response.json())
         .then(data => {
@@ -9,32 +8,20 @@ function plotBarangayOSY() {
                 console.error(data.error);
                 return;
             }
-
-            const pieData = data.counts; // OSY counts by barangay
-            const pieLabels = data.barangays; // Barangay names
-            
-            console.log(pieLabels); // Check if barangay names are coming in correctly
+            const pieData = data.counts;
+            const pieLabels = data.districts;
 
             const pieChart = {
                 values: pieData,
-                labels: pieLabels, // Assign the barangay names to the labels
+                labels: pieLabels,
                 type: 'pie'
             };
 
-            const pieLayout = { 
-                title: 'OSY Distribution by Barangay',
-                showlegend: true
-            };
-
-            // Render the pie chart in the 'pie-chart' div
+            const pieLayout = { title: 'District OSY' };
             Plotly.newPlot('pie-chart', [pieChart], pieLayout);
         })
-        .catch(error => console.error('Error fetching Barangay OSY data:', error));
+        .catch(error => console.error('Error fetching District OSY data:', error));
 }
-
-// Call the function to plot the chart
-plotBarangayOSY();
-
 
 function plotDistrictPopulation() {
     fetch('../api/district_population.php') // Update the path as needed
@@ -79,7 +66,6 @@ function plotDistrictPopulation() {
 // Call the function to plot the chart
 plotDistrictPopulation();
 
-
 // Function to fetch and plot OSY By Age Bar Chart
 function plotOSYByAge() {
     fetch('../api/osy_by_age.php')
@@ -119,7 +105,7 @@ function plotOSYByAge() {
             const layout = {
                 title: 'OSY by Age',
                 barmode: 'group',  // Group the bars side by side
-                xaxis: { title: 'Year' }, // Keep x-axis title as Year
+                xaxis: { title: 'Year' },
                 yaxis: { title: 'OSY Count', tickformat: ',d' },
                 margin: { t: 40, b: 40, l: 40, r: 40 },
                 showlegend: true
@@ -129,10 +115,6 @@ function plotOSYByAge() {
         })
         .catch(error => console.error('Error fetching OSY By Age data:', error));
 }
-
-// Call the function to plot the chart
-plotOSYByAge();
-
 
 
 // Initialize all charts

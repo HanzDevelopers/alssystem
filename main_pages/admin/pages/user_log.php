@@ -30,7 +30,7 @@
         color: white;
     }
 
-    .active1 {
+    a.active1 {
         background-color: #515151;
         color: white;
     }
@@ -97,10 +97,10 @@
                                 <a href="records.php" class="sidebar-link">Household Records</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                <a href="district_osy.php" class="sidebar-link">Manolo Fortich OSY</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
+                                <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="osy_age.php" class="sidebar-link">OSY By Age</a>

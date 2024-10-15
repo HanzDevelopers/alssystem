@@ -19,6 +19,7 @@ include '../api/fetch_summary_data.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 
 <!--For SimpleStatistics-->
+
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://unpkg.com/simple-statistics@7.0.2/dist/simple-statistics.min.js"></script>
@@ -35,15 +36,14 @@ include '../api/fetch_summary_data.php';
     .container-fluid {
         margin-top: 1px;
     }
-    
     /* Card Styles */
     .card-osy-total {
-    background-color: #ff6b6b; /* Soft Red */
+    background-color: #51cf66; /* Soft Red */
     color: white;
 }
 
 .card-osy-gender {
-    background-color: #ffa94d; /* Soft Orange */
+    background-color: #51cf66; /* Soft Orange */
     color: white;
 }
 
@@ -53,7 +53,7 @@ include '../api/fetch_summary_data.php';
 }
 
 .card-osy-district:nth-child(1) {
-    background-color: #51cf66; /* Soft Green */
+    background-color: #90D5ff; /* Soft Green */
     color: white;
 }
 
@@ -66,16 +66,21 @@ include '../api/fetch_summary_data.php';
     background-color: #9775fa; /* Soft Indigo */
     color: white;
 }
+h5{
+    text-align: center;
+    font-weight: bold;
+    font-size: 25px;
+}
 
 /* New style for Total Population card */
 .card-total-population {
-    background-color: #f783ac; /* Soft Violet/Pink */
+    background-color: #51cf66; /* Soft Violet/Pink */
     color: white;
 }
 
    /* Ensure responsive card sizes */
 .card {
-    min-width: 150px;
+    min-width: 220px;
     height: 100%;
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
@@ -95,25 +100,24 @@ include '../api/fetch_summary_data.php';
 }
 
 /* Headings inside cards */
-.card-body h6 {
-    font-size: 9px;
+.card-body h5 {
+    font-size: 1rem;
     color: #333; /* Dark text for readability */
 }
 
-
 /* Paragraphs inside cards */
 .card-body p {
-    font-weight: bold;
     font-size: 2rem;
     color: #ffffff; /* Consistent white text */
 }
-h5{
-    text-align: center;
+
+h5.card-title{
+    font-size: 15px;
+}
+p.card-text{
+    font-weight: bold;
 }
 
-.sub{
-    font-size: 8px;
-}
 /* Hover effect for interactive cards */
 .card:hover {
     transform: translateY(-5px); /* Subtle lift effect */
@@ -125,19 +129,6 @@ h5{
     font-size: 2rem;
     color: black; /* Black text for the age range labels */
 }
-.chart {
-    width: 100%;
-    height: 300px;
-}
-h5{
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 30px;
-}
-h5.mb-4{
-    margin-top: -35px;
-}
-
 </style>
 
 <body>
@@ -147,7 +138,6 @@ h5.mb-4{
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
                 <?php
-session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -189,8 +179,7 @@ $conn->close();
                 
             </div>
 
-            <li class="sidebar-header title" style="
-    font-weight: bold; color:gray;">
+            <li class="sidebar-header">
                         Key Performans Indicator
                     </li>
                     <li class="sidebar-item active4">
@@ -199,8 +188,7 @@ $conn->close();
                             Dashboard
                         </a>
                     </li>
-                    <li class="sidebar-header" style="
-    font-weight: bold; color:gray;">
+                    <li class="sidebar-header">
                         Tools & Components
                     </li>
                     <li class="sidebar-item">
@@ -219,7 +207,6 @@ $conn->close();
                         <li class="sidebar-item">
                                 <a href="records.php" class="sidebar-link">Household Records</a>
                             </li>
-                            
                             <li class="sidebar-item">
                                 <a href="district_osy.php" class="sidebar-link">District OSY</a>
                             </li>
@@ -232,19 +219,9 @@ $conn->close();
                             <li class="sidebar-item">
                                 <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
                             </li>
-                            <li class="sidebar-item">
-                                <a href="persons_with_disability.php" class="sidebar-link">Persons with Disability</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
-                            </li>
                         </ul>
                     </li>
-                    <li class="sidebar-header" style="
-    font-weight: bold; color:gray;">
+                    <li class="sidebar-header">
                         Admin Action
                     </li>
                     <li class="sidebar-item">
@@ -263,7 +240,7 @@ $conn->close();
                         <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
                             aria-expanded="false" aria-controls="auth">
                             <i class="fa-regular fa-user pe-2"></i>
-                            Account Settings
+                            Auth
                         </a>
                         <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                           
@@ -325,76 +302,89 @@ $conn->close();
         </div>-->
 
         <!-- Main Content Starts Here -->
-<div class="container-fluid">
-    <div class="container mt-4">
-        <!-- First Row: Data Summary Cards in a Single Row -->
-        <div class="row justify-content-center mb-3">
-            <h5 class="mb-4">Data Summary</h5>
-
-            <!-- Total Population (District 1 to 4) -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-total-population" onclick="window.location.href='records.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Manolo Fortich Population <span class="sub">*District 1 to 4*</span></h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['totalPopulation']; ?></span></p>
-                    </div>
+        <div class="container-fluid">
+        <div class="container mt-4">
+    <!-- First Row: Total Population, Total OSY, and Gender Cards -->
+    <div class="row justify-content-center mb-3">
+    <h5 class="mb-4">Data Summary</h5>
+        <!-- Total Population (District 1 to 4) -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-total-population" style="cursor: pointer;" onclick="window.location.href='district_population.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Manolo Fortich Population <br><span style="font-size:12px;">*District 1 to 4*</span></h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['total_population']; ?></span></p>
                 </div>
             </div>
+        </div>
 
 
-            <!-- Not Attending School (Age 15-30) -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-total" onclick="window.location.href='district_osy.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Out-of-school Youth <br><span class="sub">*Age 15-30*</span></h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['notAttendingSchool']; ?></span></p>
-                    </div>
+        
+        <!-- Not Attending School (Age 15-30) -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-total" style="cursor: pointer;" onclick="window.location.href='district_osy.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Manolo Fortich OSY <br><span style="font-size:12px;">*Age 15-30*</span></h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['not_attending_school']; ?></span></p>
                 </div>
             </div>
+        </div>
 
-            <!-- Interested in ALS -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-gender" onclick="window.location.href='interested.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Interested in ALS</h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['interestedInAls']; ?></span></p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Persons with Disability -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-district" onclick="window.location.href='persons_with_disability.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Persons with Disability</h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['personsWithDisability']; ?></span></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- No Occupation -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-district" onclick="window.location.href='no_occupation.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">No Occupation</h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['noOccupation']; ?></span></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Families with Income Below 20,000 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-district" onclick="window.location.href='income_below_20,000.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Families with Income Below 20,000</h>
-                        <p class="card-text"><span class="age-range-label"><?php echo $data['lowIncomeFamilies']; ?></span></p>
-                    </div>
+        <!-- Interested in ALS -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3"> <!-- Set to double width -->
+            <div class="card text-center card-osy-gender" style="cursor: pointer;" onclick="window.location.href='interested.php';">
+                <div class="card-body">
+            <h5 class="card-title">Interested in ALS</h5>
+            <p class="card-text"><span class="age-range-label"><?php echo $summaryData['interested_in_als']; ?></span></p>
                 </div>
             </div>
         </div>
     </div>
+
+<!-- Second Row: District OSY Cards -->
+    <div class="row justify-content-center">
+
+    
+        <!-- Persons with Disability -->
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='persons_with_disability.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Persons with Disability</h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['persons_with_disability']; ?></span></p>
+                </div>
+            </div>
+        </div>
+
+
+        
+        <!-- No Occupation -->
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='no_occupation.php';">
+                <div class="card-body">
+                    <h5 class="card-title">No Occupation</h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['no_occupation']; ?></span></p>
+                </div>
+            </div>
+        </div>
+
+
+        
+        <!-- Families with Income Below 20,000 -->
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='income_below_20,000.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Families with Income Below 20,000</h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['low_income_families']; ?></span></p>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+    </div>
 </div>
 
+        
 
 
 
@@ -407,21 +397,21 @@ $conn->close();
             </form>
                 -->
             <!-- Container for charts -->
-             
-    <h5 class="mb-4">Data Charts</h5>
+    <h5  style="text-align:center; font-weight: bold; font-size:25px;">Data Charts</h5>
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="btn-group float-end" style="margin-left: 30px;">
-    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Download
-    </button>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" onclick="downloadImage()">Download Images</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadPDF()">Download PDF</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadCSV()">Download CSV</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Download Excel</a></li>
-    </ul>
+    <div class="btn-group" style="margin-right: 100px;">
+        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="margin-left:20px;">
+            Download
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" onclick="downloadImage()">Download Images</a></li>
+            <li><a class="dropdown-item" href="#" onclick="downloadPDF()">Download PDF</a></li>
+            <li><a class="dropdown-item" href="#" onclick="downloadCSV()">Download CSV</a></li>
+            <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Download Excel</a></li>
+        </ul>
+    </div>
 </div>
-</div>
+
 <div class="dashboard-container">
     <!-- Chart 1: District OSY Pie Chart -->
     <div class="chart-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; width: 30%; min-width: 300px; text-align: center;">
@@ -452,55 +442,10 @@ $conn->close();
             View Info
         </a>
     </div>
-
-
-<footer class="footer" style="margin-top: 100px; padding: 0px 110px 0px 110px;">
-    <div class="container">
-        <div class="footer-content">
-            <!-- Partnership Logos and Description -->
-            <div class="footer-section about">
-                <div class="logos">
-                    <img src="../../../assets/images/logo.png" alt="Your Logo" class="partner-logo">
-                    <img src="../../../assets/images/logo1.png" alt="ALS Logo" class="partner-logo">
-                </div>
-                <p>In partnership with the <strong>Alternative Learning System (ALS)</strong>, we aim to collect and analyze profiles of out-of-school youth, helping create better programs and initiatives tailored to their needs.</p>
-            </div>
-
-            <!-- Quick Links -->
-            <div class="footer-section links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="about-us.html">About Us</a></li>
-                    <li><a href="services.html">Services</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="faq.html">FAQ</a></li>
-                </ul>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="footer-section contact">
-                <h4>Contact Us</h4>
-                <p><i class="fas fa-phone-alt"></i> +63 123 4567 890</p>
-                <p><i class="fas fa-envelope"></i> info@household-info-system.com</p>
-            </div>
-        </div>
-
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-            <p>&copy; 2024 Household Information System in Manolo Fortich. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
-
 </div>
 
    
 </div>
-
-
-
-
-
 
 <!-- jQuery CDN - Slim version (=without AJAX) -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -523,6 +468,7 @@ $conn->close();
             });
         });
     </script>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>

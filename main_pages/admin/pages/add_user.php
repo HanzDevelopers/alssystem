@@ -33,9 +33,9 @@
                 <label for="user_type" class="form-label">User Type</label>
                 <select class="form-select" id="user_type" name="user_type" required>
                     <option value="" disabled selected>Select User Type</option>
-                    <option value="Supervisor">Supervisor</option>
+                    <!--<option value="Supervisor">Supervisor</option>-->
                     <option value="Coordinator">Coordinator</option>
-                    <option value="Volunteer">Volunteer</option>
+                    <option value="Volunteer">Implementer</option>
                 </select>
             </div>
             <div class="mb-3">

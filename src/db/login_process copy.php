@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $user_type = strtolower($user['user_type']);
                     if ($user_type == 'supervisor') {
                         header("Location: ../../main_pages/admin/pages/dashboard.php");
-                    } elseif ($user_type == 'volunteer') {
+                    } elseif ($user_type == 'implementer') {
                         header("Location: ../../main_pages/user/pages/dashboard.php");
                     } elseif ($user_type == 'coordinator') {
                         header("Location: ../../main_pages/head/pages/dashboard.php");

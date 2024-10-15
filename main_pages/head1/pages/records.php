@@ -109,22 +109,12 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
-    <title>Records</title>
-    <!-- Bootstrap CSS CDN --> 
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
-    <!-- Our Custom CSS -->
+    <!-- CORE CSS-->
+     
     <link rel="stylesheet" href="../../../src/css/nav.css">
-    <!-- Scrollbar Custom CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
-
-<!--For SimpleStatistics-->
-    <link rel="stylesheet" href="../css/style.css">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://unpkg.com/simple-statistics@7.0.2/dist/simple-statistics.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-statistics/7.8.1/simple-statistics.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <title>Records</title>
 </head>
 <style>
     
@@ -153,126 +143,108 @@ $result = $conn->query($sql);
                 }
                 ?>
             </h3>
-                
-                </div>
-    
-                <li class="sidebar-header title" style="
-        font-weight: bold; color:gray;">
-                            Key Performans Indicator
-                        </li>
-                        <li class="sidebar-item active4">
-                            <a href="dashboard.php" class="sidebar-link">
-                            <i class="fa-regular fa-file-lines pe-2"></i>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="sidebar-header" style="
-        font-weight: bold; color:gray;">
-                            Tools & Components
-                        </li>
-                        <li class="sidebar-item">
-                    <a href="#" id="formLink" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                        Form
-                    </a>
+        </div>
+
+        <li class="sidebar-header">
+            Key Performans Indicator
+        </li>
+        <li class="sidebar-item">
+            <a href="dashboard.php" class="sidebar-link">
+                <i class="fa-regular fa-file-lines pe-2"></i>
+                Dashboard
+            </a>
+        </li>
+        <li class="sidebar-header">
+            Tools & Components
+        </li>
+        <li class="sidebar-item">
+            <a href="#" id="formLink" class="sidebar-link">
+                <i class="fa-regular fa-file-lines pe-2"></i>
+                Form
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
+                aria-expanded="false" aria-controls="pages">
+                <i class="fa-solid fa-list pe-2"></i>
+                Reports
+            </a>
+            <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item active2">
+                    <a href="records.php" class="sidebar-link">Household Records</a>
                 </li>
-                        <li class="sidebar-item ">
-                            <a href="reports.php" class="sidebar-link collapsed active1" style="color:white;" data-bs-toggle="collapse" data-bs-target="#pages"
-                                aria-expanded="false" aria-controls="pages">
-                                <i class="fa-solid fa-list pe-2"></i>
-                                Reports
-                            </a>
-                            <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item active2">
-                                    <a href="records.php" class="sidebar-link">Household Records</a>
-                                </li>
-                                
-                                <li class="sidebar-item">
-                                    <a href="district_osy.php" class="sidebar-link">District OSY</a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a href="district_population.php" class="sidebar-link">District Population</a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a href="persons_with_disability.php" class="sidebar-link">Persons with Disability</a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="sidebar-header" style="
-        font-weight: bold; color:gray;">
-                            Admin Action
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="users.php" class="sidebar-link">
-                            <i class="fa-regular fa-file-lines pe-2"></i>
-                                Users
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="user_log.php" class="sidebar-link">
-                            <i class="fa-regular fa-file-lines pe-2"></i>
-                                User Log
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
-                                aria-expanded="false" aria-controls="auth">
-                                <i class="fa-regular fa-user pe-2"></i>
-                                Account Settings
-                            </a>
-                            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                              
-                            <li class="sidebar-item">
-                                    <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
-                                </li>
-                                <li class="sidebar-item">
-                                <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
-                                </li>
-                            </ul>
-                        </li>
-                        
-                    </ul>
-            </nav>
-    
-    
-            <!-- Modal Structure -->
-        <div class="modal fade" id="csvModal" tabindex="-1" aria-labelledby="csvModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="csvModalLabel">Choose an Action</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <p>What would you like to do?</p>
-                        <button type="button" id="uploadCsvBtn" class="btn btn-outline-primary btn-lg mb-3">Upload CSV File</button><br>
-                        <button type="button" id="goToFormBtn" class="btn btn-primary btn-lg">Go to Form</button>
-                    </div>
+                <li class="sidebar-item">
+                    <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="district_population.php" class="sidebar-link">District Population</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
+                </li>
+            </ul>
+        </li>
+        <li class="sidebar-header">
+            Admin Action
+        </li>
+        <li class="sidebar-item">
+            <a href="users.php" class="sidebar-link">
+                <i class="fa-regular fa-file-lines pe-2"></i>
+                Users
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a href="user_log.php" class="sidebar-link">
+                <i class="fa-regular fa-file-lines pe-2"></i>
+                User Log
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
+                aria-expanded="false" aria-controls="auth">
+                <i class="fa-regular fa-user pe-2"></i>
+                Auth
+            </a>
+            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    </nav>
+
+    <!-- Modal Structure -->
+    <div class="modal fade" id="csvModal" tabindex="-1" aria-labelledby="csvModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="csvModalLabel">Choose an Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>What would you like to do?</p>
+                    <button type="button" id="uploadCsvBtn" class="btn btn-outline-primary btn-lg mb-3">Upload CSV File</button><br>
+                    <button type="button" id="goToFormBtn" class="btn btn-primary btn-lg">Go to Form</button>
                 </div>
             </div>
         </div>
-    
-            <!-- Page Content  -->
-            <div id="content">
-                
-                <div class="menu-header">
-                    <button type="button" id="sidebarCollapse" class="btn menu-btn">
-                        <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
-                    </button>
-                    <span class="menu-text">Dashboard</span>
-                    <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
+    </div>
+
+    <!-- Page Content  -->
+    <div id="content">
+        <div class="menu-header">
+            <button type="button" id="sidebarCollapse" class="btn menu-btn">
+                <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
+            </button>
+            <span class="menu-text">Household Records</span>
+            <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
         </div>
         <!-- End of top nav -->
 
@@ -406,7 +378,7 @@ $result = $conn->query($sql);
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script src="../js/records_download.js"></script>
-<script type="text/javascript">
+    <script type="text/javascript">
         $(document).ready(function () {
             $("#sidebar").mCustomScrollbar({
                 theme: "minimal"

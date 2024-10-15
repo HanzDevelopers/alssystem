@@ -1,7 +1,3 @@
-<?php
-// Include the logic to fetch the summary data
-include '../api/fetch_summary_data.php';
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,108 +23,22 @@ include '../api/fetch_summary_data.php';
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <style>
-.active4{
-    background-color: #b9b9b9;
-    color: white;
-}
+
+.active2 {
+        background-color: #b9b9b9;
+        color: white;
+    }
+
+    .active1 {
+        background-color: #515151;
+        color: white;
+    }
+
     /* Ensure container pushes content down */
     .container-fluid {
         margin-top: 1px;
+        margin-bottom: 50px;
     }
-    
-    /* Card Styles */
-    .card-osy-total {
-    background-color: #51cf66; /* Soft Red */
-    color: white;
-}
-
-.card-osy-gender {
-    background-color: #51cf66; /* Soft Orange */
-    color: white;
-}
-
-.card-osy-district {
-    background-color: #ffd43b; /* Soft Yellow */
-    color: #333; /* Dark text for better contrast on yellow */
-}
-
-.card-osy-district:nth-child(1) {
-    background-color: #90D5ff; /* Soft Green */
-    color: white;
-}
-
-.card-osy-district:nth-child(2) {
-    background-color: #74c0fc; /* Soft Blue */
-    color: white;
-}
-
-.card-osy-district:nth-child(3) {
-    background-color: #9775fa; /* Soft Indigo */
-    color: white;
-}
-h5{
-    text-align: center;
-    font-weight: bold;
-    font-size: 25px;
-}
-
-/* New style for Total Population card */
-.card-total-population {
-    background-color: #51cf66; /* Soft Violet/Pink */
-    color: white;
-}
-
-   /* Ensure responsive card sizes */
-.card {
-    min-width: 220px;
-    height: 100%;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-/* Margin below each card */
-.mb-3 {
-    margin-bottom: 1.5rem;
-}
-
-.card-text {
-    color: white;
-}
-/* Larger spacing for better visual separation */
-.mt-4 {
-    margin-bottom: 60px;
-}
-
-/* Headings inside cards */
-.card-body h5 {
-    font-size: 1rem;
-    color: #333; /* Dark text for readability */
-}
-
-/* Paragraphs inside cards */
-.card-body p {
-    font-size: 2rem;
-    color: #ffffff; /* Consistent white text */
-}
-
-h5.card-title{
-    font-size: 15px;
-}
-p.card-text{
-    font-weight: bold;
-}
-
-/* Hover effect for interactive cards */
-.card:hover {
-    transform: translateY(-5px); /* Subtle lift effect */
-    background-color: #f1f3f5; /* Light grey on hover for contrast */
-    color: #333;
-}
-/* Target the age range labels to be black */
-.card:hover .card-body .age-range-label {
-    font-size: 2rem;
-    color: black; /* Black text for the age range labels */
-}
 </style>
 
 <body>
@@ -137,43 +47,19 @@ p.card-text{
         <nav id="sidebar">
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
+                
                 <?php
-
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../../../index.php');
-    exit();
-}
-
-// Include the database connection
-include '../../../src/db/db_connection.php';
-
-// Fetch the latest user data from the database based on session user_id
-$user_id = $_SESSION['user_id']; // Assuming user_id is stored in the session during login
-
-// Adjust column name to match your database structure
-$sql = "SELECT user_name FROM user_tbl WHERE user_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    // Update the session username with the latest data from the database
-    $_SESSION['username'] = $row['user_name']; // Adjusted to 'user_name'
-}
-
-// Display the latest username
-if (isset($_SESSION['username'])) {
-    echo '<a href="#">' . htmlspecialchars($_SESSION['username']) . '</a>';
-} else {
-    echo '<a href="#">Admin</a>';
-}
-
-$stmt->close();
-$conn->close();
-?>
+                    session_start();
+                    if (!isset($_SESSION['username'])) {
+                        header('Location: ../../../index.php');
+                        exit();
+                    }
+                    if (isset($_SESSION['username'])) {
+                        echo '<a href="#">' . htmlspecialchars($_SESSION['username']) . '</a>';
+                    } else {
+                        echo '<a href="#">Admin</a>';
+                    }
+                ?>
 
             </h3>
                 
@@ -183,7 +69,7 @@ $conn->close();
     font-weight: bold; color:gray;">
                         Key Performans Indicator
                     </li>
-                    <li class="sidebar-item active4">
+                    <li class="sidebar-item">
                         <a href="dashboard.php" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
                             Dashboard
@@ -200,7 +86,7 @@ $conn->close();
                 </a>
             </li>
                     <li class="sidebar-item">
-                        <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
+                        <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
                             aria-expanded="false" aria-controls="pages">
                             <i class="fa-solid fa-list pe-2"></i>
                             Reports
@@ -209,7 +95,6 @@ $conn->close();
                         <li class="sidebar-item">
                                 <a href="records.php" class="sidebar-link">Household Records</a>
                             </li>
-                            
                             <li class="sidebar-item">
                                 <a href="district_osy.php" class="sidebar-link">District OSY</a>
                             </li>
@@ -229,7 +114,7 @@ $conn->close();
                                 <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
+                                <a href="income_below_20,000.php" class="sidebar-link active2">Income Below 20,000</a>
                             </li>
                         </ul>
                     </li>
@@ -294,20 +179,8 @@ $conn->close();
                 <button type="button" id="sidebarCollapse" class="btn menu-btn">
                     <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
                 </button>
-                <span class="menu-text">Dashboard</span>
+                <span class="menu-text">Household Records</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
-                <!-- Dropdown fixed at the bottom
-<div class="dropdown fixed-top-right">
-    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Download
-    </button>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" onclick="downloadImage()">Download Images</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadPDF()">Download PDF</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadCSV()">Download CSV</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Download Excel</a></li>
-    </ul>
-</div> -->
             </div>
             
     
@@ -315,146 +188,11 @@ $conn->close();
         </div>-->
 
         <!-- Main Content Starts Here -->
-        <div class="container-fluid">
-        <div class="container mt-4">
-    <!-- First Row: Total Population, Total OSY, and Gender Cards -->
-    <div class="row justify-content-center mb-3">
-    <h5 class="mb-4">Data Summary</h5>
-        <!-- Total Population (District 1 to 4) -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-            <div class="card text-center card-total-population" style="cursor: pointer;" onclick="window.location.href='district_population.php';">
-                <div class="card-body">
-                    <h5 class="card-title">Manolo Fortich Population <br><span style="font-size:12px;">*District 1 to 4*</span></h5>
-                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['total_population']; ?></span></p>
-                </div>
-            </div>
-        </div>
+<div class="container-fluid">
+    <div class="container mt-4">
+        hello
 
-
-        
-        <!-- Not Attending School (Age 15-30) -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-            <div class="card text-center card-osy-total" style="cursor: pointer;" onclick="window.location.href='district_osy.php';">
-                <div class="card-body">
-                    <h5 class="card-title">Manolo Fortich OSY <br><span style="font-size:12px;">*Age 15-30*</span></h5>
-                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['not_attending_school']; ?></span></p>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Interested in ALS -->
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3"> <!-- Set to double width -->
-            <div class="card text-center card-osy-gender" style="cursor: pointer;" onclick="window.location.href='interested.php';">
-                <div class="card-body">
-            <h5 class="card-title">Interested in ALS</h5>
-            <p class="card-text"><span class="age-range-label"><?php echo $summaryData['interested_in_als']; ?></span></p>
-                </div>
-            </div>
-        </div>
     </div>
-
-<!-- Second Row: District OSY Cards -->
-    <div class="row justify-content-center">
-
-    
-        <!-- Persons with Disability -->
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='persons_with_disability.php';">
-                <div class="card-body">
-                    <h5 class="card-title">Persons with Disability</h5>
-                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['persons_with_disability']; ?></span></p>
-                </div>
-            </div>
-        </div>
-
-
-        
-        <!-- No Occupation -->
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='no_occupation.php';">
-                <div class="card-body">
-                    <h5 class="card-title">No Occupation</h5>
-                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['no_occupation']; ?></span></p>
-                </div>
-            </div>
-        </div>
-
-
-        
-        <!-- Families with Income Below 20,000 -->
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='income_below_20,000.php';">
-                <div class="card-body">
-                    <h5 class="card-title">Families with Income Below 20,000</h5>
-                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['low_income_families']; ?></span></p>
-                </div>
-            </div>
-        </div>
-
-        
-    </div>
-    </div>
-</div>
-
-
-
-
-
-
-            <!--
-        <form id="searchForm">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" id="dateEncoded" name="dateEncoded" placeholder="Search by year Encoded">
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </div>
-            </form>
-                -->
-            <!-- Container for charts -->
-             
-    <h5 class="mb-4">Data Charts</h5>
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="btn-group float-end" style="margin-left: 30px;">
-    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Download
-    </button>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" onclick="downloadImage()">Download Images</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadPDF()">Download PDF</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadCSV()">Download CSV</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Download Excel</a></li>
-    </ul>
-</div>
-</div>
-<div class="dashboard-container">
-    <!-- Chart 1: District OSY Pie Chart -->
-    <div class="chart-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; width: 30%; min-width: 300px; text-align: center;">
-        <div id="pie-chart" class="chart"></div>
-        <!-- View Info Button for Pie Chart -->
-        <a href="district_osy.php" class="sidebar-link btn btn-primary mt-2">
-            <i class="fa fa-info-circle me-2"></i>
-            View Info
-        </a>
-    </div>
-
-    <!-- Chart 2: District Population Bar Chart -->
-    <div class="chart-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; width: 30%; min-width: 300px; text-align: center;">
-        <div id="bar-chart1" class="chart"></div>
-        <!-- View Info Button for Bar Chart 1 -->
-        <a href="district_population.php" class="sidebar-link btn btn-primary mt-2">
-            <i class="fa fa-info-circle me-2"></i>
-            View Info
-        </a>
-    </div>
-
-    <!-- Chart 3: OSY By Age Bar Chart -->
-    <div class="chart-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; width: 30%; min-width: 300px; text-align: center;">
-        <div id="bar-chart2" class="chart"></div>
-        <!-- View Info Button for Bar Chart 2 -->
-        <a href="interested.php" class="sidebar-link btn btn-primary mt-2">
-            <i class="fa fa-info-circle me-2"></i>
-            View Info
-        </a>
     </div>
 
 

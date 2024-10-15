@@ -17,7 +17,7 @@ function plotDistrictOSY() {
                 type: 'pie'
             };
 
-            const pieLayout = { title: 'District OSY' };
+            const pieLayout = { title: 'Manolo Fortich OSY' };
             Plotly.newPlot('pie-chart', [pieChart], pieLayout);
         })
         .catch(error => console.error('Error fetching District OSY data:', error));
@@ -55,7 +55,7 @@ function plotDistrictPopulation() {
                 }
             };
 
-            const barLayout1 = { title: 'District Population' };
+            const barLayout1 = { title: 'Manolo Fortich Population' };
             Plotly.newPlot('bar-chart1', [barChart1], barLayout1);
         })
         .catch(error => console.error('Error fetching District Population data:', error));

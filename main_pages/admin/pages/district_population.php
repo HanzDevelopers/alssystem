@@ -319,7 +319,7 @@ if (isset($_POST['download'])) {
         color: white;
     }
 
-    .active1 {
+    a.active1 {
         background-color: #515151;
         color: white;
     }
@@ -331,12 +331,12 @@ if (isset($_POST['download'])) {
     }
     /* Card Styles */
 .card-osy-total {
-    background-color: #ff6b6b; /* Soft Red */
+    background-color: #51cf66; /* Soft Red */
     color: white;
 }
 
 .card-osy-gender {
-    background-color: #ffa94d; /* Soft Orange */
+    background-color: #51cf66; /* Soft Orange */
     color: white;
 }
 
@@ -346,7 +346,7 @@ if (isset($_POST['download'])) {
 }
 
 .card-osy-district:nth-child(1) {
-    background-color: #51cf66; /* Soft Green */
+    background-color: #90D5ff; /* Soft Green */
     color: white;
 }
 
@@ -362,13 +362,13 @@ if (isset($_POST['download'])) {
 
 /* New style for Total Population card */
 .card-total-population {
-    background-color: #f783ac; /* Soft Violet/Pink */
+    background-color: #51cf66; /* Soft Violet/Pink */
     color: white;
 }
 
 /* Ensure responsive card sizes */
 .card {
-    min-width: 150px;
+    min-width: 220px;
     height: 100%;
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
@@ -391,7 +391,7 @@ if (isset($_POST['download'])) {
 
 /* Headings inside cards */
 .card-body h5 {
-    font-size: 9px;
+    font-size: 15px;
     color: #333; /* Dark text for readability */
 }
 
@@ -403,7 +403,7 @@ if (isset($_POST['download'])) {
 
 /* Target the age range labels to be black */
 .card-body .age-range-label {
-    font-size: 8px;
+    font-size: 12px;
     color: #000000; /* Black text for the age range labels */
 }
 
@@ -474,10 +474,10 @@ if (isset($_POST['download'])) {
                                     <a href="records.php" class="sidebar-link">Household Records</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                    <a href="district_osy.php" class="sidebar-link">Manolo Fortich OSY</a>
                                 </li>
                                 <li class="sidebar-item active2">
-                                    <a href="district_population.php" class="sidebar-link">District Population</a>
+                                    <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
                                 </li>
                                 <li class="sidebar-item">
                                     <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
@@ -558,7 +558,7 @@ if (isset($_POST['download'])) {
                 <button type="button" id="sidebarCollapse" class="btn menu-btn">
                     <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
                 </button>
-                <span class="menu-text">District Population</span>
+                <span class="menu-text">Manolo Fortich Population</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
             </div>
             
@@ -583,61 +583,58 @@ if (isset($_POST['download'])) {
     </div> -->
     
     <div class="container mt-4">
-    <!-- Single Row: Total Population, Total OSY, and Gender Cards -->
+    <!-- First Row: Total Population, Total OSY, and Gender Cards -->
     <div class="row justify-content-center mb-3">
         <!-- Total Population Card -->
-        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
-            <div class="card text-center card-total-population"style="width: 100px; cursor: pointer;" onclick="window.location.href='records.php';">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-total-population" style="cursor: pointer;" onclick="window.location.href='district_population.php';">
                 <div class="card-body">
-                    <h5 class="card-title">Manolo Fortich Population *District 1 to 4*</h5>
-                    <p class="card-text"><?php echo $total_population; ?></p>
+                    <h5 class="card-title" style="font-weight: bold;">Manolo Fortich Population <br><span style="font-size:12px;">*District 1 to 4*</span></h5>
+                    <p class="card-text" style="font-weight: bold;"><?php echo $total_population; ?></p>
                 </div>
             </div>
         </div>
 
         <!-- Total OSY Card -->
-        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
-            <div class="card text-center card-osy-total" style="width: 100px; cursor: pointer;" onclick="window.location.href='district_osy.php';">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-total" style="cursor: pointer;" onclick="window.location.href='district_osy.php';">
                 <div class="card-body">
-                    <h5 class="card-title">Out-of-school Youth <br>
-                    *Age 15-30*</h5>
-                    <p class="card-text"><?php echo $total_osy; ?></p>
+                    <h5 class="card-title" style="font-weight: bold;">Manolo Fortich OSY <br><span style="font-size:12px;">*Age 15-30*</span></h5>
+                    <p class="card-text" style="font-weight: bold;"><?php echo $total_osy; ?></p>
                 </div>
             </div>
         </div>
 
-        <!-- Gender OSY Card -->
-        <div class="col-12 col-sm-4 col-md-6 col-lg-4 mb-3"> <!-- Set to double width -->
-            <div class="card text-center card-osy-gender" style="cursor: pointer;" onclick="window.location.href='records.php';">
+
+        <!-- Gender OSY Card (Male, Female, Undefined) -->
+        <div class="col-12 col-sm-6 col-md-8 col-lg-6 mb-3"> <!-- Set to double width -->
+            <div class="card text-center card-osy-gender" style="cursor: pointer;" onclick="window.location.href='osy_age.php';">
                 <div class="card-body">
-                    <h5 class="card-title">Population Gender density</h5>
-                    <p class="card-text d-inline" style="font-weight: bold; font-size: 20px;">
-                    <span class="age-range-label">Males:</span> <?php echo $total_males; ?></p>
-                    <p class="card-text d-inline ms-3" style="font-weight: bold; font-size: 20px;">
-                    <span class="age-range-label">Females:</span> <?php echo $total_females; ?></p>
-                    <p class="card-text d-inline ms-3" style="font-weight: bold; font-size: 20px;">
-                    <span class="age-range-label">Other:</span> <?php echo $undefined_gender_count; ?></p>
+                    <h5 class="card-title" style="font-weight: bold;">Population Gender density</h5>
+                    <p class="card-text d-inline" style="font-weight: bold;">
+                    <span class="age-range-label" style="font-size: 12;">Males:</span> <?php echo $total_males; ?></p>
+                    <p class="card-text d-inline ms-3" style="font-weight: bold;">
+                    <span class="age-range-label" style="font-size: 12;">Females:</span> <?php echo $total_females; ?></p>
+                    <p class="card-text d-inline ms-3" style="font-weight: bold;">
+                    <span class="age-range-label" style="font-size: 12;"> Other:</span> <?php echo $undefined_gender_count; ?></p>
                 </div>
             </div>
-        </div>
-        <!-- District OSY Cards -->
-        <div class="col-12 col-sm-4 col-md-6 col-lg-4 mb-3"> <!-- Set to double width -->
-    <div class="card text-center card-osy-district"style="cursor: pointer;" onclick="window.location.href='records.php';">
-        <div class="card-body">
-            <h5 class="card-title">Manolo Fortich District's Population Counts</h5>
-            <?php foreach ($district_data as $district => $count): ?>
-                <p class="card-text d-inline-block" style="font-size: 9px;">
-                    <span class="age-range-label"><?php echo $district; ?>:</span>
-                    <span  style="font-weight: bold; font-size: 20px;"><?php echo $count; ?></span>
-                </p>
-                <!-- Add space between items -->
-                <span class="ms-3"></span>
-            <?php endforeach; ?>
         </div>
     </div>
-</div>
 
-
+    <!-- Second Row: District OSY Cards -->
+    <div class="row justify-content-center">
+        <!-- District OSY Cards -->
+        <?php foreach ($district_data as $district => $count): ?>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='district_osy.php';">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight:bold;"><span class="underline-text"><?php echo $district; ?></span></h5>
+                    <p class="card-text"style="font-weight:bold;"><span class="underline-text"><?php echo $count; ?></span></p>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
     </div>
 </div>
 
@@ -651,7 +648,7 @@ if (isset($_POST['download'])) {
 </div>
 
 <div class="container mt-5">
-    <h2 class="mb-4">District Population Data</h2>
+    <h2 class="mb-4" style="text-align:center;">District Population Data</h2>
 
     <!-- Single Search Bar Form -->
     <form method="GET" class="mb-4">

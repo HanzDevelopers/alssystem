@@ -14,7 +14,7 @@ $start_from = ($current_page - 1) * $results_per_page;
 $search_term = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Query to get the total number of users with user_type = 'teacher' or 'head' in any case and matching the search criteria
-$search_query = "SELECT COUNT(*) AS total FROM user_tbl WHERE LOWER(user_type) IN ('volunteer', 'coordinator')";
+$search_query = "SELECT COUNT(*) AS total FROM user_tbl WHERE LOWER(user_type) IN ('implementer', 'coordinator')";
 if (!empty($search_term)) {
     $search_query .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' OR status LIKE '%" . $conn->real_escape_string($search_term) . "%')";
 }
@@ -24,7 +24,7 @@ $total_users = $row['total'];
 $total_pages = ceil($total_users / $results_per_page);
 
 // Query to get the users for the current page, ordered by user_name in ascending order
-$sql = "SELECT user_id, user_name, email, phone_number, user_type, status, district FROM user_tbl WHERE LOWER(user_type) IN ('volunteer', 'coordinator')";
+$sql = "SELECT user_id, user_name, email, phone_number, user_type, status, district FROM user_tbl WHERE LOWER(user_type) IN ('implementer', 'coordinator')";
 if (!empty($search_term)) {
     $sql .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' 
                  OR status LIKE '%" . $conn->real_escape_string($search_term) . "%' 
@@ -64,7 +64,7 @@ $result = $conn->query($sql);
         color: white;
     }
 
-    .active1 {
+    a.active1 {
         background-color: #515151;
         color: white;
     }
@@ -131,10 +131,10 @@ $result = $conn->query($sql);
                                 <a href="records.php" class="sidebar-link">Household Records</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                <a href="district_osy.php" class="sidebar-link">Manolo Fortich OSY</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
+                                <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="osy_age.php" class="sidebar-link">OSY By Age</a>

@@ -129,10 +129,10 @@ $conn->close();
                                 <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                <a href="district_osy.php" class="sidebar-link">Manolo Fortich OSY</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
+                                <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="osy_age.php" class="sidebar-link">OSY By Age</a>

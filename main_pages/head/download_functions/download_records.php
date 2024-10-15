@@ -65,9 +65,11 @@ $sql = "
     WHERE (m.household_members LIKE '%" . mysqli_real_escape_string($conn, $search) . "%' 
         OR m.birthdate LIKE '%" . mysqli_real_escape_string($conn, $search) . "%' 
         OR m.age LIKE '%" . mysqli_real_escape_string($conn, $search) . "%' 
-        OR CONCAT(l.province, ', ', l.city_municipality, ', ', l.barangay) LIKE '%" . mysqli_real_escape_string($conn, $search) . "%')
+        OR CONCAT(l.province, ', ', l.city_municipality, ', ', l.barangay) LIKE '%" . mysqli_real_escape_string($conn, $search) . "%'
+        OR l.encoder_name LIKE '%" . mysqli_real_escape_string($conn, $search) . "%')
         AND ($barangay_condition_sql)
 ";
+
 
 // Execute the query
 $result = $conn->query($sql);
