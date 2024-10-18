@@ -23,32 +23,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <style>
+    
+.active2{
+    background-color: #b9b9b9;
+    color: white;
+}
 
-.active2 {
-        background-color: #b9b9b9;
-        color: white;
-    }
+.active1{
+    background-color: #515151;
+    color: white;
+}
 
-    a.active1 {
-        background-color: #515151;
-        color: white;
-    }
-
-    /* Ensure container pushes content down */
-    .container-fluid {
-        margin-top: 1px;
-        margin-bottom: 50px;
-    }
 </style>
-
 <body>
     <div class="wrapper">
         <!-- Sidebar  -->
         <nav id="sidebar">
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
-                
-                <?php
+                    <?php
                     session_start();
                     if (!isset($_SESSION['username'])) {
                         header('Location: ../../../index.php');
@@ -60,99 +53,98 @@
                         echo '<a href="#">Admin</a>';
                     }
                 ?>
-
             </h3>
                 
-            </div>
-
-            <li class="sidebar-header title" style="
-    font-weight: bold; color:gray;">
-                        Key Performans Indicator
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="dashboard.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="sidebar-header" style="
-    font-weight: bold; color:gray;">
-                        Tools & Components
-                    </li>
-                    <li class="sidebar-item">
-                <a href="#" id="formLink" class="sidebar-link">
-                    <i class="fa-regular fa-file-lines pe-2"></i>
-                    Form
-                </a>
-            </li>
-                    <li class="sidebar-item">
-                        <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
-                            aria-expanded="false" aria-controls="pages">
-                            <i class="fa-solid fa-list pe-2"></i>
-                            Reports
-                        </a>
-                        <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                        <li class="sidebar-item active2">
-                                <a href="records.php" class="sidebar-link">Household Records</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">Manolo Fortich OSY</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="persons_with_disability.php" class="sidebar-link">Persons with Disability</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-header" style="
-    font-weight: bold; color:gray;">
-                        Admin Action
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="users.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            Users
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="user_log.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            User Log
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
-                            aria-expanded="false" aria-controls="auth">
-                            <i class="fa-regular fa-user pe-2"></i>
-                            Account Settings
-                        </a>
-                        <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                          
+                </div>
+    
+                <li class="sidebar-header title" style="
+        font-weight: bold; color:gray;">
+                            Key Performans Indicator
+                        </li>
                         <li class="sidebar-item">
-                                <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
-                            </li>
+                            <a href="dashboard.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            Tools & Components
+                        </li>
+                        <li class="sidebar-item">
+                    <a href="#" id="formLink" class="sidebar-link">
+                        <i class="fa-regular fa-file-lines pe-2"></i>
+                        Form
+                    </a>
+                </li>
+                        <li class="sidebar-item">
+                            <a href="reports.php" class="sidebar-link collapsed active1" style="color:white;" data-bs-toggle="collapse" data-bs-target="#pages"
+                                aria-expanded="false" aria-controls="pages">
+                                <i class="fa-solid fa-list pe-2"></i>
+                                Reports
+                            </a>
+                            <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item active2">
+                                    <a href="records.php" class="sidebar-link">Household Records</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="district_osy.php" class="sidebar-link">Manolo Fortich OSY</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="persons_with_disability.php" class="sidebar-link">Persons with Disability</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            Admin Action
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="users.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                Users
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="user_log.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                User Log
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
+                                aria-expanded="false" aria-controls="auth">
+                                <i class="fa-regular fa-user pe-2"></i>
+                                Account Settings
+                            </a>
+                            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                              
                             <li class="sidebar-item">
-                            <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                </ul>
-        </nav>
+                                    <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
+                                </li>
+                                <li class="sidebar-item">
+                                <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                    </ul>
+            </nav>
 
 
         <!-- Modal Structure -->
@@ -172,9 +164,9 @@
         </div>
     </div>
 
+
         <!-- Page Content  -->
         <div id="content">
-            
             <div class="menu-header">
                 <button type="button" id="sidebarCollapse" class="btn menu-btn">
                     <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
@@ -182,15 +174,9 @@
                 <span class="menu-text">Household Records</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
             </div>
-            
-    
-        <!--remove responsive
-        </div>-->
+        <!-- End of top nav -->
 
-        <!-- Main Content Starts Here -->
-<div class="container-fluid">
-    <div class="container mt-4">
-        
+        <div class="container mt-5">
     <!-- Search Bar -->
     <form id="searchForm" class="mb-3">
         <div class="input-group">
@@ -235,8 +221,7 @@ $total_sql = "
     WHERE /*l.encoder_name LIKE '%$search%' */
        m.household_members LIKE '%$search%' 
        OR m.birthdate LIKE '%$search%' 
-       OR m.gender LIKE '%$search%'
-       OR m.age LIKE '%$search%'  
+       OR m.age LIKE '%$search%' 
        OR CONCAT(l.province, ', ', l.city_municipality, ', ', l.barangay) LIKE '%$search%'
 ";
 $total_result = $conn->query($total_sql);
@@ -245,13 +230,12 @@ $total_records = $total_row['total'];
 
 // Fetch data from the household table, filtered by search query, ordered by birthdate (newest to oldest) with LIMIT and OFFSET
 $sql = "
-    SELECT m.*, l.encoder_name, m.gender, CONCAT(l.barangay, ', ', l.city_municipality, ', ',l.province ) AS address
+    SELECT m.*, l.encoder_name, CONCAT(l.barangay, ', ', l.city_municipality, ', ',l.province ) AS address
     FROM members_tbl m 
     JOIN location_tbl l ON m.record_id = l.record_id 
     WHERE /*l.encoder_name LIKE '%$search%' */
        m.household_members LIKE '%$search%' 
-       OR m.birthdate LIKE '%$search%'
-       OR m.gender LIKE '%$search%' 
+       OR m.birthdate LIKE '%$search%' 
        OR m.age LIKE '%$search%' 
        OR CONCAT(l.province, ', ', l.city_municipality, ', ', l.barangay) LIKE '%$search%'
     ORDER BY m.age ASC 
@@ -260,8 +244,8 @@ $sql = "
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-    echo '<table class="table table-striped" style="width:102%;">';
-    echo '<thead><tr><th>Encoder Name</th><th>Household Member</th><th>Birthdate</th><th>Age</th><th>Gender</th><th>Address</th><th>Actions</th></tr></thead>';
+    echo '<table class="table table-striped">';
+    echo '<thead><tr><th>Encoder Name</th><th>Household Member</th><th>Birthdate</th><th>Age</th><th>Address</th><th>Actions</th></tr></thead>';
     echo '<tbody>';
     // Output data of each row
     while ($row = $result->fetch_assoc()) {
@@ -270,11 +254,10 @@ if ($result->num_rows > 0) {
                 <td>" . htmlspecialchars($row["household_members"]) . "</td>
                 <td>" . htmlspecialchars($row["birthdate"]) . "</td>
                 <td>" . htmlspecialchars($row["age"]) . "</td>
-                <td>" . htmlspecialchars($row["gender"]) . "</td>
                 <td>" . htmlspecialchars($row["address"]) . "</td>
                 <td>
-                    <button class='btn btn-primary' style='font-size: 13px; width: 80px' onclick='viewInfo(" . $row["member_id"] . ")'>View Info</button>
-                    <button class='btn btn-danger' style='font-size: 13px;' onclick='deleteMember(" . $row["member_id"] . ")'>Delete</button>
+                    <button class='btn btn-primary' onclick='viewInfo(" . $row["member_id"] . ")'>View Info</button>
+                    <button class='btn btn-danger' onclick='deleteMember(" . $row["member_id"] . ")'>Delete</button>
                 </td>
 
               </tr>";
@@ -309,12 +292,9 @@ if ($page < $total_pages) {
 echo '</ul>';
 echo '</nav>';
 ?>
-    </div>
 
+</div>
     </div>
-    </div>
-
-
 <footer class="footer" style="margin-top: 100px; padding: 0px 110px 0px 110px;">
     <div class="container">
         <div class="footer-content">
@@ -354,24 +334,49 @@ echo '</nav>';
 </footer>
 
 </div>
+<!-- JavaScript function to handle the View Info button -->
+<script>
+    function viewInfo(memberId) {
+        // Redirect to the member's detailed information page
+        // You need to create this page and handle the memberId parameter
+        window.location.href = 'member_info.php?member_id=' + memberId;
+    }
+    function viewInfo(member_id) {
+    window.location.href = 'household_members.php?member_id=' + member_id;
+}
 
-   
-</div>
+    function deleteMember(memberId) {
+        if (confirm("Are you sure you want to delete this record?")) {
+            // Redirect to the PHP script that handles deletion
+            window.location.href = 'delete_member.php?member_id=' + memberId;
+        }
+    }
+</script>
 
+            </tbody>
+        </table>
+    </div>
+        </div>
+            </div>
 
+        
+    </div>
+  </div>
 
+        
 
-
-
-<!-- jQuery CDN - Slim version (=without AJAX) -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-    <!-- jQuery Custom Scroller CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-
+    <!-- Confirmation Script -->
+    <script>
+        function confirmLogout() {
+            return confirm("Are you sure you want to log out?");
+        }
+    </script>
+ 
+    
+    <!--libraries to handle the exporting of the table-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="../js/records_download.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $("#sidebar").mCustomScrollbar({
@@ -384,12 +389,32 @@ echo '</nav>';
             });
         });
     </script>
+
+    <!--handle download-->
+    <script>
+    function downloadCSV() {
+        const search = document.getElementById('searchInput').value;
+        window.location.href = '../download_functions/download_records.php?format=csv&search=' + encodeURIComponent(search);
+    }
+
+    function downloadExcel() {
+        const search = document.getElementById('searchInput').value;
+        window.location.href = '../download_functions/download_records.php?format=excel&search=' + encodeURIComponent(search);
+    }
+</script>
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
-        <script src="../js/data.js"></script>
         <script src="../js/form.js"></script>
-
+        <script src="../../../src/js/nav.js"></script>
 </body>
-
 </html>

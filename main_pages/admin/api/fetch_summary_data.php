@@ -57,14 +57,17 @@ function getSummaryData($conn) {
     ";
     $totalNoOccupation = getCount($conn, $noOccupationQuery);
 
-    // Number of families with income below 20,000 pesos
-    $lowIncomeFamiliesQuery = "
-        SELECT COUNT(*) AS count
-        FROM location_tbl l
-        WHERE l.estimated_family_income < 20000
-        AND YEAR(l.date_encoded) = YEAR(CURDATE());
-    ";
-    $totalLowIncomeFamilies = getCount($conn, $lowIncomeFamiliesQuery);
+    // Count of unique house numbers with income below 20,000 pesos for the current year
+$lowIncomeFamiliesQuery = "
+SELECT COUNT(DISTINCT housenumber) AS count
+FROM location_tbl l
+WHERE l.estimated_family_income < 20000
+AND YEAR(l.date_encoded) = YEAR(CURDATE());
+";
+
+// Execute the query
+$totalLowIncomeFamilies = getCount($conn, $lowIncomeFamiliesQuery);
+
 
     // Total Population based on household members (split by commas)
     $populationQuery = "

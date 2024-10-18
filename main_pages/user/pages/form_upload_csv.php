@@ -47,69 +47,88 @@
                 ?>
             </h3>
                 
-            </div>
-
-            <li class="sidebar-header">
-                        Key Performans Indicator
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="dashboard.php" class="sidebar-link">
+                </div>
+    
+                <li class="sidebar-header title" style="
+        font-weight: bold; color:gray;">
+                            Key Performans Indicator
+                        </li>
+                        <li class="sidebar-item active4">
+                            <a href="dashboard.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            Tools & Components
+                        </li>
+                        <li class="sidebar-item">
+                    <a href="#" id="formLink" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="sidebar-header">
-                        Tools & Components
-                    </li>
-                    <li class="sidebar-item">
-                <a href="#" id="formLink" class="sidebar-link">
-                    <i class="fa-regular fa-file-lines pe-2"></i>
-                    Form
-                </a>
-            </li>
-                    <li class="sidebar-item">
-                        <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
-                            aria-expanded="false" aria-controls="pages">
-                            <i class="fa-solid fa-list pe-2"></i>
-                            Reports
-                        </a>
-                        <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        Form
+                    </a>
+                </li>
                         <li class="sidebar-item">
-                                <a href="records.php" class="sidebar-link">Household Records</a>
-                            </li>
+                            <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
+                                aria-expanded="false" aria-controls="pages">
+                                <i class="fa-solid fa-list pe-2"></i>
+                                Reports
+                            </a>
+                            <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
-                            aria-expanded="false" aria-controls="auth">
-                            <i class="fa-regular fa-user pe-2"></i>
-                            Auth
-                        </a>
-                        <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                          
+                                    <a href="records.php" class="sidebar-link">Household Records</a>
+                                </li>
+                                
+                                <li class="sidebar-item">
+                                    <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="district_population.php" class="sidebar-link">District Population</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="persons_with_disability.php" class="sidebar-link">Persons with Disability</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            User Action
+                        </li>
                         <li class="sidebar-item">
-                                <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
-                            </li>
+                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
+                                aria-expanded="false" aria-controls="auth">
+                                <i class="fa-regular fa-user pe-2"></i>
+                                Account Settings
+                            </a>
+                            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                              
                             <li class="sidebar-item">
-                            <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                </ul>
-        </nav>
+                                    <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
+                                </li>
+                                <li class="sidebar-item">
+                                <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                    </ul>
+            </nav>
+
+
+            
         <!-- Page Content  -->
         <div id="content">
             

@@ -1,3 +1,4 @@
+
 <?php
 // Database connection
 include '../../../src/db/db_connection.php';
@@ -221,6 +222,7 @@ $undefined_gender_result = $conn->query($undefined_gender_query);
 $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gender_count'];
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -260,20 +262,19 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
         margin-top: 1px;
         margin-bottom: 50px;
     }
-   
     /* Card Styles */
 .card-osy-total {
-    background-color: #90D5ff; /* Soft Red */
+    background-color: #51cf66; /* Soft Red */
     color: white;
 }
 
 .card-osy-gender {
-    background-color: #90D5ff; /* Soft Orange */
+    background-color: #51cf66; /* Soft Orange */
     color: white;
 }
 
 .card-osy-district {
-    background-color: #90D5ff; /* Soft Yellow */
+    background-color: #ffd43b; /* Soft Yellow */
     color: #333; /* Dark text for better contrast on yellow */
 }
 
@@ -294,7 +295,7 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
 
 /* New style for Total Population card */
 .card-total-population {
-    background-color: #90D5ff; /* Soft Violet/Pink */
+    background-color: #51cf66; /* Soft Violet/Pink */
     color: white;
 }
 
@@ -305,6 +306,13 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
     transition: transform 0.3s ease, background-color 0.3s ease;
+}
+h5.card-title{
+    font-size: 15px;
+    font-weight: bold;
+}
+p.card-text{
+    font-weight: bold;
 }
 
 /* Margin below each card */
@@ -323,13 +331,13 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
 
 /* Headings inside cards */
 .card-body h5 {
-    font-size: 15px;
+    font-size: 1rem;
     color: #333; /* Dark text for readability */
 }
+
 /* Paragraphs inside cards */
 .card-body p {
     font-size: 2rem;
-    font-weight: bold;
     color: #ffffff; /* Consistent white text */
 }
 
@@ -377,7 +385,7 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
         font-weight: bold; color:gray;">
                             Key Performans Indicator
                         </li>
-                        <li class="sidebar-item">
+                        <li class="sidebar-item active4">
                             <a href="dashboard.php" class="sidebar-link">
                             <i class="fa-regular fa-file-lines pe-2"></i>
                                 Dashboard
@@ -395,7 +403,7 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
                 </li>
                         <li class="sidebar-item">
                             <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
-                                aria-expanded="false" aria-controls="pages">
+                                aria-expanded="false" aria-controls="pages" style="color:white">
                                 <i class="fa-solid fa-list pe-2"></i>
                                 Reports
                             </a>
@@ -403,8 +411,9 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
                             <li class="sidebar-item">
                                     <a href="records.php" class="sidebar-link">Household Records</a>
                                 </li>
-                                <li class="sidebar-item">
-                                    <a href="district_osy.php" class="sidebar-link active2">District OSY</a>
+                                
+                                <li class="sidebar-item active2">
+                                    <a href="district_osy.php" class="sidebar-link">District OSY</a>
                                 </li>
                                 <li class="sidebar-item">
                                     <a href="district_population.php" class="sidebar-link">District Population</a>
@@ -462,7 +471,6 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
                     </ul>
             </nav>
 
-
         <!-- Modal Structure -->
     <div class="modal fade" id="csvModal" tabindex="-1" aria-labelledby="csvModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -488,7 +496,7 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
                 <button type="button" id="sidebarCollapse" class="btn menu-btn">
                     <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
                 </button>
-                <span class="menu-text">Manolo Fortich OSY</span>
+                <span class="menu-text">District OSY</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
             </div>
             
@@ -496,7 +504,6 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
 
         
         <!-- Main Content Starts Here -->
-         
         <div class="container-fluid">
     <!-- <div class="content p-3">
         <div class="row">
@@ -517,19 +524,19 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
     <div class="row justify-content-center mb-3">
         <!-- Total Population Card -->
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-            <div class="card text-center card-total-population" style="cursor: pointer;" onclick="window.location.href='district_population.php';">
+            <div class="card text-center card-total-population">
                 <div class="card-body">
-                    <h5 class="card-title" style="font-weight: bold;">District Total Population</h5>
+                    <h5 class="card-title" >District Total Population</h5>
                     <p class="card-text"><?php echo $total_population; ?></p>
                 </div>
             </div>
         </div>
-
+        
         <!-- Total OSY Card -->
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-            <div class="card text-center card-osy-total" style="cursor: pointer;" onclick="window.location.href='district_osy.php';">
+            <div class="card text-center card-osy-total">
                 <div class="card-body">
-                    <h5 class="card-title" style="font-weight: bold;">District Total OSY</h5>
+                    <h5 class="card-title">District Total OSY</h5>
                     <p class="card-text"><?php echo $total_osy; ?></p>
                 </div>
             </div>
@@ -537,9 +544,9 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
 
         <!-- Gender OSY Card (Male, Female, Undefined) -->
         <div class="col-12 col-sm-6 col-md-8 col-lg-6 mb-3"> <!-- Set to double width -->
-            <div class="card text-center card-osy-gender" onclick="window.location.href='osy_age.php';">
+            <div class="card text-center card-osy-gender">
                 <div class="card-body">
-                    <h5 class="card-title" style="font-weight: bold;">District OSY Genders</h5>
+                    <h5 class="card-title">District OSY Genders</h5>
                     <p class="card-text d-inline">
                     <span class="age-range-label">Males:</span> <?php echo $total_males; ?></p>
                     <p class="card-text d-inline ms-3">
@@ -566,16 +573,13 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
         <?php endforeach; ?>
     </div>-->
 </div>
-</div>
-
-
 
 
 
     <!-- Search Form -->
 <form method="GET" action="">
     <div class="input-group mb-3">
-        <input type="text" name="search" class="form-control" placeholder="Search by District, Household Members, House Number, or Date Encoded" value="<?php echo $search; ?>">
+        <input type="text" name="search" class="form-control" placeholder="Search by Household Members, House Number, or Date Encoded" value="<?php echo $search; ?>">
         <div class="input-group-append">
             <button class="btn btn-primary" type="submit">Search</button>
             <a href="district_osy.php" class="btn btn-secondary">Reset</a>
@@ -637,43 +641,7 @@ $undefined_gender_count = $undefined_gender_result->fetch_assoc()['undefined_gen
 </nav>
 
 
-<footer class="footer" style="margin-top: 100px; padding: 0px 110px 0px 110px;">
-    <div class="container">
-        <div class="footer-content">
-            <!-- Partnership Logos and Description -->
-            <div class="footer-section about">
-                <div class="logos">
-                    <img src="../../../assets/images/logo.png" alt="Your Logo" class="partner-logo">
-                    <img src="../../../assets/images/logo1.png" alt="ALS Logo" class="partner-logo">
-                </div>
-                <p>In partnership with the <strong>Alternative Learning System (ALS)</strong>, we aim to collect and analyze profiles of out-of-school youth, helping create better programs and initiatives tailored to their needs.</p>
-            </div>
-
-            <!-- Quick Links -->
-            <div class="footer-section links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="about-us.html">About Us</a></li>
-                    <li><a href="services.html">Services</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="faq.html">FAQ</a></li>
-                </ul>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="footer-section contact">
-                <h4>Contact Us</h4>
-                <p><i class="fas fa-phone-alt"></i> +63 123 4567 890</p>
-                <p><i class="fas fa-envelope"></i> info@household-info-system.com</p>
-            </div>
-        </div>
-
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-            <p>&copy; 2024 Household Information System in Manolo Fortich. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
+</div>
 </div>
 <!-- jQuery CDN - Slim version (=without AJAX) -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

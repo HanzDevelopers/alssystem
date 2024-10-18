@@ -1,9 +1,23 @@
 <?php
 // Database connection
 include '../../../src/db/db_connection.php';
+// Start the session if it hasn't already been started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check if the user is logged in and the district is set
+if (!isset($_SESSION['username']) || !isset($_SESSION['district'])) {
+    header('Location: ../../../index.php');
+    exit();
+}
+
+// Get the logged-in user's district
+$logged_in_district = $_SESSION['district'];
 
 // Barangay to District mapping
 $barangayDistrictMapping = [
+    
     'Tankulan' => 'District 1',
     'Tankulan ' => 'District 1',
     'tankulan' => 'District 1',
@@ -96,15 +110,30 @@ $barangayDistrictMapping = [
     'Guilang-guilang ' => 'District 4',
 ];
 
-// Initialize search variable
+// Get barangays that belong to the logged-in user's district
+$userBarangays = array_keys(array_filter($barangayDistrictMapping, function ($district) use ($logged_in_district) {
+    return $district === $logged_in_district;
+}));
+
+// If no barangays match the user's district, return an error
+if (empty($userBarangays)) {
+    echo json_encode(['error' => 'No barangays found for the logged-in user\'s district.']);
+    exit();
+}
+
+// Initialize search variables
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+$searchYear = isset($_GET['year']) ? (int)$_GET['year'] : date('Y'); // Default to current year if not specified
 
 // Pagination variables
 $itemsPerPage = 10; // Number of items to display per page
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page
 $offset = ($page - 1) * $itemsPerPage; // Calculate offset for SQL
 
-// Fetch data from the database with search and pagination
+// Prepare barangay list for SQL IN clause
+$barangayList = "'" . implode("','", $userBarangays) . "'";
+
+// Fetch data from the database with year filter, search, and pagination for user's barangays
 $sql = "SELECT 
             m.household_members AS Name,
             m.age AS Age,
@@ -116,36 +145,26 @@ $sql = "SELECT
         JOIN 
             location_tbl AS l ON m.record_id = l.record_id
         WHERE 
-            (LOWER(m.household_members) NOT IN ('n/a', 'no', 'none')) 
-            AND (LOWER(m.person_with_disability) NOT IN ('n/a', 'no', 'none'))
-            AND (LOWER(l.housenumber) NOT IN ('n/a', 'no', 'none'))
-            AND (LOWER(l.sitio_zone_purok) NOT IN ('n/a', 'no', 'none'))
-            AND (LOWER(l.barangay) NOT IN ('n/a', 'no', 'none'))
-            AND (LOWER(l.city_municipality) NOT IN ('n/a', 'no', 'none'))
-            AND (LOWER(l.province) NOT IN ('n/a', 'no', 'none'))
+            YEAR(l.date_encoded) = $searchYear
+            AND l.barangay IN ($barangayList)
+            AND m.person_with_disability = 'Yes'  -- Filter for persons with disability
             AND (LOWER(m.household_members) LIKE LOWER('%$searchTerm%') OR 
                  m.age LIKE '%$searchTerm%' OR 
-                 m.person_with_disability LIKE LOWER('%$searchTerm%') OR 
                  l.barangay LIKE LOWER('%$searchTerm%') OR 
                  CONCAT(l.housenumber, ' ', l.sitio_zone_purok, ', ', l.barangay, ', ', l.city_municipality, ', ', l.province) LIKE LOWER('%$searchTerm%'))
         LIMIT $offset, $itemsPerPage";
 
 $result = $conn->query($sql);
 
-// Get total records for pagination
+// Get total records for pagination with the year filter, user's barangays, and disability filter
 $totalRecordsSql = "SELECT COUNT(*) AS total FROM members_tbl AS m
                     JOIN location_tbl AS l ON m.record_id = l.record_id
                     WHERE 
-                        (LOWER(m.household_members) NOT IN ('n/a', 'no', 'none')) 
-                        AND (LOWER(m.person_with_disability) NOT IN ('n/a', 'no', 'none'))
-                        AND (LOWER(l.housenumber) NOT IN ('n/a', 'no', 'none'))
-                        AND (LOWER(l.sitio_zone_purok) NOT IN ('n/a', 'no', 'none'))
-                        AND (LOWER(l.barangay) NOT IN ('n/a', 'no', 'none'))
-                        AND (LOWER(l.city_municipality) NOT IN ('n/a', 'no', 'none'))
-                        AND (LOWER(l.province) NOT IN ('n/a', 'no', 'none'))
+                        YEAR(l.date_encoded) = $searchYear
+                        AND l.barangay IN ($barangayList)
+                        AND m.person_with_disability = 'Yes'  -- Filter for persons with disability
                         AND (LOWER(m.household_members) LIKE LOWER('%$searchTerm%') OR 
                              m.age LIKE '%$searchTerm%' OR 
-                             m.person_with_disability LIKE LOWER('%$searchTerm%') OR 
                              l.barangay LIKE LOWER('%$searchTerm%') OR 
                              CONCAT(l.housenumber, ' ', l.sitio_zone_purok, ', ', l.barangay, ', ', l.city_municipality, ', ', l.province) LIKE LOWER('%$searchTerm%'))";
 
@@ -204,16 +223,11 @@ if (isset($_GET['download'])) {
                 JOIN 
                     location_tbl AS l ON m.record_id = l.record_id
                 WHERE 
-                    (LOWER(m.household_members) NOT IN ('n/a', 'no', 'none')) 
-                    AND (LOWER(m.person_with_disability) NOT IN ('n/a', 'no', 'none'))
-                    AND (LOWER(l.housenumber) NOT IN ('n/a', 'no', 'none'))
-                    AND (LOWER(l.sitio_zone_purok) NOT IN ('n/a', 'no', 'none'))
-                    AND (LOWER(l.barangay) NOT IN ('n/a', 'no', 'none'))
-                    AND (LOWER(l.city_municipality) NOT IN ('n/a', 'no', 'none'))
-                    AND (LOWER(l.province) NOT IN ('n/a', 'no', 'none'))
+                    YEAR(l.date_encoded) = $searchYear
+                    AND l.barangay IN ($barangayList)
+                    AND m.person_with_disability = 'Yes'  -- Filter for persons with disability
                     AND (LOWER(m.household_members) LIKE LOWER('%$searchTerm%') OR 
                          m.age LIKE '%$searchTerm%' OR 
-                         m.person_with_disability LIKE LOWER('%$searchTerm%') OR 
                          l.barangay LIKE LOWER('%$searchTerm%') OR 
                          CONCAT(l.housenumber, ' ', l.sitio_zone_purok, ', ', l.barangay, ', ', l.city_municipality, ', ', l.province) LIKE LOWER('%$searchTerm%'))";
 
@@ -237,6 +251,11 @@ if (isset($_GET['download'])) {
 // Close the database connection
 $conn->close();
 ?>
+
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -268,7 +287,7 @@ $conn->close();
         color: white;
     }
 
-    .active1 {
+    a.active1 {
         background-color: #515151;
         color: white;
     }
@@ -287,7 +306,6 @@ $conn->close();
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
                 <?php
-                    session_start();
                     if (!isset($_SESSION['username'])) {
                         header('Location: ../../../index.php');
                         exit();
@@ -334,10 +352,10 @@ $conn->close();
                                 <a href="records.php" class="sidebar-link">Household Records</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                <a href="district_osy.php" class="sidebar-link">Manolo Fortich OSY</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
+                                <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
@@ -574,3 +592,105 @@ $conn->close();
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+<!--
+    'Tankulan' => 'District 1',
+    'Tankulan ' => 'District 1',
+    'tankulan' => 'District 1',
+    'tankulan ' => 'District 1',
+    'Diklum' => 'District 1',
+    'Diklum ' => 'District 1',
+    'diklum' => 'District 1',
+    'diklum ' => 'District 1',
+    'San Miguel' => 'District 1',
+    'San Miguel ' => 'District 1',
+    'san Miguel' => 'District 1',
+    'san Miguel ' => 'District 1',
+    'san miguel' => 'District 1',
+    'san miguel ' => 'District 1',
+    'Ticala' => 'District 1',
+    'Ticala ' => 'District 1',
+    'ticala' => 'District 1',
+    'ticala ' => 'District 1',
+    'Lingion' => 'District 1',
+    'Lingion ' => 'District 1',
+    'lingion' => 'District 1',
+    'lingion ' => 'District 1',
+    'Alae' => 'District 2',
+    'Alae ' => 'District 2',
+    'alae' => 'District 2',
+    'alae ' => 'District 2',
+    'Damilag' => 'District 2',
+    'Damilag ' => 'District 2',
+    'damilag' => 'District 2',
+    'damilag ' => 'District 2',
+    'Mambatangan' => 'District 2',
+    'Mantibugao' => 'District 2',
+    'Mantibugao ' => 'District 2',
+    'mantibugao' => 'District 2',
+    'mantibugao ' => 'District 2',
+    'Minsuro' => 'District 2',
+    'Minsuro ' => 'District 2',
+    'minsuro' => 'District 2',
+    'minsuro ' => 'District 2',
+    'Lunocan' => 'District 2',
+    'Lunocan ' => 'District 2',
+    'lunocan ' => 'District 2',
+    'lunocan' => 'District 2',
+    'Agusan canyon ' => 'District 3',
+    'Agusan Canyon ' => 'District 3',
+    'Agusan-canyon ' => 'District 3',
+    'Agusan-Canyon ' => 'District 3',
+    'Agusan canyon' => 'District 3',
+    'Agusan Canyon' => 'District 3',
+    'Agusan-canyon' => 'District 3',
+    'Agusan-Canyon' => 'District 3',
+    'Mampayag' => 'District 3',
+    'Mampayag ' => 'District 3',
+    'mampayag' => 'District 3',
+    'mampayag ' => 'District 3',
+    'Dahilayan' => 'District 3',
+    'Dahilayan ' => 'District 3',
+    'dahilayan' => 'District 3',
+    'dahilayan ' => 'District 3',
+    'Sankanan' => 'District 3',
+    'Sankanan ' => 'District 3',
+    'sankanan' => 'District 3',
+    'sankanan ' => 'District 3',
+    'Kalugmanan' => 'District 3',
+    'Kalugmanan ' => 'District 3',
+    'kalugmanan' => 'District 3',
+    'kalugmanan ' => 'District 3',
+    'Lindaban' => 'District 3',
+    'Lindaban ' => 'District 3',
+    'lindaban' => 'District 3',
+    'lindaban ' => 'District 3',
+    'Dalirig' => 'District 4',
+    'Dalirig ' => 'District 4',  // Ensure this is added
+    'dalirig' => 'District 4',
+    'dalirig ' => 'District 4',
+    'Maluko' => 'District 4',
+    'Maluko ' => 'District 4',
+    'maluko' => 'District 4',
+    'maluko ' => 'District 4',
+    'Santiago' => 'District 4',
+    'santiago' => 'District 4',
+    'Santiago ' => 'District 4',
+    'santiago ' => 'District 4',
+    'Guilang2' => 'District 4',
+    'Guilang-Guilang' => 'District 4',
+    'guilang-guilang' => 'District 4',
+    'Guilang-guilang' => 'District 4',
+    'Guilang-Guilang ' => 'District 4',
+    'guilang-guilang ' => 'District 4',
+    'Guilang-guilang ' => 'District 4',-->
+    

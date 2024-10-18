@@ -18,7 +18,7 @@ if (isset($_GET['member_id'])) {
         $record_id = $row['record_id'];
 
         // Redirect to edit_household.php with the record_id
-        header("Location: edit_household.php?record_id=" . $record_id);
+        header("Location: income_below_20,000_edit_household.php?record_id=" . $record_id);
         exit();
     } else {
         echo "No record found for this member.";

@@ -110,13 +110,14 @@ $sql = "
         l.barangay AS Barangay,
         l.housenumber AS HouseNumber,
         l.estimated_family_income AS EstimatedIncome,
-        COUNT(m.member_id) AS HouseholdMembers
+        COUNT(DISTINCT m.member_id) AS HouseholdMembers
     FROM 
         location_tbl AS l
     JOIN 
         members_tbl AS m ON l.record_id = m.record_id
     WHERE 
         l.estimated_family_income < 20000
+        AND YEAR(l.date_encoded) = YEAR(CURDATE())
 ";
 
 if (!empty($searchTerm)) {
@@ -141,6 +142,7 @@ $totalRecordsSql = "
         location_tbl AS l
     WHERE 
         l.estimated_family_income < 20000
+        AND YEAR(l.date_encoded) = YEAR(CURDATE())
 ";
 
 if (!empty($searchTerm)) {

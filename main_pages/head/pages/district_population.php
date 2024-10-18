@@ -298,12 +298,12 @@ if (isset($_POST['download'])) {
     }
     /* Card Styles */
 .card-osy-total {
-    background-color: #90D5ff; /* Soft Red */
+    background-color: #51cf66; /* Soft Red */
     color: white;
 }
 
 .card-osy-gender {
-    background-color: #90D5ff; /* Soft Orange */
+    background-color: #51cf66; /* Soft Orange */
     color: white;
 }
 
@@ -313,7 +313,7 @@ if (isset($_POST['download'])) {
 }
 
 .card-osy-district:nth-child(1) {
-    background-color: #90D5ff; /* Soft Green */
+    background-color: #51cf66; /* Soft Green */
     color: white;
 }
 
@@ -329,10 +329,17 @@ if (isset($_POST['download'])) {
 
 /* New style for Total Population card */
 .card-total-population {
-    background-color: #90D5ff; /* Soft Violet/Pink */
+    background-color: #51cf66; /* Soft Violet/Pink */
     color: white;
 }
 
+h5.card-title{
+    font-size: 15px;
+    font-weight: bold;
+}
+p.card-text{
+    font-weight: bold;
+}
 /* Ensure responsive card sizes */
 .card {
     min-width: 220px;
@@ -358,7 +365,7 @@ if (isset($_POST['download'])) {
 
 /* Headings inside cards */
 .card-body h5 {
-    font-size: 15px;
+    font-size: 1rem;
     color: #333; /* Dark text for readability */
 }
 
@@ -370,7 +377,7 @@ if (isset($_POST['download'])) {
 
 /* Target the age range labels to be black */
 .card-body .age-range-label {
-    font-size: 12px;
+    font-size: 1rem;
     color: #000000; /* Black text for the age range labels */
 }
 
@@ -395,6 +402,7 @@ if (isset($_POST['download'])) {
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
                     <?php
+                    
                     if (!isset($_SESSION['username'])) {
                         header('Location: ../../../index.php');
                         exit();
@@ -431,7 +439,7 @@ if (isset($_POST['download'])) {
                 </li>
                         <li class="sidebar-item">
                             <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
-                                aria-expanded="false" aria-controls="pages">
+                                aria-expanded="false" aria-controls="pages" style="color:white">
                                 <i class="fa-solid fa-list pe-2"></i>
                                 Reports
                             </a>
@@ -439,6 +447,7 @@ if (isset($_POST['download'])) {
                             <li class="sidebar-item">
                                     <a href="records.php" class="sidebar-link">Household Records</a>
                                 </li>
+                                
                                 <li class="sidebar-item">
                                     <a href="district_osy.php" class="sidebar-link">District OSY</a>
                                 </li>
@@ -547,9 +556,6 @@ if (isset($_POST['download'])) {
 
         </div>
     </div> -->
-    
-    
-    
     <div class="container mt-4">
     <!-- First Row: Total Population, Total OSY, and Gender Cards -->
     <div class="row justify-content-center mb-3">
@@ -610,7 +616,6 @@ if (isset($_POST['download'])) {
 
 
 
-
     
 </div>
 
@@ -618,13 +623,13 @@ if (isset($_POST['download'])) {
     <h2 class="mb-4">District Population Data</h2>
 
     <!-- Single Search Bar Form -->
-    <form method="GET" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Search by Year, District, Sitio/Zone/Purok, or Family Income" value="<?= htmlspecialchars($searchTerm) ?>">
-            <button type="submit" class="btn btn-primary">Search</button>
-            <a href="district_population.php" class="btn btn-secondary">Reset</a>
-        </div>
-    </form>
+<form method="GET" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="search" class="form-control" placeholder="Search by Sitio/Zone/Purok, or Family Income" value="<?= htmlspecialchars($searchTerm) ?>">
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="district_population.php" class="btn btn-secondary">Reset</a>
+    </div>
+</form>
 
     <P>TO DOWNLOAD SPECIFIC DATA, PLEASE USE THE SEARCH BAR</P>
     <!-- Download Button -->
@@ -690,45 +695,7 @@ if (isset($_POST['download'])) {
             <?php endfor; ?>
         </ul>
     </nav>
-    
 </div>
-<footer class="footer" style="margin-top: 100px; padding: 0px 110px 0px 110px;">
-    <div class="container">
-        <div class="footer-content">
-            <!-- Partnership Logos and Description -->
-            <div class="footer-section about">
-                <div class="logos">
-                    <img src="../../../assets/images/logo.png" alt="Your Logo" class="partner-logo">
-                    <img src="../../../assets/images/logo1.png" alt="ALS Logo" class="partner-logo">
-                </div>
-                <p>In partnership with the <strong>Alternative Learning System (ALS)</strong>, we aim to collect and analyze profiles of out-of-school youth, helping create better programs and initiatives tailored to their needs.</p>
-            </div>
-
-            <!-- Quick Links -->
-            <div class="footer-section links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="about-us.html">About Us</a></li>
-                    <li><a href="services.html">Services</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="faq.html">FAQ</a></li>
-                </ul>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="footer-section contact">
-                <h4>Contact Us</h4>
-                <p><i class="fas fa-phone-alt"></i> +63 123 4567 890</p>
-                <p><i class="fas fa-envelope"></i> info@household-info-system.com</p>
-            </div>
-        </div>
-
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-            <p>&copy; 2024 Household Information System in Manolo Fortich. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
 </div>
             </div>
 <!-- jQuery CDN - Slim version (=without AJAX) -->

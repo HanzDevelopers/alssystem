@@ -38,12 +38,12 @@ include '../api/fetch_summary_data.php';
     }
     /* Card Styles */
     .card-osy-total {
-    background-color: #ff6b6b; /* Soft Red */
+    background-color: #51cf66; /* Soft Red */
     color: white;
 }
 
 .card-osy-gender {
-    background-color: #ffa94d; /* Soft Orange */
+    background-color: #51cf66; /* Soft Orange */
     color: white;
 }
 
@@ -53,7 +53,7 @@ include '../api/fetch_summary_data.php';
 }
 
 .card-osy-district:nth-child(1) {
-    background-color: #51cf66; /* Soft Green */
+    background-color: #90D5ff; /* Soft Green */
     color: white;
 }
 
@@ -66,16 +66,21 @@ include '../api/fetch_summary_data.php';
     background-color: #9775fa; /* Soft Indigo */
     color: white;
 }
+h5{
+    text-align: center;
+    font-weight: bold;
+    font-size: 25px;
+}
 
 /* New style for Total Population card */
 .card-total-population {
-    background-color: #f783ac; /* Soft Violet/Pink */
+    background-color: #51cf66; /* Soft Violet/Pink */
     color: white;
 }
 
    /* Ensure responsive card sizes */
 .card {
-    min-width: 150px;
+    min-width: 220px;
     height: 100%;
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
@@ -95,25 +100,24 @@ include '../api/fetch_summary_data.php';
 }
 
 /* Headings inside cards */
-.card-body h6 {
-    font-size: 9px;
+.card-body h5 {
+    font-size: 1rem;
     color: #333; /* Dark text for readability */
 }
 
-
 /* Paragraphs inside cards */
 .card-body p {
-    font-weight: bold;
     font-size: 2rem;
     color: #ffffff; /* Consistent white text */
 }
-h5{
-    text-align: center;
+
+h5.card-title{
+    font-size: 15px;
+}
+p.card-text{
+    font-weight: bold;
 }
 
-.sub{
-    font-size: 8px;
-}
 /* Hover effect for interactive cards */
 .card:hover {
     transform: translateY(-5px); /* Subtle lift effect */
@@ -125,21 +129,6 @@ h5{
     font-size: 2rem;
     color: black; /* Black text for the age range labels */
 }
-.chart {
-    width: 100%;
-    height: 300px;
-}
-h5{
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 30px;
-}
-h5.mb-4{
-    margin-top: -35px;
-}
-
-
-
 </style>
 
 <body>
@@ -186,86 +175,88 @@ $stmt->close();
 $conn->close();
 ?>
 
-            </h3>
+</h3>
                 
-            </div>
-
-            <li class="sidebar-header">
-                        Key Performans Indicator
-                    </li>
-                    <li class="sidebar-item active4">
-                        <a href="dashboard.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="sidebar-header">
-                        Tools & Components
-                    </li>
-                    <li class="sidebar-item">
-                <a href="#" id="formLink" class="sidebar-link">
-                    <i class="fa-regular fa-file-lines pe-2"></i>
-                    Form
-                </a>
-            </li>
-                    <li class="sidebar-item">
-                        <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
-                            aria-expanded="false" aria-controls="pages">
-                            <i class="fa-solid fa-list pe-2"></i>
-                            Reports
-                        </a>
-                        <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                </div>
+    
+                <li class="sidebar-header title" style="
+        font-weight: bold; color:gray;">
+                            Key Performans Indicator
+                        </li>
+                        <li class="sidebar-item active4">
+                            <a href="dashboard.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            Tools & Components
+                        </li>
                         <li class="sidebar-item">
-                                <a href="records.php" class="sidebar-link">Household Records</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-header">
-                        Admin Action
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="users.php" class="sidebar-link">
+                    <a href="#" id="formLink" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
-                            Users
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="user_log.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            User Log
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
-                            aria-expanded="false" aria-controls="auth">
-                            <i class="fa-regular fa-user pe-2"></i>
-                            Auth
-                        </a>
-                        <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                          
+                        Form
+                    </a>
+                </li>
                         <li class="sidebar-item">
-                                <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
-                            </li>
+                            <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
+                                aria-expanded="false" aria-controls="pages">
+                                <i class="fa-solid fa-list pe-2"></i>
+                                Reports
+                            </a>
+                            <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                            <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                </ul>
-        </nav>
+                                    <a href="records.php" class="sidebar-link">Household Records</a>
+                                </li>
+                                
+                                <li class="sidebar-item">
+                                    <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="district_population.php" class="sidebar-link">District Population</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="persons_with_disability.php" class="sidebar-link">Persons with Disability</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            User Action
+                        </li>
+                        
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
+                                aria-expanded="false" aria-controls="auth">
+                                <i class="fa-regular fa-user pe-2"></i>
+                                Account Settings
+                            </a>
+                            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                              
+                            <li class="sidebar-item">
+                                    <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
+                                </li>
+                                <li class="sidebar-item">
+                                <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                    </ul>
+            </nav>
 
 
         <!-- Modal Structure -->
@@ -294,93 +285,95 @@ $conn->close();
                 </button>
                 <span class="menu-text">Dashboard</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
-                <!-- Dropdown fixed at the bottom
-<div class="dropdown fixed-top-right">
-    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Download
-    </button>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" onclick="downloadImage()">Download Images</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadPDF()">Download PDF</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadCSV()">Download CSV</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Download Excel</a></li>
-    </ul>
-</div> -->
             </div>
             
     
         <!--remove responsive
         </div>-->
-<!-- Main Content Starts Here -->
-<div class="container-fluid">
-    <div class="container mt-4">
-        <!-- First Row: Data Summary Cards in a Single Row -->
-        <div class="row justify-content-center mb-3">
-            <h5 class="mb-4">Data Summary</h5>
 
-            <!-- Total Population (District 1 to 4) -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-total-population" onclick="window.location.href='records.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Total Population of District</h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['total_population']; ?></span></p>
-                    </div>
+        <!-- Main Content Starts Here -->
+        <div class="container-fluid">
+        <div class="container mt-4">
+    <!-- First Row: Total Population, Total OSY, and Gender Cards -->
+    <div class="row justify-content-center mb-3">
+    <h5 class="mb-4">Data Summary</h5>
+        <!-- Total Population (District 1 to 4) -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-total-population" style="cursor: pointer;" onclick="window.location.href='district_population.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Manolo Fortich Population <br><span style="font-size:12px;">*District 1 to 4*</span></h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['total_population']; ?></span></p>
                 </div>
             </div>
+        </div>
 
 
-            <!-- Not Attending School (Age 15-30) -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-total" onclick="window.location.href='district_osy.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Out-of-school Youth <br><span class="sub">*Age 15-30*</span></h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['not_attending_school']; ?></span></p>
-                    </div>
+        
+        <!-- Not Attending School (Age 15-30) -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-total" style="cursor: pointer;" onclick="window.location.href='district_osy.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Manolo Fortich OSY <br><span style="font-size:12px;">*Age 15-30*</span></h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['not_attending_school']; ?></span></p>
                 </div>
             </div>
+        </div>
 
-            <!-- Interested in ALS -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-gender" onclick="window.location.href='interested.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Interested in ALS</h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['interested_in_als']; ?></span></p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Persons with Disability -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-district" onclick="window.location.href='persons_with_disability.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Persons with Disability</h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['persons_with_disability']; ?></span></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- No Occupation -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-district" onclick="window.location.href='no_occupation.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">No Occupation</h6>
-                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['no_occupation']; ?></span></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Families with Income Below 20,000 -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card text-center card-osy-district" onclick="window.location.href='income_below_20,000.php';" style="cursor: pointer;">
-                    <div class="card-body">
-                        <h6 class="card-title">Families with Income Below 20,000</h>
-                        <p class="card-text"><span class="age-range-label"><?php echo $summaryData['low_income_families']; ?></span></p>
-                    </div>
+        <!-- Interested in ALS -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3"> <!-- Set to double width -->
+            <div class="card text-center card-osy-gender" style="cursor: pointer;" onclick="window.location.href='interested.php';">
+                <div class="card-body">
+            <h5 class="card-title">Interested in ALS</h5>
+            <p class="card-text"><span class="age-range-label"><?php echo $summaryData['interested_in_als']; ?></span></p>
                 </div>
             </div>
         </div>
     </div>
+
+<!-- Second Row: District OSY Cards -->
+    <div class="row justify-content-center">
+
+    
+        <!-- Persons with Disability -->
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='persons_with_disability.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Persons with Disability</h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['persons_with_disability']; ?></span></p>
+                </div>
+            </div>
+        </div>
+
+
+        
+        <!-- No Occupation -->
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='no_occupation.php';">
+                <div class="card-body">
+                    <h5 class="card-title">No Occupation</h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['no_occupation']; ?></span></p>
+                </div>
+            </div>
+        </div>
+
+
+        
+        <!-- Families with Income Below 20,000 -->
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='income_below_20,000.php';">
+                <div class="card-body">
+                    <h5 class="card-title">Families with Income Below 20,000</h5>
+                    <p class="card-text"><span class="age-range-label"><?php echo $summaryData['low_income_families']; ?></span></p>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+    </div>
 </div>
+
         
 
 
@@ -394,10 +387,10 @@ $conn->close();
             </form>
                 -->
             <!-- Container for charts -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Data Charts</h1>
+    <h5  style="text-align:center; font-weight: bold; font-size:25px;">Data Charts</h5>
+<!--<div class="d-flex justify-content-between align-items-center mb-4">
     <div class="btn-group" style="margin-right: 100px;">
-        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="margin-left:20px;">
             Download
         </button>
         <ul class="dropdown-menu">
@@ -407,21 +400,18 @@ $conn->close();
             <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Download Excel</a></li>
         </ul>
     </div>
-</div>
+</div>-->
 
 <div class="dashboard-container">
     <!-- Chart 1: District OSY Pie Chart -->
-<div class="chart-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; width: 30%; min-width: 300px; text-align: center;">
-    <div id="pie-chart" class="chart">
-        <canvas id="myPieChart"></canvas> <!-- This is where the pie chart will be rendered -->
+    <div class="chart-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; width: 30%; min-width: 300px; text-align: center;">
+        <div id="pie-chart" class="chart"></div>
+        <!-- View Info Button for Pie Chart -->
+        <a href="district_osy.php" class="sidebar-link btn btn-primary mt-2">
+            <i class="fa fa-info-circle me-2"></i>
+            View Info
+        </a>
     </div>
-    <!-- View Info Button for Pie Chart -->
-    <a href="district_osy.php" class="sidebar-link btn btn-primary mt-2">
-        <i class="fa fa-info-circle me-2"></i>
-        View Info
-    </a>
-</div>
-
 
     <!-- Chart 2: District Population Bar Chart -->
     <div class="chart-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; width: 30%; min-width: 300px; text-align: center;">

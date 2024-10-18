@@ -243,12 +243,12 @@ $result = $conn->query($query);
     }
     /* Card Styles */
 .card-osy-total {
-    background-color: #ff6b6b; /* Soft Red */
+    background-color: #51cf66; /* Soft Red */
     color: white;
 }
 
 .card-osy-gender {
-    background-color: #ffa94d; /* Soft Orange */
+    background-color: #51cf66; /* Soft Orange */
     color: white;
 }
 
@@ -274,13 +274,20 @@ $result = $conn->query($query);
 
 /* New style for Total Population card */
 .card-total-population {
-    background-color: #f783ac; /* Soft Violet/Pink */
+    background-color: #51cf66; /* Soft Violet/Pink */
     color: white;
 }
 
+h5.card-title{
+    font-size: 15px;
+    font-weight: bold;
+}
+p.card-text{
+    font-weight: bold;
+}
 /* Ensure responsive card sizes */
 .card {
-    min-width: 150px;
+    min-width: 220px;
     height: 100%;
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle depth */
@@ -303,7 +310,7 @@ $result = $conn->query($query);
 
 /* Headings inside cards */
 .card-body h5 {
-    font-size: 9px;
+    font-size: 1rem;
     color: #333; /* Dark text for readability */
 }
 
@@ -315,7 +322,7 @@ $result = $conn->query($query);
 
 /* Target the age range labels to be black */
 .card-body .age-range-label {
-    font-size: 8px;
+    font-size: 1rem;
     color: #000000; /* Black text for the age range labels */
 }
 
@@ -376,7 +383,7 @@ $result = $conn->query($query);
                 </li>
                         <li class="sidebar-item">
                             <a href="reports.php" class="sidebar-link collapsed active1" data-bs-toggle="collapse" data-bs-target="#pages"
-                                aria-expanded="false" aria-controls="pages">
+                                aria-expanded="false" aria-controls="pages" style="color:white">
                                 <i class="fa-solid fa-list pe-2"></i>
                                 Reports
                             </a>
@@ -384,6 +391,7 @@ $result = $conn->query($query);
                             <li class="sidebar-item">
                                     <a href="records.php" class="sidebar-link">Household Records</a>
                                 </li>
+                                
                                 <li class="sidebar-item">
                                     <a href="district_osy.php" class="sidebar-link">District OSY</a>
                                 </li>
@@ -491,67 +499,63 @@ $result = $conn->query($query);
 </div>
 
         </div>
-    </div> -->
-    
-    
-    <div class="container mt-4">
-    <!-- Single Row: Total Population, Total OSY, and Gender Cards -->
+    </div> --><div class="container mt-4">
+    <!-- First Row: Total Population, Total OSY, and Gender Cards -->
     <div class="row justify-content-center mb-3">
         <!-- Total Population Card -->
-        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
-            <div class="card text-center card-total-population" style="width: 100px; cursor: pointer;" onclick="window.location.href='records.php';">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-total-population">
                 <div class="card-body">
-                    <h5 class="card-title">Manolo Fortich Population *District 1 to 4*</h5>
-                    <p class="card-text" style="font-weight: bold;"><?php echo $total_population; ?></p>
+                    <h5 class="card-title">District Total Population</h5>
+                    <p class="card-text"><span class="underline-text"><?php echo $total_population; ?></span></p>
                 </div>
             </div>
         </div>
 
         <!-- Total OSY Card -->
-        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
-            <div class="card text-center card-osy-total" style="width: 100px; cursor: pointer;" onclick="window.location.href='district_osy.php';">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-total">
                 <div class="card-body">
-                    <h5 class="card-title">Out-of-school Youth <br>
-                    *Age 15-30*</h5>
-                    <p class="card-text" style="font-weight: bold;"><?php echo $total_osy; ?></p>
+                    <h5 class="card-title">District Total OSY</h5>
+                    <p class="card-text"><span class="underline-text"><?php echo $total_osy; ?></span></p>
                 </div>
             </div>
         </div>
-        <!-- Gender OSY Card -->
-        <div class="col-12 col-sm-4 col-md-6 col-lg-4 mb-3"> <!-- Set to double width -->
-            <div class="card text-center card-osy-gender" style="cursor: pointer;" onclick="window.location.href='osy_age.php';">
+
+        <!-- Gender OSY Card (Male, Female, Undefined) -->
+        <div class="col-12 col-sm-6 col-md-8 col-lg-6 mb-3"> <!-- Set to double width -->
+            <div class="card text-center card-osy-gender">
                 <div class="card-body">
-                    <h5 class="card-title">OSY by Age Range</h5>
-                    <p class="card-text d-inline" style="font-weight: bold; font-size: 20px;">
-                    <span class="age-range-label">Age 15-20:</span> <?php echo $age_15_20; ?></p>
-                    <p class="card-text d-inline ms-3" style="font-weight: bold; font-size: 20px;">
-                    <span class="age-range-label">Age 21-25:</span> <?php echo $age_21_25; ?></p>
-                    <p class="card-text d-inline ms-3" style="font-weight: bold; font-size: 20px;">
-                    <span class="age-range-label">Age 26-30:</span> <?php echo $age_26_30; ?></p>
+                    <h5 class="card-title">District OSY by Age Range</h5>
+                    <p class="card-text d-inline">
+                        <span class="age-range-label">Age 15-20:</span><?php echo $age_15_20; ?>
+                    </p>
+                    <p class="card-text d-inline ms-3">
+                        <span class="age-range-label">Age 21-25:</span><?php echo $age_21_25; ?>
+                    </p>
+                    <p class="card-text d-inline ms-3">
+                        <span class="age-range-label">Age 26-30:</span><?php echo $age_26_30; ?>
+                    </p>
                 </div>
             </div>
         </div>
-        <!-- District OSY Cards -->
-        <div class="col-12 col-sm-4 col-md-6 col-lg-4 mb-3"> <!-- Set to double width -->
-    <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='district_osy.php';">
-        <div class="card-body">
-            <h5 class="card-title">Manolo Fortich OSY Counts</h5>
-            <?php foreach ($district_data as $district => $count): ?>
-                <p class="card-text d-inline-block" style="font-size: 9px;">
-                    <span class="age-range-label"><?php echo $district; ?>:</span>
-                    <span  style="font-weight: bold; font-size: 20px;"><?php echo $count; ?></span>
-                </p>
-                <!-- Add space between items -->
-                <span class="ms-3"></span>
-            <?php endforeach; ?>
+    </div>
+
+    <!-- Second Row: District OSY Cards
+    <div class="row justify-content-center">
+        <!-- District OSY Cards
+        <?php foreach ($district_data as $district => $count): ?>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <div class="card text-center card-osy-district">
+                <div class="card-body">
+                    <h5 class="card-title"><span class="underline-text"><?php echo $district; ?></span></h5>
+                    <p class="card-text"><span class="underline-text"><?php echo $count; ?></span></p>
+                </div>
+            </div>
         </div>
-    </div>
+        <?php endforeach; ?>
+    </div> -->
 </div>
-
-
-    </div>
-</div>
-    
  
 </div>
 
@@ -591,7 +595,6 @@ $result = $conn->query($query);
         <tr>
             <th>Name</th>
             <th>Age</th>
-            <th>Gender</th>
             <th>District</th>
             <th>Address</th>
             <th>Highest Grade/Year Completed</th>
@@ -606,7 +609,6 @@ $result = $conn->query($query);
                 <tr>
                     <td><?php echo htmlspecialchars($row['name']); ?></td>
                     <td><?php echo htmlspecialchars($row['age']); ?></td>
-                    <td><?php echo htmlspecialchars($row['gender']); ?></td>
                     <td><?php echo htmlspecialchars(isset($district_mapping[$row['barangay']]) ? $district_mapping[$row['barangay']] : 'Unknown'); ?></td>
                     <td><?php echo htmlspecialchars($row['sitio_zone_purok'] . ', ' . $row['housenumber']); ?></td>
                     <td><?php echo htmlspecialchars($row['highest_grade_completed']); ?></td>
@@ -614,6 +616,7 @@ $result = $conn->query($query);
                     <td><?php echo htmlspecialchars($row['reasons_for_not_attending_school']); ?></td>
                     <td><?php echo htmlspecialchars($row['status']); ?></td>
                 </tr>
+                
             <?php endwhile; ?>
         <?php else: ?>
             <tr>
@@ -644,43 +647,6 @@ $result = $conn->query($query);
 
 
 
-<footer class="footer" style="margin-top: 100px; padding: 0px 110px 0px 110px;">
-    <div class="container">
-        <div class="footer-content">
-            <!-- Partnership Logos and Description -->
-            <div class="footer-section about">
-                <div class="logos">
-                    <img src="../../../assets/images/logo.png" alt="Your Logo" class="partner-logo">
-                    <img src="../../../assets/images/logo1.png" alt="ALS Logo" class="partner-logo">
-                </div>
-                <p>In partnership with the <strong>Alternative Learning System (ALS)</strong>, we aim to collect and analyze profiles of out-of-school youth, helping create better programs and initiatives tailored to their needs.</p>
-            </div>
-
-            <!-- Quick Links -->
-            <div class="footer-section links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="about-us.html">About Us</a></li>
-                    <li><a href="services.html">Services</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="faq.html">FAQ</a></li>
-                </ul>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="footer-section contact">
-                <h4>Contact Us</h4>
-                <p><i class="fas fa-phone-alt"></i> +63 123 4567 890</p>
-                <p><i class="fas fa-envelope"></i> info@household-info-system.com</p>
-            </div>
-        </div>
-
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-            <p>&copy; 2024 Household Information System in Manolo Fortich. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
 </div>
             </div>
 <!-- jQuery CDN - Slim version (=without AJAX) -->

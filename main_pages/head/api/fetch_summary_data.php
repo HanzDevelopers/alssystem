@@ -105,19 +105,21 @@ function getSummaryData($conn, $userDistrict) {
     $totalNoOccupation = getCount($conn, $noOccupationQuery);
 
     // Number of families with income below 20,000 pesos
-    $lowIncomeFamiliesQuery = "
-        SELECT COUNT(*) AS count
-        FROM location_tbl l
-        WHERE l.estimated_family_income < 20000
-        AND YEAR(l.date_encoded) = YEAR(CURDATE())
-        AND (
-            (l.barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') AND '$userDistrict' = 'District 1') OR
-            (l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') AND '$userDistrict' = 'District 2') OR
-            (l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') AND '$userDistrict' = 'District 3') OR
-            (l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') AND '$userDistrict' = 'District 4')
-        )
-    ";
-    $totalLowIncomeFamilies = getCount($conn, $lowIncomeFamiliesQuery);
+$lowIncomeFamiliesQuery = "
+SELECT COUNT(DISTINCT l.housenumber) AS count
+FROM location_tbl l
+WHERE l.estimated_family_income < 20000
+AND YEAR(l.date_encoded) = YEAR(CURDATE())
+AND (
+    (l.barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') AND '$userDistrict' = 'District 1') OR
+    (l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') AND '$userDistrict' = 'District 2') OR
+    (l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') AND '$userDistrict' = 'District 3') OR
+    (l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') AND '$userDistrict' = 'District 4')
+)
+";
+
+$totalLowIncomeFamilies = getCount($conn, $lowIncomeFamiliesQuery);
+
 
     // Total population query
     $totalPopulationQuery = "

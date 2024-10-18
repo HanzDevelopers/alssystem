@@ -1,3 +1,10 @@
+<?php
+session_start(); // Make sure to start the session to access user info
+
+// Assuming the user's district is stored in the session after login
+$userDistrict = isset($_SESSION['district']) ? $_SESSION['district'] : '';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,25 +36,10 @@
                 <label for="pass" class="form-label">Password</label>
                 <input type="password" class="form-control" id="pass" name="pass" required>
             </div>
-            <div class="mb-3">
-                <label for="user_type" class="form-label">User Type</label>
-                <select class="form-select" id="user_type" name="user_type" required>
-                    <option value="" disabled selected>Select User Type</option>
-                    <option value="Supervisor">Supervisor</option>
-                    <option value="Coordinator">Coordinator</option>
-                    <option value="Volunteer">Volunteer</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="district" class="form-label">District</label>
-                <select class="form-select" id="district" name="district" required>
-                    <option value="" disabled selected>Select District</option>
-                    <option value="District 1">District 1</option>
-                    <option value="District 2">District 2</option>
-                    <option value="District 3">District 3</option>
-                    <option value="District 4">District 4</option>
-                </select>
-            </div>
+            <!-- Hidden inputs for user type and district -->
+            <input type="hidden" name="user_type" value="Implementer">
+            <input type="hidden" name="district" value="<?php echo htmlspecialchars($userDistrict); ?>">
+            
             <button type="submit" class="btn btn-primary">Add User</button>
             <button type="button" class="btn btn-secondary" onclick="window.location.href='users.php';">Cancel</button>
         </form>

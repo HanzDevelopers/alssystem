@@ -2,6 +2,18 @@
 // Database connection
 include '../../../src/db/db_connection.php';
 
+// Start the session to access user information
+session_start();
+
+// Check if the user is logged in and retrieve the user's district
+if (!isset($_SESSION['username']) || !isset($_SESSION['district'])) {
+    header('Location: ../../../index.php'); // Redirect to login if not authenticated
+    exit();
+}
+
+$logged_in_district = $_SESSION['district'];
+$current_year = date("Y");
+
 // Barangay to District mapping
 $barangayDistrictMapping = [
     'Tankulan' => 'District 1',
@@ -110,14 +122,28 @@ $sql = "
         l.barangay AS Barangay,
         l.housenumber AS HouseNumber,
         l.estimated_family_income AS EstimatedIncome,
-        COUNT(m.member_id) AS HouseholdMembers
+        COUNT(DISTINCT m.member_id) AS HouseholdMembers
     FROM 
         location_tbl AS l
     JOIN 
         members_tbl AS m ON l.record_id = m.record_id
     WHERE 
         l.estimated_family_income < 20000
+        AND YEAR(l.date_encoded) = $current_year
 ";
+
+// Check if the logged-in user district is available
+if ($logged_in_district) {
+    // Filter the barangays by the district of the logged-in user
+    $barangaysInDistrict = array_keys(array_filter($barangayDistrictMapping, function($district) use ($logged_in_district) {
+        return $district === $logged_in_district;
+    }));
+
+    if (!empty($barangaysInDistrict)) {
+        $barangaysPlaceholder = "'" . implode("', '", $barangaysInDistrict) . "'";
+        $sql .= " AND l.barangay IN ($barangaysPlaceholder)";
+    }
+}
 
 if (!empty($searchTerm)) {
     // Add search conditions for barangay and housenumber
@@ -141,7 +167,15 @@ $totalRecordsSql = "
         location_tbl AS l
     WHERE 
         l.estimated_family_income < 20000
+        AND YEAR(l.date_encoded) = $current_year
 ";
+
+// Include the district filter in the total records query as well
+if ($logged_in_district) {
+    if (!empty($barangaysInDistrict)) {
+        $totalRecordsSql .= " AND l.barangay IN ($barangaysPlaceholder)";
+    }
+}
 
 if (!empty($searchTerm)) {
     // Update total records SQL to include search conditions
@@ -152,6 +186,7 @@ $totalRecordsResult = $conn->query($totalRecordsSql);
 $totalRecords = $totalRecordsResult->fetch_assoc()['total'];
 $totalPages = ceil($totalRecords / $itemsPerPage);
 ?>
+
 
 
 <!DOCTYPE html>
@@ -184,7 +219,7 @@ $totalPages = ceil($totalRecords / $itemsPerPage);
         color: white;
     }
 
-    .active1 {
+    a.active1 {
         background-color: #515151;
         color: white;
     }
@@ -204,7 +239,6 @@ $totalPages = ceil($totalRecords / $itemsPerPage);
                 <h3 style="color: #ffffff;">
                 
                 <?php
-                    session_start();
                     if (!isset($_SESSION['username'])) {
                         header('Location: ../../../index.php');
                         exit();
@@ -251,10 +285,10 @@ $totalPages = ceil($totalRecords / $itemsPerPage);
                                 <a href="records.php" class="sidebar-link">Household Records</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                <a href="district_osy.php" class="sidebar-link">Manolo Fortich OSY</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
+                                <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="osy_age.php" class="sidebar-link">OSY By Age</a>

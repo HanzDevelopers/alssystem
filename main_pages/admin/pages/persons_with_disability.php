@@ -2,7 +2,7 @@
 // Database connection
 include '../../../src/db/db_connection.php';
 
-// Barangay to District mapping
+// Barangay to District mapping (same as your existing list)
 $barangayDistrictMapping = [
     'Tankulan' => 'District 1',
     'Tankulan ' => 'District 1',
@@ -96,15 +96,16 @@ $barangayDistrictMapping = [
     'Guilang-guilang ' => 'District 4',
 ];
 
-// Initialize search variable
+// Initialize search variables
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+$searchYear = isset($_GET['year']) ? (int)$_GET['year'] : date('Y'); // Default to current year if not specified
 
 // Pagination variables
 $itemsPerPage = 10; // Number of items to display per page
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page
 $offset = ($page - 1) * $itemsPerPage; // Calculate offset for SQL
 
-// Fetch data from the database with search and pagination
+// Fetch data from the database with year filter, search, and pagination
 $sql = "SELECT 
             m.household_members AS Name,
             m.age AS Age,
@@ -116,7 +117,8 @@ $sql = "SELECT
         JOIN 
             location_tbl AS l ON m.record_id = l.record_id
         WHERE 
-            (LOWER(m.household_members) NOT IN ('n/a', 'no', 'none')) 
+            YEAR(l.date_encoded) = $searchYear
+            AND (LOWER(m.household_members) NOT IN ('n/a', 'no', 'none')) 
             AND (LOWER(m.person_with_disability) NOT IN ('n/a', 'no', 'none'))
             AND (LOWER(l.housenumber) NOT IN ('n/a', 'no', 'none'))
             AND (LOWER(l.sitio_zone_purok) NOT IN ('n/a', 'no', 'none'))
@@ -132,11 +134,12 @@ $sql = "SELECT
 
 $result = $conn->query($sql);
 
-// Get total records for pagination
+// Get total records for pagination with the year filter
 $totalRecordsSql = "SELECT COUNT(*) AS total FROM members_tbl AS m
                     JOIN location_tbl AS l ON m.record_id = l.record_id
                     WHERE 
-                        (LOWER(m.household_members) NOT IN ('n/a', 'no', 'none')) 
+                        YEAR(l.date_encoded) = $searchYear
+                        AND (LOWER(m.household_members) NOT IN ('n/a', 'no', 'none')) 
                         AND (LOWER(m.person_with_disability) NOT IN ('n/a', 'no', 'none'))
                         AND (LOWER(l.housenumber) NOT IN ('n/a', 'no', 'none'))
                         AND (LOWER(l.sitio_zone_purok) NOT IN ('n/a', 'no', 'none'))
@@ -152,6 +155,7 @@ $totalRecordsSql = "SELECT COUNT(*) AS total FROM members_tbl AS m
 $totalRecordsResult = $conn->query($totalRecordsSql);
 $totalRecords = $totalRecordsResult->fetch_assoc()['total'];
 $totalPages = ceil($totalRecords / $itemsPerPage);
+
 
 // Function to export data as CSV
 function exportToCSV($data) {
@@ -237,6 +241,7 @@ if (isset($_GET['download'])) {
 // Close the database connection
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

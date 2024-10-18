@@ -1,7 +1,20 @@
-
 <?php
 // Database connection
 include '../../../src/db/db_connection.php';
+
+// Start the session if it hasn't already been started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check if the user is logged in and the district is set
+if (!isset($_SESSION['username']) || !isset($_SESSION['district'])) {
+    header('Location: ../../../index.php');
+    exit();
+}
+
+// Get the logged-in user's district
+$logged_in_district = $_SESSION['district'];
 
 // Barangay to District mapping
 $barangayDistrictMapping = [
@@ -97,6 +110,11 @@ $barangayDistrictMapping = [
     'Guilang-guilang ' => 'District 4',
 ];
 
+// Get the barangays for the logged-in district
+$barangaysInDistrict = array_keys(array_filter($barangayDistrictMapping, function($district) use ($logged_in_district) {
+    return $district === $logged_in_district;
+}));
+
 // Initialize search variable
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
@@ -105,7 +123,10 @@ $itemsPerPage = 10; // Number of items to display per page
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page
 $offset = ($page - 1) * $itemsPerPage; // Calculate offset for SQL
 
-// Fetch data from the database for individuals with no occupation
+// Prepare a string for the IN clause in SQL
+$barangaysPlaceholder = implode("','", $barangaysInDistrict);
+
+// Fetch data from the database for individuals with no occupation in the user's barangays
 $sql = "
     SELECT 
         m.household_members AS Name,
@@ -122,6 +143,7 @@ $sql = "
     WHERE 
         b.occupation IN ('NO', 'No', 'no') 
         AND YEAR(l.date_encoded) = YEAR(CURDATE())
+        AND l.barangay IN ('$barangaysPlaceholder')
         AND (LOWER(m.household_members) LIKE LOWER('%$searchTerm%') 
         OR m.age LIKE '%$searchTerm%'
         OR l.barangay LIKE LOWER('%$searchTerm%') 
@@ -142,6 +164,7 @@ $totalRecordsSql = "
     WHERE 
         b.occupation IN ('NO', 'No', 'no') 
         AND YEAR(l.date_encoded) = YEAR(CURDATE())
+        AND l.barangay IN ('$barangaysPlaceholder')
         AND (LOWER(m.household_members) LIKE LOWER('%$searchTerm%') 
         OR m.age LIKE '%$searchTerm%'
         OR l.barangay LIKE LOWER('%$searchTerm%') 
@@ -152,7 +175,7 @@ $totalRecordsResult = $conn->query($totalRecordsSql);
 $totalRecords = $totalRecordsResult->fetch_assoc()['total'];
 $totalPages = ceil($totalRecords / $itemsPerPage);
 
-
+// Download functionality remains unchanged
 if (isset($_GET['download'])) {
     $downloadType = $_GET['download'];
 
@@ -173,6 +196,7 @@ if (isset($_GET['download'])) {
         WHERE 
             b.occupation IN ('NO', 'No', 'no') 
             AND YEAR(l.date_encoded) = YEAR(CURDATE())
+            AND l.barangay IN ('$barangaysPlaceholder')
             AND (LOWER(m.household_members) LIKE LOWER('%$searchTerm%') 
             OR m.age LIKE '%$searchTerm%'
             OR l.barangay LIKE LOWER('%$searchTerm%') 
@@ -207,8 +231,8 @@ if (isset($_GET['download'])) {
         exit;
     }
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -240,7 +264,7 @@ if (isset($_GET['download'])) {
         color: white;
     }
 
-    .active1 {
+    a.active1 {
         background-color: #515151;
         color: white;
     }
@@ -260,7 +284,6 @@ if (isset($_GET['download'])) {
                 <h3 style="color: #ffffff;">
                 
                 <?php
-                    session_start();
                     if (!isset($_SESSION['username'])) {
                         header('Location: ../../../index.php');
                         exit();
@@ -307,10 +330,10 @@ if (isset($_GET['download'])) {
                                 <a href="records.php" class="sidebar-link">Household Records</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                <a href="district_osy.php" class="sidebar-link">Manolo Fortich OSY</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
+                                <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="osy_age.php" class="sidebar-link">OSY By Age</a>

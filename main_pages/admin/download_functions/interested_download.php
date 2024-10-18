@@ -49,9 +49,7 @@ $sql = "SELECT
         FROM members_tbl
         JOIN background_tbl ON members_tbl.member_id = background_tbl.member_id
         JOIN location_tbl ON members_tbl.record_id = location_tbl.record_id
-        WHERE members_tbl.age BETWEEN 15 AND 30
-        AND background_tbl.currently_attending_school IN ('No', 'no', 'NO')
-        AND background_tbl.status IN ('Yes', 'YES', 'yes')  /* Filter for Interested in ALS */
+        WHERE background_tbl.status IN ('Yes', 'YES', 'yes')  /* Filter for Interested in ALS */
         AND YEAR(location_tbl.date_encoded) = YEAR(CURDATE())
         AND (members_tbl.household_members LIKE '%$search_query%' 
             OR members_tbl.age LIKE '%$search_query%' 

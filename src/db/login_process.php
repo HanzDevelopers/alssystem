@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     } elseif ($user_type == 'implementer') {
                         header("Location: ../../main_pages/user/pages/dashboard.php");
                     } elseif ($user_type == 'coordinator') {
-                        header("Location: ../../main_pages/head1/pages/dashboard.php");
+                        header("Location: ../../main_pages/head/pages/dashboard.php");
                     } else {
                         echo "Invalid user type.";
                     }
