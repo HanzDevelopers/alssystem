@@ -2,7 +2,7 @@
     margin-top: 40px;
 }
 .team-members {
-    display: flex;
+    display: flex;   
     flex-wrap: wrap;
     justify-content: space-around;
     margin-top: 20px;

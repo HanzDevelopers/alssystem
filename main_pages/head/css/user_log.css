@@ -1,0 +1,7 @@
+.pagination {
+    display: flex;
+    justify-content: center; /* Centers the pagination */
+}
+.form-control, .btn {
+    margin-left: auto; /* Align the form input and button to the right */
+}

@@ -13,8 +13,8 @@ $start_from = ($current_page - 1) * $results_per_page;
 // Search handling
 $search_term = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Query to get the total number of users with user_type = 'user' and matching the search criteria
-$search_query = "SELECT COUNT(*) AS total FROM user_tbl WHERE user_type = 'user'";
+// Query to get the total number of users with user_type = 'teacher' or 'head' in any case and matching the search criteria
+$search_query = "SELECT COUNT(*) AS total FROM user_tbl WHERE LOWER(user_type) IN ('implementer', 'coordinator')";
 if (!empty($search_term)) {
     $search_query .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' OR status LIKE '%" . $conn->real_escape_string($search_term) . "%')";
 }
@@ -23,12 +23,14 @@ $row = $total_result->fetch_assoc();
 $total_users = $row['total'];
 $total_pages = ceil($total_users / $results_per_page);
 
-// Query to get the users for the current page, ordered from newest to oldest
-$sql = "SELECT * FROM user_tbl WHERE user_type = 'user'";
+// Query to get the users for the current page, ordered by user_name in ascending order
+$sql = "SELECT user_id, user_name, email, phone_number, user_type, status, district FROM user_tbl WHERE LOWER(user_type) IN ('implementer', 'coordinator')";
 if (!empty($search_term)) {
-    $sql .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' OR status LIKE '%" . $conn->real_escape_string($search_term) . "%')";
+    $sql .= " AND (user_name LIKE '%" . $conn->real_escape_string($search_term) . "%' 
+                 OR status LIKE '%" . $conn->real_escape_string($search_term) . "%' 
+                 OR district LIKE '%" . $conn->real_escape_string($search_term) . "%')";
 }
-$sql .= " ORDER BY user_name asc LIMIT $start_from, $results_per_page";
+$sql .= " ORDER BY user_name ASC LIMIT $start_from, $results_per_page";
 $result = $conn->query($sql);
 ?>
 
@@ -38,42 +40,68 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-    <!-- CORE CSS-->
-    <link rel="stylesheet" href="../../../src/css/dashboard.css">
+    <title>Users</title>
+    <!-- Bootstrap CSS CDN --> 
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
+    <!-- Our Custom CSS -->
     <link rel="stylesheet" href="../../../src/css/nav.css">
-    <title>Records</title>
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
+<!--For SimpleStatistics-->
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://unpkg.com/simple-statistics@7.0.2/dist/simple-statistics.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-statistics/7.8.1/simple-statistics.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <style>
-    .btn {
-        margin: 0 5px; /* Add a uniform margin to both buttons */
-        padding: 5px 10px; /* Adjust padding if needed */
+
+.active2 {
+        background-color: #b9b9b9;
+        color: white;
     }
-    td {
-        white-space: nowrap; /* Prevents the content from wrapping */
+
+    a.active1 {
+        background-color: #515151;
+        color: white;
+    }
+
+    /* Ensure container pushes content down */
+    .container-fluid {
+        margin-top: 1px;
+        margin-bottom: 50px;
     }
 </style>
+
 <body>
-  <!-- Sidebar -->
-  <div class="wrapper">
-    <!-- Sidebar  -->
-    <nav id="sidebar">
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
             <div class="sidebar-header" style="background: gray;">
                 <h3 style="color: #ffffff;">
-                    <?php
+                
+                <?php
                     session_start();
+                    if (!isset($_SESSION['username'])) {
+                        header('Location: ../../../index.php');
+                        exit();
+                    }
                     if (isset($_SESSION['username'])) {
                         echo '<a href="#">' . htmlspecialchars($_SESSION['username']) . '</a>';
                     } else {
                         echo '<a href="#">Admin</a>';
                     }
                 ?>
+
             </h3>
                 
             </div>
 
-            <li class="sidebar-header">
+            <li class="sidebar-header title" style="
+    font-weight: bold; color:gray;">
                         Key Performans Indicator
                     </li>
                     <li class="sidebar-item">
@@ -82,15 +110,16 @@ $result = $conn->query($sql);
                             Dashboard
                         </a>
                     </li>
-                    <li class="sidebar-header">
+                    <li class="sidebar-header" style="
+    font-weight: bold; color:gray;">
                         Tools & Components
                     </li>
                     <li class="sidebar-item">
-                        <a href="form.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            Form
-                        </a>
-                    </li>
+                <a href="#" id="formLink" class="sidebar-link">
+                    <i class="fa-regular fa-file-lines pe-2"></i>
+                    Form
+                </a>
+            </li>
                     <li class="sidebar-item">
                         <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
                             aria-expanded="false" aria-controls="pages">
@@ -102,23 +131,33 @@ $result = $conn->query($sql);
                                 <a href="records.php" class="sidebar-link">Household Records</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
+                                <a href="district_osy.php" class="sidebar-link">Manolo Fortich OSY</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
+                                <a href="district_population.php" class="sidebar-link">Manolo Fortich Population</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="OSY_age.php" class="sidebar-link">OSY By Age</a>
+                                <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
                             </li>
                             <li class="sidebar-item">
                                 <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
                             </li>
+                            <li class="sidebar-item">
+                                <a href="persons_with_disability.php" class="sidebar-link">Persons with Disability</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
+                            </li>
                         </ul>
                     </li>
-                    <li class="sidebar-header">
+                    <li class="sidebar-header" style="
+    font-weight: bold; color:gray;">
                         Admin Action
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item active2">
                         <a href="users.php" class="sidebar-link">
                         <i class="fa-regular fa-file-lines pe-2"></i>
                             Users
@@ -134,10 +173,11 @@ $result = $conn->query($sql);
                         <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
                             aria-expanded="false" aria-controls="auth">
                             <i class="fa-regular fa-user pe-2"></i>
-                            Auth
+                            Account Settings
                         </a>
                         <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                           <li class="sidebar-item">
+                          
+                        <li class="sidebar-item">
                                 <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
                             </li>
                             <li class="sidebar-item">
@@ -145,23 +185,48 @@ $result = $conn->query($sql);
                             </li>
                         </ul>
                     </li>
+                    
                 </ul>
         </nav>
 
+
+        <!-- Modal Structure -->
+    <div class="modal fade" id="csvModal" tabindex="-1" aria-labelledby="csvModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="csvModalLabel">Choose an Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>What would you like to do?</p>
+                    <button type="button" id="uploadCsvBtn" class="btn btn-outline-primary btn-lg mb-3">Upload CSV File</button><br>
+                    <button type="button" id="goToFormBtn" class="btn btn-primary btn-lg">Go to Form</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
         <!-- Page Content  -->
         <div id="content">
+            
             <div class="menu-header">
                 <button type="button" id="sidebarCollapse" class="btn menu-btn">
                     <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
                 </button>
-                <span class="menu-text">Users</span>
+                <span class="menu-text">User List</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
             </div>
-        <!-- End of top nav -->
+            
+    
+        <!--remove responsive
+        </div>-->
 
-        <div class="container mt-5">
-            <!-- Search Form -->
-            <form method="get" class="mb-3">
+        <!-- Main Content Starts Here -->
+<div class="container-fluid">
+    <div class="container mt-4">
+    <!-- Search Form -->
+    <form method="get" class="mb-3">
                 <div class="row">
                     <div class="col-md-8">
                         <input type="text" name="search" class="form-control" placeholder="Search by name or status" value="<?php echo htmlspecialchars($search_term); ?>">
@@ -174,99 +239,146 @@ $result = $conn->query($sql);
             </form>
             <a href="add_user.php" class="btn btn-success mb-3">Add</a>
             <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>User Type</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- PHP code to fetch data from the database -->
-                        <?php
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<tr>
-                                        <td>{$row['user_name']}</td>
-                                        <td>{$row['email']}</td>
-                                        <td>{$row['user_type']}</td>
-                                        <td>{$row['status']}</td>
-                                        <td>
-                                            <button class='btn btn-sm btn-toggle-status'  onclick='return disable()' 
-                                                data-id='{$row['user_id']}' 
-                                                data-status='{$row['status']}' 
-                                                style='background-color: " . ($row['status'] === 'disable' ? 'green' : 'orange') . "; color: white;'>
-                                                " . ($row['status'] === 'disable' ? 'Enable' : 'Disable') . "
-                                            </button>
-                                            <a href='delete_user.php?id={$row['user_id']}' class='btn btn-danger btn-sm' onclick='return confirmDelete()'>Delete</a>
-                                        </td>
-                                      </tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='5'>No records found</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>District</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone Number</th> <!-- Added Phone Number column -->
+                <th>User Type</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>
+                            <td>{$row['district']}</td>
+                            <td>{$row['user_name']}</td>
+                            <td>{$row['email']}</td>
+                            <td>{$row['phone_number']}</td> <!-- Display Phone Number -->
+                            <td>{$row['user_type']}</td>
+                            <td>{$row['status']}</td>
+                            <td>
+                                <button class='btn btn-sm btn-toggle-status'  
+                                    data-id='{$row['user_id']}' 
+                                    data-status='{$row['status']}' 
+                                    style='background-color: " . ($row['status'] === 'disable' ? 'green' : 'orange') . "; color: white;'>
+                                    " . ($row['status'] === 'disable' ? 'Enable' : 'Disable') . "
+                                </button>
+                                <a href='delete_user.php?id={$row['user_id']}' class='btn btn-danger btn-sm' onclick='return confirmDelete()'>Delete</a>
+                            </td>
+                          </tr>";
+                }
+            } else {
+                echo "<tr><td colspan='7'>No records found</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination Controls -->
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <?php
+        if ($current_page > 1) {
+            echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page - 1) . '&search=' . urlencode($search_term) . '">Previous</a></li>';
+        }
+
+        for ($page = 1; $page <= $total_pages; $page++) {
+            if ($page == $current_page) {
+                echo '<li class="page-item active"><a class="page-link" href="#">' . $page . '</a></li>';
+            } else {
+                echo '<li class="page-item"><a class="page-link" href="users.php?page=' . $page . '&search=' . urlencode($search_term) . '">' . $page . '</a></li>';
+            }
+        }
+
+        if ($current_page < $total_pages) {
+            echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page + 1) . '&search=' . urlencode($search_term) . '">Next</a></li>';
+        }
+        ?>
+    </ul>
+</nav>
+
+    </div>
+
+    </div>
+
+
+<footer class="footer" style="margin-top: 100px; padding: 0px 110px 0px 110px;">
+    <div class="container">
+        <div class="footer-content">
+            <!-- Partnership Logos and Description -->
+            <div class="footer-section about">
+                <div class="logos">
+                    <img src="../../../assets/images/logo.png" alt="Your Logo" class="partner-logo">
+                    <img src="../../../assets/images/logo1.png" alt="ALS Logo" class="partner-logo">
+                </div>
+                <p>In partnership with the <strong>Alternative Learning System (ALS)</strong>, we aim to collect and analyze profiles of out-of-school youth, helping create better programs and initiatives tailored to their needs.</p>
             </div>
-            <!-- Pagination Controls -->
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    <?php
-                    // Previous page button
-                    if ($current_page > 1) {
-                        echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page - 1) . '">Previous</a></li>';
-                    }
-                    
-                    // Page number buttons
-                    for ($page = 1; $page <= $total_pages; $page++) {
-                        if ($page == $current_page) {
-                            echo '<li class="page-item active"><a class="page-link" href="#">' . $page . '</a></li>';
-                        } else {
-                            echo '<li class="page-item"><a class="page-link" href="users.php?page=' . $page . '">' . $page . '</a></li>';
-                        }
-                    }
-                    
-                    // Next page button
-                    if ($current_page < $total_pages) {
-                        echo '<li class="page-item"><a class="page-link" href="users.php?page=' . ($current_page + 1) . '">Next</a></li>';
-                    }
-                    ?>
+
+            <!-- Quick Links -->
+            <div class="footer-section links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="about-us.html">About Us</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
                 </ul>
-            </nav>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="footer-section contact">
+                <h4>Contact Us</h4>
+                <p><i class="fas fa-phone-alt"></i> +63 123 4567 890</p>
+                <p><i class="fas fa-envelope"></i> info@household-info-system.com</p>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p>&copy; 2024 Household Information System in Manolo Fortich. All rights reserved.</p>
         </div>
     </div>
-  </div>
+</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <!-- jQuery Library -->
-  <script type="text/javascript" src="../../../src/js/plugins/jquery-1.11.2.min.js"></script>  
-  <!-- materialize js -->
-  <script type="text/javascript" src="../../../src/js/materialize.min.js"></script>
-  <!-- plugins.js - Some Specific JS codes for Plugin Settings -->
-  <script type="text/javascript" src="../../../src/js/plugins.min.js"></script>
-  <script src="../../../src/js/nav.js"></script>
+</div>
 
-  <!-- Confirmation Script -->
-  <script>
-      function confirmLogout() {
-          return confirm("Are you sure you want to log out?");
-      }
-  </script>
+   
+</div>
 
-  <!-- jQuery CDN - Slim version (=without AJAX) -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <!-- Popper.JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-  <!-- Bootstrap JS -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-  <!-- jQuery Custom Scroller CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-  <!-- Confirmation Script -->
-  <script>
+
+
+
+
+
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar, #content').toggleClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        });
+    </script>
+    <script>
     function disable() {
           return confirm("Are you sure you want to disable/enable this account?");
       }
@@ -276,18 +388,6 @@ $result = $conn->query($sql);
       function confirmLogout() {
           return confirm("Are you sure you want to log out?");
       }
-  </script>
-  <script type="text/javascript">
-      $(document).ready(function () {
-          $("#sidebar").mCustomScrollbar({
-              theme: "minimal"
-          });
-          $('#sidebarCollapse').on('click', function () {
-              $('#sidebar, #content').toggleClass('active');
-              $('.collapse.in').toggleClass('in');
-              $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-          });
-      });
   </script>
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
@@ -324,9 +424,12 @@ $result = $conn->query($sql);
         });
     });
 </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+        <script src="../js/data.js"></script>
+        <script src="../js/form.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-      crossorigin="anonymous"></script>
 </body>
+
 </html>
