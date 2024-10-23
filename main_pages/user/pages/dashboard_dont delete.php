@@ -19,6 +19,7 @@ include '../api/fetch_summary_data.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 
 <!--For SimpleStatistics-->
+
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://unpkg.com/simple-statistics@7.0.2/dist/simple-statistics.min.js"></script>
@@ -35,7 +36,6 @@ include '../api/fetch_summary_data.php';
     .container-fluid {
         margin-top: 1px;
     }
-    
     /* Card Styles */
     .card-osy-total {
     background-color: #51cf66; /* Soft Red */
@@ -175,99 +175,72 @@ $stmt->close();
 $conn->close();
 ?>
 
-            </h3>
+</h3>
                 
-            </div>
-
-            <li class="sidebar-header title" style="
-    font-weight: bold; color:gray;">
-                        Key Performans Indicator
-                    </li>
-                    <li class="sidebar-item active4">
-                        <a href="dashboard.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="sidebar-header" style="
-    font-weight: bold; color:gray;">
-                        Tools & Components
-                    </li>
-                    <li class="sidebar-item">
-                <a href="#" id="formLink" class="sidebar-link">
-                    <i class="fa-regular fa-file-lines pe-2"></i>
-                    Form
-                </a>
-            </li>
-                    <li class="sidebar-item">
-                        <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
-                            aria-expanded="false" aria-controls="pages">
-                            <i class="fa-solid fa-list pe-2"></i>
-                            Reports
-                        </a>
-                        <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                </div>
+    
+                <li class="sidebar-header title" style="
+        font-weight: bold; color:gray;">
+                            Key Performans Indicator
+                        </li>
+                        <li class="sidebar-item active4">
+                            <a href="dashboard.php" class="sidebar-link">
+                            <i class="fa-regular fa-file-lines pe-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            Tools & Components
+                        </li>
                         <li class="sidebar-item">
-                                <a href="records.php" class="sidebar-link">Household Records</a>
-                            </li>
-                            
-                            <li class="sidebar-item">
-                                <a href="district_osy.php" class="sidebar-link">District OSY</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="district_population.php" class="sidebar-link">District Population</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="osy_age.php" class="sidebar-link">OSY By Age</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="interested.php" class="sidebar-link">List of Interested in ALS</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="persons_with_disability.php" class="sidebar-link">Persons with Disability</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-header" style="
-    font-weight: bold; color:gray;">
-                        Admin Action
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="users.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            Users
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="user_log.php" class="sidebar-link">
-                        <i class="fa-regular fa-file-lines pe-2"></i>
-                            User Log
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
-                            aria-expanded="false" aria-controls="auth">
-                            <i class="fa-regular fa-user pe-2"></i>
-                            Account Settings
-                        </a>
-                        <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                          
+                    <a href="#" id="formLink" class="sidebar-link">
+                        
+                        <i class="fa-solid fa-list pe-2"></i>
+                        Form
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                                    <a href="records.php" class="sidebar-link"><i class="fa-regular fa-file-lines pe-2"></i>Household Records</a>
+                                </li>
                         <li class="sidebar-item">
-                                <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
-                            </li>
+                            <a href="reports.php" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#pages"
+                                aria-expanded="false" aria-controls="pages">
+                                <i class="fa-solid fa-list pe-2"></i>
+                                Reports
+                            </a>
+                            <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                            <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                </ul>
-        </nav>
+                                    <a href="records.php" class="sidebar-link">Household Records</a>
+                                </li>
+                                
+                                
+                            </ul>
+                        </li>
+                        <li class="sidebar-header" style="
+        font-weight: bold; color:gray;">
+                            User Action
+                        </li>
+                        
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
+                                aria-expanded="false" aria-controls="auth">
+                                <i class="fa-regular fa-user pe-2"></i>
+                                Account Settings
+                            </a>
+                            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                              
+                            <li class="sidebar-item">
+                                    <a href="edit_profile.php" class="sidebar-link">Edit Profile</a>
+                                </li>
+                                <li class="sidebar-item">
+                                <a href="logout.php" class="sidebar-link" onclick="return confirmLogout();">Log Out</a>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                    </ul>
+            </nav>
 
 
         <!-- Modal Structure -->
@@ -296,18 +269,6 @@ $conn->close();
                 </button>
                 <span class="menu-text">Dashboard</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
-                <!-- Dropdown fixed at the bottom
-<div class="dropdown fixed-top-right">
-    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Download
-    </button>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" onclick="downloadImage()">Download Images</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadPDF()">Download PDF</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadCSV()">Download CSV</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Download Excel</a></li>
-    </ul>
-</div> -->
             </div>
             
     
@@ -397,8 +358,7 @@ $conn->close();
     </div>
 </div>
 
-
-
+        
 
 
 
@@ -411,21 +371,21 @@ $conn->close();
             </form>
                 -->
             <!-- Container for charts -->
-             
-    <h5 class="mb-4">Data Charts</h5>
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="btn-group float-end" style="margin-left: 30px;">
-    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Download
-    </button>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" onclick="downloadImage()">Download Images</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadPDF()">Download PDF</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadCSV()">Download CSV</a></li>
-        <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Download Excel</a></li>
-    </ul>
-</div>
-</div>
+    <h5  style="text-align:center; font-weight: bold; font-size:25px;">Data Charts</h5>
+<!--<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="btn-group" style="margin-right: 100px;">
+        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="margin-left:20px;">
+            Download
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" onclick="downloadImage()">Download Images</a></li>
+            <li><a class="dropdown-item" href="#" onclick="downloadPDF()">Download PDF</a></li>
+            <li><a class="dropdown-item" href="#" onclick="downloadCSV()">Download CSV</a></li>
+            <li><a class="dropdown-item" href="#" onclick="downloadExcel()">Download Excel</a></li>
+        </ul>
+    </div>
+</div>-->
+
 <div class="dashboard-container">
     <!-- Chart 1: District OSY Pie Chart -->
     <div class="chart-card" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; width: 30%; min-width: 300px; text-align: center;">
@@ -456,55 +416,10 @@ $conn->close();
             View Info
         </a>
     </div>
-
-
-<footer class="footer" style="margin-top: 100px; padding: 0px 110px 0px 110px;">
-    <div class="container">
-        <div class="footer-content">
-            <!-- Partnership Logos and Description -->
-            <div class="footer-section about">
-                <div class="logos">
-                    <img src="../../../assets/images/logo.png" alt="Your Logo" class="partner-logo">
-                    <img src="../../../assets/images/logo1.png" alt="ALS Logo" class="partner-logo">
-                </div>
-                <p>In partnership with the <strong>Alternative Learning System (ALS)</strong>, we aim to collect and analyze profiles of out-of-school youth, helping create better programs and initiatives tailored to their needs.</p>
-            </div>
-
-            <!-- Quick Links -->
-            <div class="footer-section links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="about-us.html">About Us</a></li>
-                    <li><a href="services.html">Services</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="faq.html">FAQ</a></li>
-                </ul>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="footer-section contact">
-                <h4>Contact Us</h4>
-                <p><i class="fas fa-phone-alt"></i> +63 123 4567 890</p>
-                <p><i class="fas fa-envelope"></i> info@household-info-system.com</p>
-            </div>
-        </div>
-
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-            <p>&copy; 2024 Household Information System in Manolo Fortich. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
-
 </div>
 
    
 </div>
-
-
-
-
-
 
 <!-- jQuery CDN - Slim version (=without AJAX) -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -527,6 +442,7 @@ $conn->close();
             });
         });
     </script>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>

@@ -134,7 +134,7 @@ $stmt->bind_param("sssssssssi", $household_member, $relationship_to_head, $birth
     }
 
     // Redirect after successful update
-    header("Location: income_below_20,000.php");
+    header("Location: dashboard.php");
     exit;
 }
 ?>
@@ -494,7 +494,7 @@ input, textarea {
 function confirmCancel() {
     var result = confirm("Are you sure you want to cancel? Any changes may not be saved.");
     if (result) {
-        window.location.href = 'income_below_20,000.php'; // Redirect if user confirms
+        window.location.href = 'dashboard.php'; // Redirect if user confirms
     }
 }
 // Function to display success message

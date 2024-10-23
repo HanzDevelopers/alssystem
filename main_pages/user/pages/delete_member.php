@@ -29,14 +29,14 @@ try {
     // Use JavaScript to show an alert and then redirect to records.php
     echo "<script>
         alert('Member deleted successfully');
-        window.location.href = 'records.php';
+        window.location.href = 'dashboard.php';
     </script>";
 } catch (Exception $e) {
     // If any error occurs, rollback transaction
     $conn->rollback();
     echo "<script>
         alert('Error deleting member: " . $e->getMessage() . "');
-        window.location.href = 'records.php';
+        window.location.href = 'dashboard.php';
     </script>";
 }
 ?>

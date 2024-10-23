@@ -114,7 +114,20 @@ foreach ($household_members as $index => $member) {
     // Get the inserted member_id from members_tbl
     $member_id = $stmt_mem->insert_id;
 
-    // Insert into background_tbl
+    /* Insert into background_tbl
+    $stmt_bg->bind_param(
+        "issssssss",
+        $member_id,
+        $highest_grade[$index],
+        $attending_school[$index],
+        $level_enrolled[$index],
+        $reasons_not_attending[$index],
+        $can_read_write[$index],
+        $occupation[$index],
+        $work[$index],
+        $status[$index]
+    );*/
+
     $stmt_bg->bind_param(
         "issssssss",
         $member_id,
@@ -127,6 +140,7 @@ foreach ($household_members as $index => $member) {
         $work[$index],
         $status[$index]
     );
+    
 
     if (!$stmt_bg->execute()) {
         die("Error inserting into background_tbl: " . $stmt_bg->error);

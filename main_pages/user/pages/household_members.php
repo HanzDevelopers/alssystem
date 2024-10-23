@@ -266,7 +266,7 @@ if (isset($_GET['member_id']) && !empty($_GET['member_id'])) {
 
     <!-- Button Container -->
     <div class="button-container">
-            <a href="records.php" class="custom-button redirect">Back to Records</a>
+            <a href="dashboard.php" class="custom-button redirect">Back to Dashboard</a>
             <a href="get_record_id.php?member_id=<?php echo $member_id; ?>" class="custom-button edit" onclick="confirmCancel()">Edit Household Data</a>
             <button id="download-pdf" class="custom-button">Download PDF</button>
         </div>
