@@ -26,7 +26,7 @@ $total_osy = $total_osy_result->fetch_assoc()['total_osy'];
 $district_osy_query = "
     SELECT 
         CASE 
-            WHEN l.barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
+            WHEN l.barangay IN ('Tankulan', 'Diklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
             WHEN l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') THEN 'District 2'
             WHEN l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') THEN 'District 3'
             WHEN l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') THEN 'District 4'
@@ -74,6 +74,8 @@ $district_mapping = [
     'Diklum ' => 'District 1',
     'diklum' => 'District 1',
     'diklum ' => 'District 1',
+    'diclum ' => 'District 1',
+    'Diclum ' => 'District 1',
     'San Miguel' => 'District 1',
     'San Miguel ' => 'District 1',
     'san Miguel' => 'District 1',
@@ -176,6 +178,7 @@ $sql = "SELECT COUNT(*) AS total FROM members_tbl
             OR (CASE 
                     WHEN location_tbl.barangay = 'Tankulan' THEN 'District 1'
                     WHEN location_tbl.barangay = 'Diklum' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'Diclum' THEN 'District 1'
                     WHEN location_tbl.barangay = 'San Miguel' THEN 'District 1'
                     WHEN location_tbl.barangay = 'Ticala' THEN 'District 1'
                     WHEN location_tbl.barangay = 'Lingion' THEN 'District 1'
@@ -229,6 +232,7 @@ $sql = "SELECT
             OR (CASE 
                     WHEN location_tbl.barangay = 'Tankulan' THEN 'District 1'
                     WHEN location_tbl.barangay = 'Diklum' THEN 'District 1'
+                    WHEN location_tbl.barangay = 'Diclum' THEN 'District 1'
                     WHEN location_tbl.barangay = 'San Miguel' THEN 'District 1'
                     WHEN location_tbl.barangay = 'Ticala' THEN 'District 1'
                     WHEN location_tbl.barangay = 'Lingion' THEN 'District 1'

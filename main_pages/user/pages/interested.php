@@ -21,7 +21,7 @@ $total_population_query = "
         SELECT barangay FROM location_tbl
         WHERE 
             CASE 
-                WHEN barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
+                WHEN barangay IN ('Tankulan', 'Diklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
                 WHEN barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') THEN 'District 2'
                 WHEN barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') THEN 'District 3'
                 WHEN barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') THEN 'District 4'
@@ -42,7 +42,7 @@ $total_osy_query = "SELECT COUNT(*) AS total_osy
                         SELECT barangay FROM location_tbl
                         WHERE 
                             CASE 
-                                WHEN barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
+                                WHEN barangay IN ('Tankulan', 'Diklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
                                 WHEN barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') THEN 'District 2'
                                 WHEN barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') THEN 'District 3'
                                 WHEN barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') THEN 'District 4'
@@ -56,7 +56,7 @@ $total_osy = $total_osy_result->fetch_assoc()['total_osy'];
 $district_osy_query = "
     SELECT 
         CASE 
-            WHEN l.barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
+            WHEN l.barangay IN ('Tankulan', 'Diklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
             WHEN l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') THEN 'District 2'
             WHEN l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') THEN 'District 3'
             WHEN l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') THEN 'District 4'
@@ -72,7 +72,7 @@ $district_osy_query = "
         SELECT barangay FROM location_tbl
         WHERE 
             CASE 
-                WHEN barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
+                WHEN barangay IN ('Tankulan', 'Diklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
                 WHEN barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') THEN 'District 2'
                 WHEN barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') THEN 'District 3'
                 WHEN barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') THEN 'District 4'
@@ -98,7 +98,7 @@ $interested_als_query = "SELECT COUNT(*) AS total_interested_als
                              SELECT barangay FROM location_tbl
                              WHERE 
                                  CASE 
-                                     WHEN barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
+                                     WHEN barangay IN ('Tankulan', 'Diklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
                                      WHEN barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') THEN 'District 2'
                                      WHEN barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') THEN 'District 3'
                                      WHEN barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') THEN 'District 4'
@@ -139,34 +139,98 @@ $logged_in_district = $_SESSION['district'];
 
 // District Mapping for Barangays
 $district_mapping = [
-    // District 1
     'Tankulan' => 'District 1',
+    'Tankulan ' => 'District 1',
+    'tankulan' => 'District 1',
+    'tankulan ' => 'District 1',
     'Diklum' => 'District 1',
+    'Diklum ' => 'District 1',
+    'diklum' => 'District 1',
+    'diklum ' => 'District 1',
+    'diclum ' => 'District 1',
+    'Diclum ' => 'District 1',
     'San Miguel' => 'District 1',
+    'San Miguel ' => 'District 1',
+    'san Miguel' => 'District 1',
+    'san Miguel ' => 'District 1',
+    'san miguel' => 'District 1',
+    'san miguel ' => 'District 1',
     'Ticala' => 'District 1',
+    'Ticala ' => 'District 1',
+    'ticala' => 'District 1',
+    'ticala ' => 'District 1',
     'Lingion' => 'District 1',
-
-    // District 2
+    'Lingion ' => 'District 1',
+    'lingion' => 'District 1',
+    'lingion ' => 'District 1',
     'Alae' => 'District 2',
+    'Alae ' => 'District 2',
+    'alae' => 'District 2',
+    'alae ' => 'District 2',
     'Damilag' => 'District 2',
+    'Damilag ' => 'District 2',
+    'damilag' => 'District 2',
+    'damilag ' => 'District 2',
     'Mambatangan' => 'District 2',
     'Mantibugao' => 'District 2',
+    'Mantibugao ' => 'District 2',
+    'mantibugao' => 'District 2',
+    'mantibugao ' => 'District 2',
     'Minsuro' => 'District 2',
+    'Minsuro ' => 'District 2',
+    'minsuro' => 'District 2',
+    'minsuro ' => 'District 2',
     'Lunocan' => 'District 2',
-
-    // District 3
+    'Lunocan ' => 'District 2',
+    'lunocan ' => 'District 2',
+    'lunocan' => 'District 2',
+    'Agusan canyon ' => 'District 3',
+    'Agusan Canyon ' => 'District 3',
+    'Agusan-canyon ' => 'District 3',
+    'Agusan-Canyon ' => 'District 3',
     'Agusan canyon' => 'District 3',
+    'Agusan Canyon' => 'District 3',
+    'Agusan-canyon' => 'District 3',
+    'Agusan-Canyon' => 'District 3',
     'Mampayag' => 'District 3',
+    'Mampayag ' => 'District 3',
+    'mampayag' => 'District 3',
+    'mampayag ' => 'District 3',
     'Dahilayan' => 'District 3',
+    'Dahilayan ' => 'District 3',
+    'dahilayan' => 'District 3',
+    'dahilayan ' => 'District 3',
     'Sankanan' => 'District 3',
+    'Sankanan ' => 'District 3',
+    'sankanan' => 'District 3',
+    'sankanan ' => 'District 3',
     'Kalugmanan' => 'District 3',
+    'Kalugmanan ' => 'District 3',
+    'kalugmanan' => 'District 3',
+    'kalugmanan ' => 'District 3',
     'Lindaban' => 'District 3',
-
-    // District 4
+    'Lindaban ' => 'District 3',
+    'lindaban' => 'District 3',
+    'lindaban ' => 'District 3',
     'Dalirig' => 'District 4',
+    'Dalirig ' => 'District 4',  // Ensure this is added
+    'dalirig' => 'District 4',
+    'dalirig ' => 'District 4',
     'Maluko' => 'District 4',
+    'Maluko ' => 'District 4',
+    'maluko' => 'District 4',
+    'maluko ' => 'District 4',
     'Santiago' => 'District 4',
+    'santiago' => 'District 4',
+    'Santiago ' => 'District 4',
+    'santiago ' => 'District 4',
     'Guilang2' => 'District 4',
+    'Guilang-Guilang' => 'District 4',
+    'guilang-guilang' => 'District 4',
+    'Guilang-guilang' => 'District 4',
+    'Guilang-Guilang ' => 'District 4',
+    'guilang-guilang ' => 'District 4',
+    'Guilang-guilang ' => 'District 4',
 ];
 
 // Get the current year

@@ -11,7 +11,7 @@ $logged_in_district = $_SESSION['district'];
 
 // Define the barangay to district mapping
 $district_mapping = [
-    'District 1' => ['Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion'],
+    'District 1' => ['Tankulan', 'Diklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion'],
     'District 2' => ['Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan'],
     'District 3' => ['Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban'],
     'District 4' => ['Dalirig', 'Maluko', 'Santiago', 'Guilang2'],
@@ -40,7 +40,7 @@ if (!empty($search)) {
                         OR l.housenumber LIKE '%" . mysqli_real_escape_string($conn, $search) . "%' 
                         OR l.date_encoded LIKE '%" . mysqli_real_escape_string($conn, $search) . "%' 
                         OR (CASE 
-                            WHEN l.barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
+                            WHEN l.barangay IN ('Tankulan', 'Diklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
                             WHEN l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') THEN 'District 2'
                             WHEN l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') THEN 'District 3'
                             WHEN l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') THEN 'District 4'
@@ -52,7 +52,7 @@ if (!empty($search)) {
 $query = "SELECT 
             m.member_id,
             CASE 
-                WHEN l.barangay IN ('Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
+                WHEN l.barangay IN ('Tankulan', 'Diklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
                 WHEN l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') THEN 'District 2'
                 WHEN l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') THEN 'District 3'
                 WHEN l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') THEN 'District 4'

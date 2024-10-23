@@ -91,53 +91,86 @@ if (!isset($_SESSION['username'])) {
 
 
                     <!-- Step 1 -->
-                    <div class="form-step" id="step1">
-                        <div class="group-container">
-                            <div class="group">
-                                <label>Date Encoded:</label>
-                <input type="date" name="date_encoded" required>
-                                
-                            </div>
-                            <div class="group">
-                                <label>Province:</label>
-                                <input type="text" name="province" required placeholder="Province">
-                            </div>
-                            <div class="group">
-                                <label>Estimated Family Income:</label>
-                                <input type="number" name="estimated_family_income" required placeholder="Estimated Family Income">
-                            </div>
-                        </div>
-                        <div class="group-container">
-                            <div class="group">
-                                <label>House Number:</label>
-                                <input type="text" name="house_number" required placeholder="House Number">
-                            </div>
-                            <div class="group">
-                                <label>City/Municipality:</label>
-                                <input type="text" name="city" required placeholder="City/Municipality">
-                            </div>
-                            <div class="group">
-                                <label>Other Notes:</label>
-                                <textarea name="notes" rows="2" cols="50" placeholder="State Notes Here"></textarea>
-                             </div>
-                        </div>
-                        <div class="group-container">
-                            <div class="group">
-                                <label>Sitio/Zone:</label>
-                                <input type="text" name="sitio_zone_purok" required placeholder="Sitio/Zone">
-                            </div>
-                            <div class="group">
-                                <label>Barangay:</label>
-                                <input type="text" name="barangay" required placeholder="Barangay">
-                            </div>
-                            <div class="group">
-                            </div>
-                        </div>
-                        <div class="button-group">
-                        <span id="dashboard" class="dashboard" onclick="dashboard()">Leave form</span>
-                            <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next</button>
-                        </div>
-                    </div>
+<div class="form-step" id="step1">
+    <div class="group-container">
+        <div class="group">
+            <label>Origin Date:</label>
+            <input type="date" name="date_encoded" required>
+        </div>
+
+        <div class="group">
+            <label>Barangay:</label>
+            <input type="text" id="barangay" name="barangay" required placeholder="Barangay" oninput="updateLocation()">
+        </div>
+
+        <div class="group">
+            <label>Estimated Family Income:</label>
+            <input type="number" name="estimated_family_income" required placeholder="Estimated Family Income">
+        </div>
+    </div>
+
+    <div class="group-container">
+        <div class="group">
+            <label>House Number:</label>
+            <input type="text" name="house_number" required placeholder="House Number">
+        </div>
+
+        <div class="group">
+            <label>City/Municipality:</label>
+            <input type="text" id="city" name="city" required placeholder="City/Municipality">
+        </div>
+
+        <div class="group">
+            <label>Other Notes:</label>
+            <textarea name="notes" rows="2" cols="50" placeholder="State Notes Here"></textarea>
+        </div>
+    </div>
+
+    <div class="group-container">
+        <div class="group">
+            <label>Sitio/Zone:</label>
+            <input type="text" name="sitio_zone_purok" required placeholder="Sitio/Zone">
+        </div>
+
+        <div class="group">
+            <label>Province:</label>
+            <input type="text" id="province" name="province" required placeholder="Province">
+        </div>
+        <div class="group">
+        </div>
+    </div>
+
+    <div class="button-group">
+        <span id="dashboard" class="dashboard" onclick="dashboard()">Leave form</span>
+        <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next</button>
+    </div>
+</div>
+
+<script>
+    function updateLocation() {
+        // List of barangays
+        const barangays = [
+            'tankulan', 'diclum', 'san miguel', 'ticala', 'lingion',
+            'alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan',
+            'agusan canyon', 'agusan-canyon', 'mampayag', 'dahilayan', 'sankanan',
+            'kalugmanan', 'lindaban', 'dalirig', 'maluko', 'santiago', 'guilang2', 'guilang-guilang'
+        ];
+
+        // Get the value from the Barangay input
+        const barangayInput = document.getElementById('barangay').value.toLowerCase();
+
+        // Check if the input value matches any barangay in the list
+        if (barangays.includes(barangayInput)) {
+            document.getElementById('city').value = 'Manolo Fortich';
+            document.getElementById('province').value = 'Bukidnon';
+        } else {
+            // Clear the city and province fields if no match is found
+            document.getElementById('city').value = '';
+            document.getElementById('province').value = '';
+        }
+    }
+</script>
+
 <!-- Step 2 -->
 <div class="form-step" id="step2" style="display:none;">
     <div class="table-responsive">
@@ -159,15 +192,38 @@ if (!isset($_SESSION['username'])) {
             <tbody>
                 <tr>
                     <td data-label="No.">1</td>
-                    <td data-label="Household Members"><input type="text" name="household_members[]" placeholder="Name of Member"></td>
-                    <td data-label="Relationship to Head"><input type="text" name="relationship_to_head[]" placeholder="Relationship to Head"></td>
-                    <td data-label="Birthdate"><input type="date" name="birthdate[]" onchange="calculateAge(this)"></td>
-                    <td data-label="Age"><input type="number" name="age[]" placeholder="Age" readonly></td>
-                    <td data-label="Gender"><input type="text" name="gender[]" placeholder="Gender"></td>
-                    <td data-label="Civil Status"><input type="text" name="civil_status[]" placeholder="Civil Status"></td>
-                    <td data-label="Person w/ Disability"><input type="text" name="disability[]" placeholder="Person w/ Disability"></td>
-                    <td data-label="Ethnicity"><input type="text" name="ethnicity[]" placeholder="Ethnicity"></td>
-                    <td data-label="Religion"><input type="text" name="religion[]" placeholder="Religion"></td>
+                    <td data-label="Household Members">
+                        <input type="text" name="household_members[]" placeholder="Name of Member">
+                    </td>
+                    <td data-label="Relationship to Head">
+                        <input type="text" name="relationship_to_head[]" placeholder="Relationship to Head" oninput="showRelationshipSuggestions(this)">
+                        <div class="suggestions-box" id="relationship-suggestions"></div>
+                    </td>
+                    <td data-label="Birthdate">
+                        <input type="date" name="birthdate[]" onchange="calculateAge(this)">
+                    </td>
+                    <td data-label="Age">
+                        <input type="number" name="age[]" placeholder="Age" readonly>
+                    </td>
+                    <td data-label="Gender">
+                        <input type="text" name="gender[]" placeholder="Gender">
+                    </td>
+                    <td data-label="Civil Status">
+                        <input type="text" name="civil_status[]" placeholder="Civil Status" oninput="showCivilStatusSuggestions(this)">
+                        <div class="suggestions-box" id="civil-status-suggestions"></div>
+                    </td>
+                    <td data-label="Person w/ Disability">
+                        <input type="text" name="disability[]" placeholder="Person w/ Disability" oninput="showDisabilitySuggestions(this)">
+                        <div class="suggestions-box" id="disability-suggestions"></div>
+                    </td>
+                    <td data-label="Ethnicity">
+                        <input type="text" name="ethnicity[]" placeholder="Ethnicity" oninput="showEthnicitySuggestions(this)">
+                        <div class="suggestions-box" id="ethnicity-suggestions"></div>
+                    </td>
+                    <td data-label="Religion">
+                        <input type="text" name="religion[]" placeholder="Religion" oninput="showReligionSuggestions(this)">
+                        <div class="suggestions-box" id="religion-suggestions"></div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -181,6 +237,123 @@ if (!isset($_SESSION['username'])) {
         <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next</button>
     </div>
 </div>
+
+<!-- CSS for Suggestions Box -->
+<style>
+    .suggestions-box {
+        border: 1px solid #ccc;
+        border-top: none;
+        position: absolute;
+        background-color: white;
+        z-index: 1000;
+        max-height: 150px;
+        overflow-y: auto;
+        width: calc(100% - 22px); /* Same width as the input field */
+        display: none; /* Initially hidden */
+    }
+
+    .suggestion-item {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .suggestion-item:hover {
+        background-color: #f0f0f0;
+    }
+</style>
+
+<script>
+    const relationships = [
+        'Head', 'Spouse', 'Son', 'Daughter', 'Stepson', 'Stepdaughter', 
+        'Son-in-law', 'Daughter-in-law', 'Grandson', 'Granddaughter', 
+        'Father', 'Mother', 'Brother', 'Sister', 'Uncle', 'Aunt', 
+        'Nephew', 'Niece', 'Housemaid', 'Houseboy', 'Others (nonrelative/boarder)'
+    ];
+
+    const civilStatuses = [
+        'Single', 'Married', 'Widower', 'Separated', 'Live-in'
+    ];
+
+    const disabilities = [
+        'Partially Hearing Impaired', 'Totally Hearing Impaired', 
+        'Partially Visually Impaired', 'Totally Visually Impaired', 
+        'Physically Impaired', 'W/ Special Needs'
+    ];
+
+    const ethnicities = [
+        'Boholano', 'Bukidnon', 'Cebuano', 'Higa-onon', 
+        'Ilocano', 'Ilonggo', 'Manobo', 'Matigsalog', 
+        'Talaandig', 'Others (specify)'
+    ];
+
+    const religions = [
+        'Roman Catholic', 'Islam', 'Iglesia ni Kristo', 'Aglipayan', 
+        'Protestant', 'Jehovah\'s Witness', 'Seventh Day Adventist', 
+        'Baptist', 'Mormons', 'Others (specify)', 'None'
+    ];
+
+    function showSuggestions(input, suggestionsArray, suggestionsBoxId) {
+        const inputValue = input.value.toLowerCase();
+        const suggestionsBox = document.getElementById(suggestionsBoxId);
+        suggestionsBox.innerHTML = ''; // Clear previous suggestions
+        suggestionsBox.style.display = 'none'; // Hide suggestions initially
+
+        // Filter suggestions based on input
+        const filteredSuggestions = suggestionsArray.filter(item =>
+            item.toLowerCase().startsWith(inputValue)
+        );
+
+        // Show suggestions if any match
+        if (filteredSuggestions.length > 0 && inputValue.length > 0) {
+            filteredSuggestions.forEach(item => {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.className = 'suggestion-item';
+                suggestionItem.textContent = item;
+
+                // Set the input value to the clicked suggestion
+                suggestionItem.onclick = function() {
+                    input.value = item;
+                    suggestionsBox.innerHTML = ''; // Clear suggestions
+                    suggestionsBox.style.display = 'none'; // Hide suggestions
+                };
+
+                suggestionsBox.appendChild(suggestionItem);
+            });
+            suggestionsBox.style.display = 'block'; // Show suggestions
+        }
+    }
+
+    function showRelationshipSuggestions(input) {
+        showSuggestions(input, relationships, 'relationship-suggestions');
+    }
+
+    function showCivilStatusSuggestions(input) {
+        showSuggestions(input, civilStatuses, 'civil-status-suggestions');
+    }
+
+    function showDisabilitySuggestions(input) {
+        showSuggestions(input, disabilities, 'disability-suggestions');
+    }
+
+    function showEthnicitySuggestions(input) {
+        showSuggestions(input, ethnicities, 'ethnicity-suggestions');
+    }
+
+    function showReligionSuggestions(input) {
+        showSuggestions(input, religions, 'religion-suggestions');
+    }
+
+    // Optional: Close suggestion box when clicking outside
+    document.addEventListener('click', function(e) {
+        const suggestionBoxes = document.querySelectorAll('.suggestions-box');
+        suggestionBoxes.forEach(box => {
+            if (!box.previousElementSibling.contains(e.target)) {
+                box.innerHTML = '';
+                box.style.display = 'none';
+            }
+        });
+    });
+</script>
 
 
                     <!-- Step 3 -->

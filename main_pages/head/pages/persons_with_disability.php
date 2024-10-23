@@ -17,7 +17,6 @@ $logged_in_district = $_SESSION['district'];
 
 // Barangay to District mapping
 $barangayDistrictMapping = [
-    
     'Tankulan' => 'District 1',
     'Tankulan ' => 'District 1',
     'tankulan' => 'District 1',
@@ -26,6 +25,8 @@ $barangayDistrictMapping = [
     'Diklum ' => 'District 1',
     'diklum' => 'District 1',
     'diklum ' => 'District 1',
+    'diclum ' => 'District 1',
+    'Diclum ' => 'District 1',
     'San Miguel' => 'District 1',
     'San Miguel ' => 'District 1',
     'san Miguel' => 'District 1',
