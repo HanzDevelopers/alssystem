@@ -29,7 +29,7 @@
 <div class="landing-page">
         <header>
         <div class="container">
-  <a href="#" class="logo">A Household Profiling System for <b>
+  <a href="#" class="logo">A Household Information System for <b>
     <span class="red1">A</span><span class="green1">L</span><span class="blue1">S</span>
   </b></a>
   <ul class="links">
@@ -44,7 +44,7 @@
           <div class="container">
             <div class="info">
               <h1>About Us: Empowering Out-of-School Youth in Barangay Tankulan</h1>
-              <p>This web-based household profiling system is the culmination of our capstone project, a collaborative effort by Bimbo Villaganas, Evelyn Secuya, Jaylah Binayao, and Jessa Abarquez.  Our project, initiated on July 14, 2024, focuses on empowering out-of-school youth in Barangay Tankulan, Manolo Fortich, Bukidnon, by providing a comprehensive and accessible platform for household profiling.</p>
+              <p>This web-based household information system is the culmination of our capstone project, a collaborative effort by Bimbo Villaganas, Evelyn Secuya, Jaylah Binayao, and Jessa Abarquez.  Our project, initiated on July 14, 2024, focuses on empowering out-of-school youth in Barangay Tankulan, Manolo Fortich, Bukidnon, by providing a comprehensive and accessible platform for household information.</p>
 
 
               <div class="about">
@@ -116,7 +116,7 @@
                 <p>
                     1. You must provide accurate information.<br>
                     2. You agree to follow the guidelines set forth.<br>
-                    3. Your data will be used for profiling purposes only. You agree not to share, disclose, or distribute any data or information obtained from the ALS Household Profiling System to any third parties without prior written consent from ALS.
+                    3. Your data will be used for profiling purposes only. You agree not to share, disclose, or distribute any data or information obtained from the ALS Household Information System to any third parties without prior written consent from ALS.
                 </p>
                 <p><a href="#" id="readMore" data-bs-toggle="modal" data-bs-target="#fullTermsModal">Read More</a></p>
             </div>
@@ -144,7 +144,7 @@
                 <p>We reserve the right to modify these Terms and Conditions at any time. Any changes will be effective immediately upon posting on this page. Your continued use of the system after any changes signifies your acceptance of the new terms.</p>
 
                 <h2>3. Use of Service</h2>
-                <p>Your data will be used for profiling purposes only. You agree not to share, disclose, or distribute any data or information obtained from the ALS Household Profiling System to any third parties without prior written consent from ALS. Any unauthorized sharing of data may result in the termination of your access to the service.</p>
+                <p>Your data will be used for profiling purposes only. You agree not to share, disclose, or distribute any data or information obtained from the ALS Household Information System to any third parties without prior written consent from ALS. Any unauthorized sharing of data may result in the termination of your access to the service.</p>
 
                 <h2>4. User Responsibilities</h2>
                 <p>As a user, you are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account or any other breach of security.</p>

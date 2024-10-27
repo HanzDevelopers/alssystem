@@ -28,7 +28,7 @@
     <div class="landing-page">
         <header>
             <div class="container">
-                <a href="#" class="logo">A Household Profiling System for <b>
+                <a href="#" class="logo">A Household Information System for <b>
                     <span class="red1">A</span><span class="green1">L</span><span class="blue1">S</span>
                 </b></a>
                 <ul class="links">
@@ -41,8 +41,8 @@
         <div class="content">
             <div class="container">
                 <div class="info">
-                    <h1>Mapping the Path to Learning: The ALS Household Profiling System for Barangay Tankulan</h1>
-                    <p>The ALS Household Profiling System is a vital tool for identifying and supporting out-of-school youth in Barangay Tankulan. This innovative system leverages data analytics to create detailed profiles of each household, revealing the unique needs and circumstances of young people who are not currently enrolled in traditional educational settings. By understanding the specific challenges, aspirations, and potential barriers faced by these individuals, the ALS program can tailor its resources and interventions to effectively reach and empower out-of-school youth in Barangay Tankulan.</p>
+                    <h1>Mapping the Path to Learning: The ALS Household Information System for Manolo Fortich</h1>
+                    <p>The ALS Household Information System is a vital tool for identifying and supporting out-of-school youth in Manolo Fortich. This innovative system leverages data analytics to create detailed profiles of each household, revealing the unique needs and circumstances of young people who are not currently enrolled in traditional educational settings. By understanding the specific challenges, aspirations, and potential barriers faced by these individuals, the ALS program can tailor its resources and interventions to effectively reach and empower out-of-school youth in Barangay Tankulan.</p>
                     <button class="button-link" data-bs-toggle="modal" data-bs-target="#termsModal">Get Started</button>
                 </div>
                 <div class="image">
@@ -66,7 +66,7 @@
                 <p>
                     1. You must provide accurate information.<br>
                     2. You agree to follow the guidelines set forth.<br>
-                    3. Your data will be used for profiling purposes only. You agree not to share, disclose, or distribute any data or information obtained from the ALS Household Profiling System to any third parties without prior written consent from ALS.
+                    3. Your data will be used for profiling purposes only. You agree not to share, disclose, or distribute any data or information obtained from the ALS Household Information System to any third parties without prior written consent from ALS.
                 </p>
                 <p><a href="#" id="readMore" data-bs-toggle="modal" data-bs-target="#fullTermsModal">Read More</a></p>
             </div>
@@ -94,7 +94,7 @@
                 <p>We reserve the right to modify these Terms and Conditions at any time. Any changes will be effective immediately upon posting on this page. Your continued use of the system after any changes signifies your acceptance of the new terms.</p>
 
                 <h2>3. Use of Service</h2>
-                <p>Your data will be used for profiling purposes only. You agree not to share, disclose, or distribute any data or information obtained from the ALS Household Profiling System to any third parties without prior written consent from ALS. Any unauthorized sharing of data may result in the termination of your access to the service.</p>
+                <p>Your data will be used for profiling purposes only. You agree not to share, disclose, or distribute any data or information obtained from the ALS Household Information System to any third parties without prior written consent from ALS. Any unauthorized sharing of data may result in the termination of your access to the service.</p>
 
                 <h2>4. User Responsibilities</h2>
                 <p>As a user, you are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account or any other breach of security.</p>

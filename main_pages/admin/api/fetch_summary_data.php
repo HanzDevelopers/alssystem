@@ -12,16 +12,17 @@ function getCount($conn, $query) {
 // Fetch summary data
 function getSummaryData($conn) {
     // Total number of people aged 15-30 not currently attending school (NO/no)
-    $notAttendingSchoolQuery = "
-        SELECT COUNT(*) AS count
-        FROM members_tbl m
-        JOIN background_tbl b ON m.member_id = b.member_id
-        JOIN location_tbl l ON m.record_id = l.record_id
-        WHERE b.currently_attending_school IN ('NO', 'No', 'no')
-        AND m.age BETWEEN 15 AND 30
-        AND YEAR(l.date_encoded) = YEAR(CURDATE());
-    ";
-    $totalNotAttendingSchool = getCount($conn, $notAttendingSchoolQuery);
+$notAttendingSchoolQuery = "
+SELECT COUNT(*) AS count 
+FROM background_tbl AS b
+JOIN members_tbl AS m ON b.member_id = m.member_id
+JOIN location_tbl AS l ON m.record_id = l.record_id
+WHERE m.age BETWEEN 15 AND 30
+AND LOWER(b.currently_attending_school) = 'no'
+AND YEAR(l.date_encoded) = YEAR(CURDATE())
+";
+$totalNotAttendingSchool = getCount($conn, $notAttendingSchoolQuery);
+
 
     // Number of people interested in ALS (Yes/yes)
     $interestedInAlsQuery = "
