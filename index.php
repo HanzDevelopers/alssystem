@@ -14,7 +14,7 @@
     <link href="src/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection">
     <link href="src/css/style.min.css" type="text/css" rel="stylesheet" media="screen,projection">
 
-    <title>Household Profiling</title>
+    <title>Household Information</title>
 </head>
 <body>
     <!-- Start Page Loading -->

@@ -90,17 +90,38 @@ if (!isset($_SESSION['username'])) {
 
 
 
-                    <!-- Step 1 -->
+                    <!-- Modal Alert -->
+<div id="duplicateModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Duplicate Record Found</h5>
+                <button type="button" class="close" aria-label="Close" onclick="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>A record with the same house number and barangay already exists for the current year. Would you like to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeModal()">Continue</button>
+                <button type="button" class="btn btn-secondary" onclick="redirectToDashboard()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Step 1 Form -->
 <div class="form-step" id="step1">
     <div class="group-container">
         <div class="group">
             <label>Origin Date:</label>
-            <input type="date" name="date_encoded" required>
+            <input type="date" name="date_encoded" required oninput="checkDuplicate()">
         </div>
 
         <div class="group">
             <label>Barangay:</label>
-            <input type="text" id="barangay" name="barangay" required placeholder="Barangay" onfocus="showBarangaySuggestions(this)" oninput="showBarangaySuggestions(this)">
+            <input type="text" id="barangay" name="barangay" required placeholder="Barangay" onfocus="showBarangaySuggestions(this)" oninput="checkDuplicate(); showBarangaySuggestions(this)">
             <div class="suggestions-box" id="barangay-suggestions"></div>
         </div>
 
@@ -113,7 +134,7 @@ if (!isset($_SESSION['username'])) {
     <div class="group-container">
         <div class="group">
             <label>House Number:</label>
-            <input type="text" name="house_number" required placeholder="House Number">
+            <input type="text" name="house_number" required placeholder="House Number" oninput="checkDuplicate()">
         </div>
 
         <div class="group">
@@ -137,18 +158,30 @@ if (!isset($_SESSION['username'])) {
             <label>Province:</label>
             <input type="text" id="province" name="province" required placeholder="Province">
         </div>
-        <div class="group">
-        </div>
     </div>
 
     <div class="button-group">
-        <span id="dashboard" class="dashboard" onclick="dashboard()">Leave form</span>
+        <span id="dashboard" class="dashboard" onclick="redirectToDashboard()">Leave form</span>
         <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next</button>
     </div>
 </div>
 
-<!-- CSS for Suggestions Box -->
+<!-- CSS for Modal and Suggestions Box -->
 <style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-dialog {
+        max-width: 500px;
+        margin: 100px auto;
+    }
     .suggestions-box {
         border: 1px solid #ccc;
         border-top: none;
@@ -157,89 +190,108 @@ if (!isset($_SESSION['username'])) {
         z-index: 100;
         max-height: 150px;
         overflow-y: auto;
-        width: calc(12% - 22px); /* Same width as the input field */
-        display: none; /* Initially hidden */
+        width: calc(100% - 22px);
+        display: none;
     }
-
     .suggestion-item {
         padding: 8px;
         cursor: pointer;
     }
-
     .suggestion-item:hover {
         background-color: gray;
     }
 </style>
 
+<!-- JavaScript for Modal, Suggestions, and Duplicate Check -->
 <script>
-    const barangays = [
-        'tankulan', 'diclum', 'san miguel', 'ticala', 'lingion',
-        'alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan',
-        'agusan canyon', 'agusan-canyon', 'mampayag', 'dahilayan', 'sankanan',
-        'kalugmanan', 'lindaban', 'dalirig', 'maluko', 'santiago', 'guilang2', 'guilang-guilang'
-    ];
+const barangays = [
+    'tankulan', 'diclum', 'san miguel', 'ticala', 'lingion',
+    'alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan',
+    'agusan canyon', 'mampayag', 'dahilayan', 'sankanan', 'kalugmanan',
+    'lindaban', 'dalirig', 'maluko', 'santiago', 'guilang2', 'guilang-guilang'
+];
 
-    function showBarangaySuggestions(input) {
-        const inputValue = input.value.toLowerCase();
-        const suggestionsBox = document.getElementById('barangay-suggestions');
-        suggestionsBox.innerHTML = ''; // Clear previous suggestions
+function showBarangaySuggestions(input) {
+    const inputValue = input.value.toLowerCase();
+    const suggestionsBox = document.getElementById('barangay-suggestions');
+    suggestionsBox.innerHTML = '';
 
-        // Filter suggestions based on input if the user has typed something
-        let filteredSuggestions = barangays;
-        if (inputValue.length > 0) {
-            filteredSuggestions = barangays.filter(item =>
-                item.toLowerCase().startsWith(inputValue)
-            );
-        }
-
-        // Show suggestions if any match
-        if (filteredSuggestions.length > 0) {
-            filteredSuggestions.forEach(item => {
-                const suggestionItem = document.createElement('div');
-                suggestionItem.className = 'suggestion-item';
-                suggestionItem.textContent = item;
-
-                // Set the input value to the clicked suggestion
-                suggestionItem.onclick = function() {
-                    input.value = item;
-                    updateLocation(); // Auto-fill city and province
-                    suggestionsBox.innerHTML = ''; // Clear suggestions
-                    suggestionsBox.style.display = 'none'; // Hide suggestions
-                };
-
-                suggestionsBox.appendChild(suggestionItem);
-            });
-            suggestionsBox.style.display = 'block'; // Show suggestions
-        } else {
-            suggestionsBox.style.display = 'none'; // Hide suggestions if no matches
-        }
+    let filteredSuggestions = barangays;
+    if (inputValue.length > 0) {
+        filteredSuggestions = barangays.filter(item =>
+            item.toLowerCase().startsWith(inputValue)
+        );
     }
 
-    function updateLocation() {
-        // Get the value from the Barangay input
-        const barangayInput = document.getElementById('barangay').value.toLowerCase();
-
-        // Check if the input value matches any barangay in the list
-        if (barangays.includes(barangayInput)) {
-            document.getElementById('city').value = 'Manolo Fortich';
-            document.getElementById('province').value = 'Bukidnon';
-        } else {
-            // Clear the city and province fields if no match is found
-            document.getElementById('city').value = '';
-            document.getElementById('province').value = '';
-        }
+    if (filteredSuggestions.length > 0) {
+        filteredSuggestions.forEach(item => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'suggestion-item';
+            suggestionItem.textContent = item;
+            suggestionItem.onclick = function() {
+                input.value = item;
+                updateLocation();
+                suggestionsBox.innerHTML = '';
+                suggestionsBox.style.display = 'none';
+            };
+            suggestionsBox.appendChild(suggestionItem);
+        });
+        suggestionsBox.style.display = 'block';
+    } else {
+        suggestionsBox.style.display = 'none';
     }
+}
 
-    // Optional: Close suggestion box when clicking outside, but not on input or suggestion box
-    document.addEventListener('click', function(e) {
-        const barangayInput = document.getElementById('barangay');
-        const suggestionsBox = document.getElementById('barangay-suggestions');
-        
-        if (!barangayInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
-            suggestionsBox.innerHTML = '';
-            suggestionsBox.style.display = 'none';
-        }
-    });
+function updateLocation() {
+    const barangayInput = document.getElementById('barangay').value.toLowerCase();
+    if (barangays.includes(barangayInput)) {
+        document.getElementById('city').value = 'Manolo Fortich';
+        document.getElementById('province').value = 'Bukidnon';
+    } else {
+        document.getElementById('city').value = '';
+        document.getElementById('province').value = '';
+    }
+}
+
+function showModal() {
+    document.getElementById('duplicateModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('duplicateModal').style.display = 'none';
+}
+
+function redirectToDashboard() {
+    window.location.href = 'dashboard.php';
+}
+
+function checkDuplicate() {
+    const dateEncoded = document.querySelector('input[name="date_encoded"]').value;
+    const barangay = document.getElementById('barangay').value;
+    const houseNumber = document.querySelector('input[name="house_number"]').value;
+
+    if (dateEncoded && barangay && houseNumber) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'form_check_duplicate.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            if (this.status === 200 && this.responseText === 'duplicate') {
+                showModal();
+            }
+        };
+        xhr.send(`date_encoded=${dateEncoded}&barangay=${barangay}&house_number=${houseNumber}`);
+    }
+}
+
+document.addEventListener('click', function(e) {
+    const barangayInput = document.getElementById('barangay');
+    const suggestionsBox = document.getElementById('barangay-suggestions');
+    
+    if (!barangayInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+        suggestionsBox.innerHTML = '';
+        suggestionsBox.style.display = 'none';
+    }
+});
 </script>
 
 <!-- Step 2 -->
