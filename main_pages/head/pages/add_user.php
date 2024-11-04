@@ -28,13 +28,14 @@ $userDistrict = isset($_SESSION['district']) ? $_SESSION['district'] : '';
             </div>
             <div class="mb-3">
                 <label for="id_number" class="form-label">ID Number</label>
-                <input type="text" class="form-control" id="id_number" name="id_number" required>
+                <input type="int" class="form-control" id="id_number" name="id_number" required 
+                       inputmode="numeric" pattern="\d*">
             </div>
             <div class="mb-3">
                 <label for="phone_number" class="form-label">Mobile Number</label>
                 <input type="tel" class="form-control" id="phone_number" name="phone_number" 
                        pattern="^\d{11}$" placeholder="e.g., 09123456789" required>
-                <small class="form-text text-muted">Enter a 11-digit mobile number (e.g., 09123456789).</small>
+                <small class="form-text text-muted">Enter an 11-digit mobile number (e.g., 09123456789).</small>
             </div>
             <div class="mb-3">
                 <label for="pass" class="form-label">Password</label>
@@ -55,12 +56,12 @@ $userDistrict = isset($_SESSION['district']) ? $_SESSION['district'] : '';
         $id_number = $_POST['id_number'];
         $user_name = $_POST['user_name'];
         $email = $_POST['email'];
-        $phone_number = $_POST['phone_number']; // Capture the phone number
+        $phone_number = $_POST['phone_number'];
         $pass = password_hash($_POST['pass'], PASSWORD_BCRYPT);
         $user_type = $_POST['user_type'];
         $district = $_POST['district'];
 
-        // Update the SQL statement to include phone_number
+        // Update the SQL statement to include id_number and phone_number
         $sql = "INSERT INTO user_tbl (id_number, user_name, email, phone_number, pass, user_type, district) 
                 VALUES ('$id_number', '$user_name', '$email', '$phone_number', '$pass', '$user_type', '$district')";
         

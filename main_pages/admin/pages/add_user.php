@@ -21,7 +21,8 @@
             </div>
             <div class="mb-3">
                 <label for="id_number" class="form-label">ID Number</label>
-                <input type="text" class="form-control" id="id_number" name="id_number" required>
+                <input type="int" class="form-control" id="id_number" name="id_number" required 
+                       inputmode="numeric" pattern="\d*">
             </div>
             <div class="mb-3">
                 <label for="phone_number" class="form-label">Mobile Number</label>
@@ -38,7 +39,7 @@
                 <select class="form-select" id="user_type" name="user_type" required>
                     <option value="" disabled selected>Select User Type</option>
                     <option value="Coordinator">Coordinator</option>
-                    <option value="Volunteer">Implementer</option>
+                    <option value="Implementer">Implementer</option>
                 </select>
             </div>
             <div class="mb-3">
