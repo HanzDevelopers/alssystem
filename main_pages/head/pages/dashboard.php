@@ -21,6 +21,7 @@ include '../api/fetch_summary_data.php';
 <!--For SimpleStatistics-->
 
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/solution.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://unpkg.com/simple-statistics@7.0.2/dist/simple-statistics.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-statistics/7.8.1/simple-statistics.min.js"></script>
@@ -443,6 +444,22 @@ $conn->close();
             View Info
         </a>
     </div>
+    
+<!-- Loading indicator container -->
+<div id="loading-container">
+        <div id="loading-text">Generating solutions, please wait...</div>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Solutions container, initially hidden -->
+    <div id="solutions" style="margin-top:30px;">
+        <h2 style="text-align:center; 
+    font-weight: bold;">Top 3 Reasons for Not Attending School of OSY Age Range 15-30 and Possible Solutions</h2>
+    <h4 style="font-size:15px; text-align:center; margin-bottom:50px; font-style: italic;">(<span style="color: blue;">AI Model:</span><span style="text-decoration: underline;"><a href="https://huggingface.co/meta-llama/Llama-3.2-11B-Vision-Instruct" target="_blank" rel="noopener noreferrer">
+    meta-llama/Llama-3.2-11B-Vision-Instruct model on Hugging Face
+</a></span>)</h4>
+        <!-- Solutions will be dynamically inserted here -->
+    </div>
 </div>
 
    
@@ -475,6 +492,7 @@ $conn->close();
         crossorigin="anonymous"></script>
         <script src="../js/data.js"></script>
         <script src="../js/form.js"></script>
+        <script src="../js/generate_solution.js"></script>
 
 </body>
 
