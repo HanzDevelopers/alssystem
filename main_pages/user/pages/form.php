@@ -158,6 +158,8 @@ if (!isset($_SESSION['username'])) {
             <label>Province:</label>
             <input type="text" id="province" name="province" required placeholder="Province">
         </div>
+        <div class="group">
+        </div>
     </div>
 
     <div class="button-group">
@@ -272,7 +274,7 @@ function checkDuplicate() {
 
     if (dateEncoded && barangay && houseNumber) {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'form_check_duplicate.php', true);
+        xhr.open('POST', 'form_step1_check_duplicate.php', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = function() {
             if (this.status === 200 && this.responseText === 'duplicate') {

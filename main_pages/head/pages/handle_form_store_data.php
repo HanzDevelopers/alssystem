@@ -1,0 +1,161 @@
+<?php
+// Start session
+session_start();
+include '../../../src/db/db_connection.php';
+
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+    die("You must be logged in to submit the form.");
+}
+
+// Get the encoder name from session
+$encoder_name = $_SESSION['username'];
+
+// Retrieve form data
+$province = isset($_POST['province']) ? $_POST['province'] : null;
+$city = isset($_POST['city']) ? $_POST['city'] : null;
+$barangay = isset($_POST['barangay']) ? $_POST['barangay'] : null;
+$sitio_zone_purok = isset($_POST['sitio_zone_purok']) ? $_POST['sitio_zone_purok'] : null;
+$house_number = isset($_POST['house_number']) ? $_POST['house_number'] : null;
+$estimated_family_income = isset($_POST['estimated_family_income']) ? intval($_POST['estimated_family_income']) : null;
+$household_members = isset($_POST['household_members']) ? $_POST['household_members'] : [];
+$birthdate = isset($_POST['birthdate']) ? $_POST['birthdate'] : [];
+$age = isset($_POST['age']) ? $_POST['age'] : [];
+$gender = isset($_POST['gender']) ? $_POST['gender'] : [];
+$date_encoded = !empty($_POST['date_encoded']) ? $_POST['date_encoded'] : date('Y-m-d H:i:s');
+$notes = isset($_POST['notes']) ? $_POST['notes'] : '';
+
+// Check if required fields are provided
+if ($province === null || $city === null || $barangay === null || $sitio_zone_purok === null || $house_number === null || $estimated_family_income === null || empty($household_members)) {
+    die("Required fields are missing.");
+}
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Check for duplicates
+$current_year = date('Y');
+$duplicate_found = false;
+foreach ($household_members as $index => $member) {
+    $check_sql = "
+        SELECT * FROM members_tbl 
+        JOIN location_tbl ON members_tbl.record_id = location_tbl.record_id 
+        WHERE YEAR(location_tbl.date_encoded) = ? 
+        AND location_tbl.barangay = ? 
+        AND location_tbl.housenumber = ? 
+        AND members_tbl.household_members = ? 
+        AND members_tbl.birthdate = ? 
+        AND members_tbl.age = ? 
+        AND members_tbl.gender = ?";
+
+    $check_stmt = $conn->prepare($check_sql);
+    $check_stmt->bind_param(
+        "issssss",
+        $current_year,
+        $barangay,
+        $house_number,
+        $household_members[$index],
+        $birthdate[$index],
+        $age[$index],
+        $gender[$index]
+    );
+
+    $check_stmt->execute();
+    $result = $check_stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $duplicate_found = true;
+        break;
+    }
+    $check_stmt->close();
+}
+
+if ($duplicate_found) {
+    // Trigger JavaScript confirm with options
+    echo '<script>
+        if (confirm("A similar household record already exists in this barangay for the current year. Do you want to continue to save this as a duplicate entry?")) {
+            window.location.href = "handle_form_store_data.php";
+        } else {
+            window.location.href = "dashboard.php";
+        }
+    </script>';
+    exit;
+}
+
+// If no duplicates are found, or user clicked "Continue to Save" from the confirm dialog
+// Proceed with saving data into location_tbl
+$stmt_loc = $conn->prepare("
+    INSERT INTO location_tbl (
+        encoder_name, date_encoded, province, city_municipality, barangay, sitio_zone_purok, housenumber, estimated_family_income, notes
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
+$stmt_loc->bind_param("sssssssss", $encoder_name, $date_encoded, $province, $city, $barangay, $sitio_zone_purok, $house_number, $estimated_family_income, $notes);
+$stmt_loc->execute();
+$record_id = $stmt_loc->insert_id;
+$stmt_loc->close();
+
+// Insert members and background data
+$stmt_mem = $conn->prepare("
+    INSERT INTO members_tbl (
+        record_id, household_members, relationship_to_head, birthdate, age, gender, civil_status, person_with_disability, ethnicity, religion
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
+$stmt_bg = $conn->prepare("
+    INSERT INTO background_tbl (
+        member_id, highest_grade_completed, currently_attending_school, grade_level_enrolled, reasons_for_not_attending_school,
+        can_read_write_simple_messages_inanylanguage, occupation, work, status
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
+
+foreach ($household_members as $index => $member) {
+    $stmt_mem->bind_param(
+        "isssssssss",
+        $record_id,
+        $household_members[$index],
+        $relationship_to_head[$index],
+        $birthdate[$index],
+        $age[$index],
+        $gender[$index],
+        $civil_status[$index],
+        $disability[$index],
+        $ethnicity[$index],
+        $religion[$index]
+    );
+    $stmt_mem->execute();
+    $member_id = $stmt_mem->insert_id;
+
+    $stmt_bg->bind_param(
+        "issssssss",
+        $member_id,
+        $highest_grade[$index],
+        $attending_school[$index],
+        $level_enrolled[$index],
+        $reasons_not_attending[$index],
+        $can_read_write[$index],
+        $occupation[$index],
+        $work[$index],
+        $status[$index]
+    );
+    $stmt_bg->execute();
+}
+
+// Close statements and connection
+$stmt_mem->close();
+$stmt_bg->close();
+$conn->close();
+
+// Success alert after storing data
+echo '<script>
+    window.onload = function() {
+        const result = confirm("New household added successfully. Click OK to go to the Dashboard or Cancel to add another Household.");
+        if (result) {
+            window.location.href = "dashboard.php";
+        } else {
+            window.location.href = "form.php";
+        }
+    };
+</script>';
+?>
