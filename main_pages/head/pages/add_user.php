@@ -27,6 +27,10 @@ $userDistrict = isset($_SESSION['district']) ? $_SESSION['district'] : '';
                 <input type="email" class="form-control" id="email" name="email" required>
             </div>
             <div class="mb-3">
+                <label for="id_number" class="form-label">ID Number</label>
+                <input type="text" class="form-control" id="id_number" name="id_number" required>
+            </div>
+            <div class="mb-3">
                 <label for="phone_number" class="form-label">Mobile Number</label>
                 <input type="tel" class="form-control" id="phone_number" name="phone_number" 
                        pattern="^\d{11}$" placeholder="e.g., 09123456789" required>
@@ -48,6 +52,7 @@ $userDistrict = isset($_SESSION['district']) ? $_SESSION['district'] : '';
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         include '../../../src/db/db_connection.php';
+        $id_number = $_POST['id_number'];
         $user_name = $_POST['user_name'];
         $email = $_POST['email'];
         $phone_number = $_POST['phone_number']; // Capture the phone number
@@ -56,7 +61,8 @@ $userDistrict = isset($_SESSION['district']) ? $_SESSION['district'] : '';
         $district = $_POST['district'];
 
         // Update the SQL statement to include phone_number
-        $sql = "INSERT INTO user_tbl (user_name, email, phone_number, pass, user_type, district) VALUES ('$user_name', '$email', '$phone_number', '$pass', '$user_type', '$district')";
+        $sql = "INSERT INTO user_tbl (id_number, user_name, email, phone_number, pass, user_type, district) 
+                VALUES ('$id_number', '$user_name', '$email', '$phone_number', '$pass', '$user_type', '$district')";
         
         if ($conn->query($sql) === TRUE) {
             echo "<script>alert('New record created successfully'); window.location.href='users.php';</script>";
