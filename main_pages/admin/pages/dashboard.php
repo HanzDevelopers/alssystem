@@ -465,7 +465,7 @@ $conn->close();
     </div>
 
     <!-- Solutions container, initially hidden -->
-    <div id="solutions" style="margin-top:30px;">
+    <div id="solutions" style="display: none; max-height: 500px; overflow-y: auto;">
         <h2 style="text-align:center; 
     font-weight: bold;">Top 3 Reasons for Not Attending School of OSY Age Range 15-30 and Possible Solutions</h2>
     <h4 style="font-size:15px; text-align:center; margin-bottom:50px; font-style: italic;">(<span style="color: blue;">AI Model:</span><span style="text-decoration: underline;"><a href="https://huggingface.co/meta-llama/Llama-3.2-11B-Vision-Instruct" target="_blank" rel="noopener noreferrer">

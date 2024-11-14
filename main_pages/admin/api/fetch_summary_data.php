@@ -70,15 +70,29 @@ AND YEAR(l.date_encoded) = YEAR(CURDATE());
 $totalLowIncomeFamilies = getCount($conn, $lowIncomeFamiliesQuery);
 
 
-    // Total Population based on household members (split by commas)
-    $populationQuery = "
-        SELECT 
-            SUM(LENGTH(m.household_members) - LENGTH(REPLACE(m.household_members, ',', '')) + 1) AS count
-        FROM members_tbl m
-        JOIN location_tbl l ON m.record_id = l.record_id
-        WHERE YEAR(l.date_encoded) = YEAR(CURDATE());
-    ";
-    $totalPopulation = getCount($conn, $populationQuery);
+    // Total Population based on household members (counting entries directly)
+/*$populationQuery = "
+SELECT 
+    SUM(
+        LENGTH(aggregated_data.household_members) - LENGTH(REPLACE(aggregated_data.household_members, ',',''))
+    ) AS count
+FROM (
+    SELECT DISTINCT l.record_id, m.household_members
+    FROM members_tbl m
+    JOIN location_tbl l ON m.record_id = l.record_id
+    WHERE YEAR(l.date_encoded) = YEAR(CURDATE())
+) AS aggregated_data;
+";
+$totalPopulation = getCount($conn, $populationQuery);
+*/
+$totalPopulation = "
+    SELECT COUNT(m.member_id) AS count
+    FROM members_tbl m
+    JOIN location_tbl l ON m.record_id = l.record_id
+    WHERE YEAR(l.date_encoded) = YEAR(CURDATE());
+";
+
+$totalPopulation = getCount($conn, $totalPopulation);
 
     // Return the data as an array
     return [

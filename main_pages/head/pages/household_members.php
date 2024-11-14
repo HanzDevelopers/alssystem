@@ -116,16 +116,25 @@ if (isset($_GET['member_id']) && !empty($_GET['member_id'])) {
     </style>
 <body>
     <div class="container" id="pdf-content"> <!-- Added id for PDF generation -->
-        <!-- Header -->
-        <header><br>
-            <h2>DEPARTMENT OF EDUCATION</h2>
-            <h2>BUREAU OF ALTERNATIVE LEARNING SYSTEM</h2>
-            <h3>in partnership with the</h3>
-            <h2>LOCAL GOVERNMENT UNIT OF MANOLO FORTICH</h2>
-            <br>
-            <h2 class="under">PROFILE OF HOUSEHOLD MEMBERS</h2>
-            <br>
-        </header>
+        <!-- Header --><br><br>
+        <header style="display: flex; align-items: center; justify-content: center; gap: 80px;">
+    <!-- Left Logo -->
+    <img src="../../../assets/images/dep.png" alt="Left Logo" style="height: 100px; width: auto;">
+    
+    <!-- Center Text Content -->
+    <div style="text-align: center;">
+        <h2>DEPARTMENT OF EDUCATION</h2>
+        <h2>ALTERNATIVE LEARNING SYSTEM</h2>
+        <h3>in partnership with the</h3>
+        <h2>LOCAL GOVERNMENT UNIT OF MANOLO FORTICH</h2>
+        <br>
+        <h2 class="under">PROFILE OF HOUSEHOLD MEMBERS</h2>
+        <br>
+    </div>
+
+    <!-- Right Logo -->
+    <img src="../../../assets/images/als.png" alt="Right Logo" style="height: 100px; width: auto;">
+</header><br><br>
         <!-- Encoder Info -->
         <div class="encoder-info">
             <p class="haha">Name of Encoder: 
