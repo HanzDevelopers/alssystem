@@ -17,9 +17,9 @@ $logged_in_district = $_SESSION['district'];
 
 // Define the barangay to district mapping
 $district_mapping = [
-    'District 1' => ['Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion'],
+    'District 1' => ['Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'san miguel', 'Ticala', 'Lingion'],
     'District 2' => ['Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan'],
-    'District 3' => ['Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban'],
+    'District 3' => ['Agusan canyon','agusan canyon', 'agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban'],
     'District 4' => ['Dalirig', 'Maluko', 'Santiago', 'Guilang2'],
 ];
 
@@ -118,7 +118,7 @@ $logged_in_district = $_SESSION['district'];
 
 // District mapping
 $district_mapping = [
-    'District 1' => ['Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion'],
+    'District 1' => ['Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'san miguel', 'Ticala', 'Lingion'],
     'District 2' => ['Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan'],
     'District 3' => ['Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban'],
     'District 4' => ['Dalirig', 'Maluko', 'Santiago', 'Guilang2'],
@@ -595,7 +595,7 @@ p.card-text{
         <tr>
             <th>Name</th>
             <th>Age</th>
-            <th>District</th>
+            <!--<th>District</th>-->
             <th>Address</th>
             <th>Highest Grade/Year Completed</th>
             <th>Currently Attending School</th>
@@ -609,7 +609,7 @@ p.card-text{
                 <tr>
                     <td><?php echo htmlspecialchars($row['name']); ?></td>
                     <td><?php echo htmlspecialchars($row['age']); ?></td>
-                    <td><?php echo htmlspecialchars(isset($district_mapping[$row['barangay']]) ? $district_mapping[$row['barangay']] : 'Unknown'); ?></td>
+                    <!--<td><?php echo htmlspecialchars(isset($district_mapping[$row['barangay']]) ? $district_mapping[$row['barangay']] : 'Unknown'); ?></td>-->
                     <td><?php echo htmlspecialchars($row['sitio_zone_purok'] . ', ' . $row['housenumber']); ?></td>
                     <td><?php echo htmlspecialchars($row['highest_grade_completed']); ?></td>
                     <td><?php echo htmlspecialchars($row['currently_attending_school']); ?></td>

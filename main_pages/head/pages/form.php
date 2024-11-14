@@ -14,6 +14,7 @@ if (!isset($_SESSION['username'])) {
     <link href="../../../src/css/style.min.css" type="text/css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/form.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../../src/css/nav.css">
     <title>Household Form</title>
@@ -76,7 +77,86 @@ if (!isset($_SESSION['username'])) {
 
 
 </style>
+<style>
+    /* Ensure the modal is always in front */
+    .modal {
+        z-index: 1055 !important;  /* Bootstrap default z-index for modals is 1050 */
+    }
+    .modal-backdrop {
+        z-index: 1050 !important;
+    }
+</style>
 <body>
+<!-- Consent Modal Structure -->
+<div class="modal fade" id="consentModal" tabindex="-1" aria-labelledby="consentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="consentModalLabel">Consent for Data Collection</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    I hereby give my full consent to the collection, use, and storage of my personal information
+                    for the purpose of tracking out-of-school youth (OSY) and identifying individuals interested
+                    in the Alternative Learning System (ALS) through this system. I understand that this information
+                    will only be used for the stated purpose and will be protected under the relevant data protection
+                    laws and policies. I also acknowledge that I have the right to withdraw my consent at any time
+                    by providing written notice to those responsible for data collection.
+                </p>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="consentCheckbox">
+                    <label class="form-check-label" for="consentCheckbox">I agree to the terms and conditions.</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="denyConsentBtn" class="btn btn-outline-secondary">Deny</button>
+                <button type="button" id="agreeConsentBtn" class="btn btn-primary" disabled>Agree and Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies with defer attribute -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js" defer></script>
+<script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize the Bootstrap modal
+        const consentModalElement = document.getElementById('consentModal');
+        const consentModal = new bootstrap.Modal(consentModalElement, {
+            backdrop: 'static',
+            keyboard: false
+        });
+
+        // Show the consent modal when the page loads
+        consentModal.show();
+
+        // Elements
+        const consentCheckbox = document.getElementById('consentCheckbox');
+        const agreeConsentBtn = document.getElementById('agreeConsentBtn');
+        const denyConsentBtn = document.getElementById('denyConsentBtn');
+
+        // Event listeners
+
+        // Toggle the "Agree and Proceed" button state based on checkbox
+        consentCheckbox.addEventListener('change', () => {
+            agreeConsentBtn.disabled = !consentCheckbox.checked;
+        });
+
+        // "Agree and Proceed" button click
+        agreeConsentBtn.addEventListener('click', () => {
+            // Close the modal
+            const bootstrapModalInstance = bootstrap.Modal.getInstance(consentModalElement);
+            bootstrapModalInstance.hide();
+        });
+
+        // "Deny" button click
+        denyConsentBtn.addEventListener('click', () => {
+            window.location.href = 'dashboard.php';
+        });
+    });
+</script>
+
   <!-- End of top nav -->
             <div class="container2">
                 <h1>Household Form</h1>
@@ -355,7 +435,7 @@ document.addEventListener('click', function(e) {
         </table>
     </div>
     <div class="button-group-start" style="margin-top: 10px;">
-        <button type="button" class="btn btn-add" onclick="addRow()">Add Member</button>
+        <button type="button" class="btn btn-add" onclick="addRow()"  style="background-color: #007bff; color:white;">Add Member</button>
         <button type="button" class="btn btn-danger btn-sm" onclick="deleteLastRow()">Delete Last Row</button>
     </div>
     <div class="button-group">
@@ -523,8 +603,8 @@ document.addEventListener('click', function(e) {
         <button type="button" class="btn btn-secondary" onclick="previousStep(2)">Previous</button>
     </div>
     <div class="button-group-end">
-        <button type="submit" class="btn btn-save">Save</button>
-        <button type="reset" id="cancelButton" class="btn btn-cancel">Cancel</button>
+        <button type="submit" class="btn btn-save" style="background-color:#28a745; color:white;">Save</button>
+        <button type="reset" id="cancelButton" class="btn btn-cancel" style="background-color:red; color:white;">Cancel</button>
     </div>
 </div>
 

@@ -118,6 +118,7 @@ $districts = [
     'dicklum' => 'District 1',
     'dicklum ' => 'District 1',
     'diclum ' => 'District 1',
+    'diclum' => 'District 1',
     'Diclum ' => 'District 1',
     'San Miguel' => 'District 1',
     'San Miguel ' => 'District 1',

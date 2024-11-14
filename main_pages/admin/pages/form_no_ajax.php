@@ -173,7 +173,7 @@ if (!isset($_SESSION['username'])) {
 
 <script>
     const barangays = [
-        'tankulan', 'diclum', 'san miguel', 'ticala', 'lingion',
+        'tankulan', 'diclum', 'dicklum', 'san miguel', 'ticala', 'lingion',
         'alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan',
         'agusan canyon', 'agusan-canyon', 'mampayag', 'dahilayan', 'sankanan',
         'kalugmanan', 'lindaban', 'dalirig', 'maluko', 'santiago', 'guilang2', 'guilang-guilang'
