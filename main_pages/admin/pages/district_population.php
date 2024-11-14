@@ -27,7 +27,7 @@ $total_osy = $total_osy_result->fetch_assoc()['total_osy'];
 $district_household_query = "
     SELECT 
         CASE 
-            WHEN l.barangay IN ('Tankulan', 'Diklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
+            WHEN l.barangay IN ('Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') THEN 'District 1'
             WHEN l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') THEN 'District 2'
             WHEN l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') THEN 'District 3'
             WHEN l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') THEN 'District 4'
@@ -82,6 +82,7 @@ $districts = [
     'Tankulan' => 'District 1',
     'Diklum' => 'District 1',
     'Diclum ' => 'District 1',
+    'Dicklum ' => 'District 1',
     'San Miguel' => 'District 1',
     'Ticala' => 'District 1',
     'Lingion' => 'District 1',

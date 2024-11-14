@@ -13,6 +13,8 @@ function getDistrict($barangay) {
     'diklum ' => 'District 1',
     'diclum ' => 'District 1',
     'Diclum ' => 'District 1',
+    'Dicklum ' => 'District 1',
+    'dicklum ' => 'District 1',
     'San Miguel' => 'District 1',
     'San Miguel ' => 'District 1',
     'san Miguel' => 'District 1',

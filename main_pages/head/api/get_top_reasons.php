@@ -8,7 +8,7 @@ $user_district = $_SESSION['district'];
 
 // District mapping with case variations for each barangay
 $district_mapping = [
-    'tankulan' => 'District 1', 'diklum' => 'District 1', 'san miguel' => 'District 1', 'ticala' => 'District 1', 'lingion' => 'District 1',
+    'tankulan' => 'District 1', 'dicklum' => 'District 1', 'san miguel' => 'District 1', 'ticala' => 'District 1', 'lingion' => 'District 1',
     'alae' => 'District 2', 'damilag' => 'District 2', 'mambatangan' => 'District 2', 'mantibugao' => 'District 2', 'minsuro' => 'District 2', 'lunocan' => 'District 2',
     'agusan canyon' => 'District 3', 'mampayag' => 'District 3', 'dahilayan' => 'District 3', 'sankanan' => 'District 3', 'kalugmanan' => 'District 3', 'lindaban' => 'District 3',
     'dalirig' => 'District 4', 'maluko' => 'District 4', 'santiago' => 'District 4', 'guilang2' => 'District 4', 'guilang-guilang' => 'District 4'

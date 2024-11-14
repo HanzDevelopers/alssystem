@@ -17,10 +17,10 @@ $district_mapping = [
     'Tankulan ' => 'District 1',
     'tankulan' => 'District 1',
     'tankulan ' => 'District 1',
-    'Diklum' => 'District 1',
-    'Diklum ' => 'District 1',
-    'diklum' => 'District 1',
-    'diklum ' => 'District 1',
+    'Dicklum' => 'District 1',
+    'Dicklum ' => 'District 1',
+    'dicklum' => 'District 1',
+    'dicklum ' => 'District 1',
     'San Miguel' => 'District 1',
     'San Miguel ' => 'District 1',
     'san Miguel' => 'District 1',
@@ -84,7 +84,7 @@ $sql = "
            CONCAT(l.barangay, ', ', l.city_municipality, ', ', l.province) AS address,
            CASE 
                WHEN l.barangay IN ('Tankulan', 'Tankulan ', 'tankulan', 'tankulan ') THEN 'District 1'
-               WHEN l.barangay IN ('Diklum', 'Diklum ', 'diklum', 'diklum ') THEN 'District 1'
+               WHEN l.barangay IN ('Dicklum', 'Dicklum ', 'dicklum', 'dicklum ') THEN 'District 1'
                WHEN l.barangay IN ('San Miguel', 'San Miguel ', 'san Miguel', 'san Miguel ') THEN 'District 1'
                WHEN l.barangay IN ('Ticala', 'Ticala ', 'ticala', 'ticala ') THEN 'District 1'
                WHEN l.barangay IN ('Lingion', 'Lingion ', 'lingion', 'lingion ') THEN 'District 1'
@@ -254,7 +254,7 @@ $result = $conn->query($sql);
                 <div class="input-group">
                     <input type="text" class="form-control" name="search" id="searchInput" placeholder="Search By Encoder Name, Household Member, or Birthdate" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
                     <button class="btn btn-primary" type="submit">Search</button>
-                    <a href="records.php" class="btn btn-secondary">Reset</a>
+                    <a href="dashboard.php" class="btn btn-secondary">Reset</a>
                 </div>
             </form>
             <div class="container mt-5">

@@ -12,7 +12,7 @@ $logged_in_district = $_SESSION['district'];
 
 // Define the barangay to district mapping
 $district_mapping = [
-    'District 1' => ['Tankulan', 'Diklum', 'San Miguel', 'Ticala', 'Lingion'],
+    'District 1' => ['Tankulan', 'Dicklum', 'San Miguel', 'Ticala', 'Lingion'],
     'District 2' => ['Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan'],
     'District 3' => ['Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban'],
     'District 4' => ['Dalirig', 'Maluko', 'Santiago', 'Guilang2'],

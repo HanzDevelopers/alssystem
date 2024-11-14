@@ -9,7 +9,7 @@ $search = isset($_GET['search']) ? $_GET['search'] : ''; // Get the search query
 
 $district_mapping = [
     'Tankulan' => 'District 1',
-    'Diklum' => 'District 1',
+    'Dicklum' => 'District 1',
     'San Miguel' => 'District 1',
     'Ticala' => 'District 1',
     'Lingion' => 'District 1',

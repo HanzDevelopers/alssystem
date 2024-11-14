@@ -13,7 +13,7 @@ $logged_in_district = $_SESSION['district'];
 // District Mapping
 $district_mapping = [
     'Tankulan' => 'District 1',
-    'Diklum' => 'District 1',
+    'Dicklum' => 'District 1',
     'San Miguel' => 'District 1',
     'Ticala' => 'District 1',
     'Lingion' => 'District 1',
