@@ -2,7 +2,6 @@
 // district_population.php
 header('Content-Type: application/json');
 include '../../../src/db/db_connection.php';
-include 'barangay_district_map.php';
 session_start();  // Start session to get logged-in user info
 
 // Get the current year
@@ -21,10 +20,10 @@ $user_district = $_SESSION['district'];
 
 // Barangay-district mapping
 $district_barangays = [
-    'District 1' => ['Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion'],
-    'District 2' => ['Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan'],
-    'District 3' => ['Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban'],
-    'District 4' => ['Dalirig', 'Maluko', 'Santiago', 'Guilang2']
+    'District 1' => ['tankulan', 'dicklum', 'san miguel', 'ticala', 'lingion'],
+    'District 2' => ['alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan'],
+    'District 3' => ['agusan canyon', 'mampayag', 'dahilayan', 'mankanan', 'kalugmanan', 'lindaban'],
+    'District 4' => ['dalirig', 'maluko', 'santiago', 'guilang-guilang']
 ];
 
 // Ensure the user's district is valid

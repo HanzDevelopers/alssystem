@@ -114,7 +114,7 @@
                                 <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="income_below_20,000.php" class="sidebar-link active2">Income Below 20,000</a>
+                                <a href="income_below_20,000.php" class="sidebar-link active2">Income Below ₱20,000</a>
                             </li>
                         </ul>
                     </li>

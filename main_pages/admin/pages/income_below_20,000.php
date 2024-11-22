@@ -166,7 +166,7 @@ $totalPages = ceil($totalRecords / $itemsPerPage);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../../../assets/images/logo.png" type="image/x-icon">
-    <title>Households with Income Below 20,000</title>
+    <title>Households with Income Below ₱20,000</title>
     <!-- Bootstrap CSS CDN --> 
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
@@ -275,7 +275,7 @@ $totalPages = ceil($totalRecords / $itemsPerPage);
                                 <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="income_below_20,000.php" class="sidebar-link active2">Income Below 20,000</a>
+                                <a href="income_below_20,000.php" class="sidebar-link active2">Income Below ₱20,000</a>
                             </li>
                         </ul>
                     </li>
@@ -340,7 +340,7 @@ $totalPages = ceil($totalRecords / $itemsPerPage);
                 <button type="button" id="sidebarCollapse" class="btn menu-btn">
                     <img src="../../../assets/images/burger-bar.png" alt="Menu" width="30" style="margin-left: 10px;">
                 </button>
-                <span class="menu-text">Households with Income Below 20,000</span>
+                <span class="menu-text">Households with Income Below ₱20,000</span>
                 <img src="../../../assets/images/logo.png" alt="Logo" class="header-logo">
             </div>
             

@@ -22,7 +22,7 @@ function plotBarangayOSY() {
             };
 
             const pieLayout = { 
-                title: 'OSY Distribution by Barangay',
+                title: 'OSY Distribution in Barangay',
                 showlegend: true
             };
 

@@ -233,7 +233,7 @@ $conn->close();
                                 <a href="no_occupation.php" class="sidebar-link">No Occupation</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="income_below_20,000.php" class="sidebar-link">Income Below 20,000</a>
+                                <a href="income_below_20,000.php" class="sidebar-link">Income Below ₱20,000</a>
                             </li>
                         </ul>
                     </li>
@@ -390,7 +390,7 @@ $conn->close();
     <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
             <div class="card text-center card-osy-district" style="cursor: pointer;" onclick="window.location.href='income_below_20,000.php';">
                 <div class="card-body">
-                    <h5 class="card-title">Families with Income Below 20,000</h5>
+                    <h5 class="card-title">Families with Income Below ₱20,000</h5>
                     <p class="card-text"><span class="age-range-label"><?php echo $data['lowIncomeFamilies']; ?></span></p>
                 </div>
             </div>

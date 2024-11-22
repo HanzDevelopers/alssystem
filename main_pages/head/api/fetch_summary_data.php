@@ -46,10 +46,10 @@ function getSummaryData($conn, $userDistrict) {
         AND m.age BETWEEN 15 AND 30
         AND YEAR(l.date_encoded) = YEAR(CURDATE())
         AND (
-            (l.barangay IN ('Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') AND '$userDistrict' = 'District 1') OR
-            (l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') AND '$userDistrict' = 'District 2') OR
-            (l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') AND '$userDistrict' = 'District 3') OR
-            (l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') AND '$userDistrict' = 'District 4')
+            (l.barangay IN ('tankulan', 'dicklum', 'san miguel', 'ticala', 'lingion') AND '$userDistrict' = 'District 1') OR
+            (l.barangay IN ('alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan') AND '$userDistrict' = 'District 2') OR
+            (l.barangay IN ('agusan canyon', 'mampayag', 'dahilayan', 'sankanan', 'kalugmanan', 'lindaban') AND '$userDistrict' = 'District 3') OR
+            (l.barangay IN ('dalirig', 'maluko', 'santiago', 'guilang-guilang') AND '$userDistrict' = 'District 4')
         )
     ";
     $totalNotAttendingSchool = getCount($conn, $notAttendingSchoolQuery);
@@ -63,10 +63,10 @@ function getSummaryData($conn, $userDistrict) {
         WHERE b.status IN ('YES', 'Yes', 'yes')
         AND YEAR(l.date_encoded) = YEAR(CURDATE())
         AND (
-            (l.barangay IN ('Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') AND '$userDistrict' = 'District 1') OR
-            (l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') AND '$userDistrict' = 'District 2') OR
-            (l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') AND '$userDistrict' = 'District 3') OR
-            (l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') AND '$userDistrict' = 'District 4')
+            (l.barangay IN ('tankulan', 'dicklum', 'san miguel', 'ticala', 'lingion') AND '$userDistrict' = 'District 1') OR
+            (l.barangay IN ('alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan') AND '$userDistrict' = 'District 2') OR
+            (l.barangay IN ('agusan canyon', 'mampayag', 'dahilayan', 'sankanan', 'kalugmanan', 'lindaban') AND '$userDistrict' = 'District 3') OR
+            (l.barangay IN ('dalirig', 'maluko', 'santiago', 'guilang-guilang') AND '$userDistrict' = 'District 4')
         )
     ";
     $totalInterestedInAls = getCount($conn, $interestedInAlsQuery);
@@ -79,10 +79,10 @@ function getSummaryData($conn, $userDistrict) {
         WHERE m.person_with_disability IN ('YES', 'Yes', 'yes')
         AND YEAR(l.date_encoded) = YEAR(CURDATE())
         AND (
-            (l.barangay IN ('Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') AND '$userDistrict' = 'District 1') OR
-            (l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') AND '$userDistrict' = 'District 2') OR
-            (l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') AND '$userDistrict' = 'District 3') OR
-            (l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') AND '$userDistrict' = 'District 4')
+            (l.barangay IN ('tankulan', 'dicklum', 'san miguel', 'ticala', 'lingion') AND '$userDistrict' = 'District 1') OR
+            (l.barangay IN ('alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan') AND '$userDistrict' = 'District 2') OR
+            (l.barangay IN ('agusan canyon', 'mampayag', 'dahilayan', 'sankanan', 'kalugmanan', 'lindaban') AND '$userDistrict' = 'District 3') OR
+            (l.barangay IN ('dalirig', 'maluko', 'santiago', 'guilang-guilang') AND '$userDistrict' = 'District 4')
         )
     ";
     $totalPersonsWithDisability = getCount($conn, $personsWithDisabilityQuery);
@@ -96,10 +96,10 @@ function getSummaryData($conn, $userDistrict) {
         WHERE b.occupation IN ('NO', 'No', 'no')
         AND YEAR(l.date_encoded) = YEAR(CURDATE())
         AND (
-            (l.barangay IN ('Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') AND '$userDistrict' = 'District 1') OR
-            (l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') AND '$userDistrict' = 'District 2') OR
-            (l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') AND '$userDistrict' = 'District 3') OR
-            (l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') AND '$userDistrict' = 'District 4')
+            (l.barangay IN ('tankulan', 'dicklum', 'san miguel', 'ticala', 'lingion') AND '$userDistrict' = 'District 1') OR
+            (l.barangay IN ('alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan') AND '$userDistrict' = 'District 2') OR
+            (l.barangay IN ('agusan canyon', 'mampayag', 'dahilayan', 'sankanan', 'kalugmanan', 'lindaban') AND '$userDistrict' = 'District 3') OR
+            (l.barangay IN ('dalirig', 'maluko', 'santiago', 'guilang-guilang') AND '$userDistrict' = 'District 4')
         )
     ";
     $totalNoOccupation = getCount($conn, $noOccupationQuery);
@@ -111,10 +111,10 @@ FROM location_tbl l
 WHERE l.estimated_family_income < 20000
 AND YEAR(l.date_encoded) = YEAR(CURDATE())
 AND (
-    (l.barangay IN ('Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') AND '$userDistrict' = 'District 1') OR
-    (l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') AND '$userDistrict' = 'District 2') OR
-    (l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') AND '$userDistrict' = 'District 3') OR
-    (l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') AND '$userDistrict' = 'District 4')
+    (l.barangay IN ('tankulan', 'dicklum', 'san miguel', 'ticala', 'lingion') AND '$userDistrict' = 'District 1') OR
+            (l.barangay IN ('alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan') AND '$userDistrict' = 'District 2') OR
+            (l.barangay IN ('agusan canyon', 'mampayag', 'dahilayan', 'sankanan', 'kalugmanan', 'lindaban') AND '$userDistrict' = 'District 3') OR
+            (l.barangay IN ('dalirig', 'maluko', 'santiago', 'guilang-guilang') AND '$userDistrict' = 'District 4')
 )
 ";
 
@@ -128,10 +128,10 @@ $totalLowIncomeFamilies = getCount($conn, $lowIncomeFamiliesQuery);
         JOIN location_tbl l ON m.record_id = l.record_id
         WHERE YEAR(l.date_encoded) = YEAR(CURDATE())
         AND (
-            (l.barangay IN ('Tankulan', 'Dicklum', 'Diclum', 'San Miguel', 'Ticala', 'Lingion') AND '$userDistrict' = 'District 1') OR
-            (l.barangay IN ('Alae', 'Damilag', 'Mambatangan', 'Mantibugao', 'Minsuro', 'Lunocan') AND '$userDistrict' = 'District 2') OR
-            (l.barangay IN ('Agusan canyon', 'Mampayag', 'Dahilayan', 'Sankanan', 'Kalugmanan', 'Lindaban') AND '$userDistrict' = 'District 3') OR
-            (l.barangay IN ('Dalirig', 'Maluko', 'Santiago', 'Guilang2') AND '$userDistrict' = 'District 4')
+            (l.barangay IN ('tankulan', 'dicklum', 'san miguel', 'ticala', 'lingion') AND '$userDistrict' = 'District 1') OR
+            (l.barangay IN ('alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan') AND '$userDistrict' = 'District 2') OR
+            (l.barangay IN ('agusan canyon', 'mampayag', 'dahilayan', 'sankanan', 'kalugmanan', 'lindaban') AND '$userDistrict' = 'District 3') OR
+            (l.barangay IN ('dalirig', 'maluko', 'santiago', 'guilang-guilang') AND '$userDistrict' = 'District 4')
         )
     ";
     $totalPopulation = getCount($conn, $totalPopulationQuery);
