@@ -310,6 +310,12 @@ a.active1{
                                 Dashboard
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a href="view_deleted_by_user.php" class="sidebar-link" target="_blank">
+                                <i class="fa-regular fa-file-lines pe-2"></i>
+                                Archive
+                            </a>
+                        </li>
                         <li class="sidebar-header" style="
         font-weight: bold; color:gray;">
                             Tools & Components
@@ -544,8 +550,8 @@ a.active1{
             <td>
                 <!-- View Info Button -->
                 <button class='btn btn-primary view-info-btn' data-member-id='<?php echo $row["member_id"]; ?>'>View Info</button>
-                <!-- Delete Button -->
-                <button class='btn btn-danger delete-member-btn' data-member-id='<?php echo $row["member_id"]; ?>'>Delete</button>
+                <!-- Delete Button
+                <button class='btn btn-danger delete-member-btn' data-member-id='<?php echo $row["member_id"]; ?>'>Delete</button> -->
             </td>
         </tr>
         <?php endwhile; ?>

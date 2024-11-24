@@ -288,6 +288,12 @@ if (isset($_GET['download'])) {
                             Dashboard
                         </a>
                     </li>
+                        <li class="sidebar-item">
+                            <a href="view_deleted_by_user.php" class="sidebar-link" target="_blank">
+                                <i class="fa-regular fa-file-lines pe-2"></i>
+                                Archive
+                            </a>
+                        </li>
                     <li class="sidebar-header" style="
     font-weight: bold; color:gray;">
                         Tools & Components
