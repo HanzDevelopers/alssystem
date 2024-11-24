@@ -627,8 +627,8 @@ p.card-text{
             <td>
                 <!-- View Info Button -->
                 <button class='btn btn-primary view-info-btn' data-member-id='<?php echo $row["member_id"]; ?>'>View Info</button>
-                <!-- Delete Button -->
-                <button class='btn btn-danger delete-member-btn' data-member-id='<?php echo $row["member_id"]; ?>'>Delete</button>
+                <!-- Delete Button
+                <button class='btn btn-danger delete-member-btn' data-member-id='<?php echo $row["member_id"]; ?>'>Archive</button> -->
             </td>
         </tr>
         <?php endwhile; ?>
