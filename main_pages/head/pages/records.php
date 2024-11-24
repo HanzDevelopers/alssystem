@@ -228,6 +228,12 @@ $result = $conn->query($sql);
                                 Dashboard
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a href="view_deleted_by_user.php" class="sidebar-link" target="_blank">
+                                <i class="fa-regular fa-file-lines pe-2"></i>
+                                Archive
+                            </a>
+                        </li>
                         <li class="sidebar-header" style="
         font-weight: bold; color:gray;">
                             Tools & Components
@@ -376,7 +382,7 @@ $result = $conn->query($sql);
                     <td>" . htmlspecialchars($row["district"]) . "</td>
                     <td>
                         <button class='btn btn-primary' onclick='viewInfo(" . $row["member_id"] . ")'>View Info</button>
-                        <button class='btn btn-danger' onclick='deleteMember(" . $row["member_id"] . ")'>Delete</button>
+                        <button class='btn btn-danger ah' onclick='deleteMember(" . $row["member_id"] . ")'>Archive</button>
                     </td>
                   </tr>";
         }
