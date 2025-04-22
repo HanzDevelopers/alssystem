@@ -18,6 +18,16 @@ if (!isset($_SESSION['username'])) {
     <link rel="stylesheet" href="../../../src/css/nav.css">
     <title>Household Form</title>
 </head>
+
+<style>
+    /* Ensure the modal is always in front */
+    .modal {
+        z-index: 1055 !important;  /* Bootstrap default z-index for modals is 1050 */
+    }
+    .modal-backdrop {
+        z-index: 1050 !important;
+    }
+</style>
 <style>
     * { font-size: 12px; }
     .table-responsive {
@@ -77,6 +87,75 @@ if (!isset($_SESSION['username'])) {
 
 </style>
 <body>
+    <!-- Consent Modal Structure -->
+<div class="modal fade" id="consentModal" tabindex="-1" aria-labelledby="consentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="consentModalLabel">Consent for Data Collection</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    I hereby give my full consent to the collection, use, and storage of my personal information
+                    for the purpose of tracking out-of-school youth (OSY) and identifying individuals interested
+                    in the Alternative Learning System (ALS) through this system. I understand that this information
+                    will only be used for the stated purpose and will be protected under the relevant data protection
+                    laws and policies. I also acknowledge that I have the right to withdraw my consent at any time
+                    by providing written notice to those responsible for data collection.
+                </p>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="consentCheckbox">
+                    <label class="form-check-label" for="consentCheckbox">I agree to the terms and conditions.</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="denyConsentBtn" class="btn btn-outline-secondary">Deny</button>
+                <button type="button" id="agreeConsentBtn" class="btn btn-primary" disabled>Agree and Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies with defer attribute -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js" defer></script>
+<script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize the Bootstrap modal
+        const consentModalElement = document.getElementById('consentModal');
+        const consentModal = new bootstrap.Modal(consentModalElement, {
+            backdrop: 'static',
+            keyboard: false
+        });
+
+        // Show the consent modal when the page loads
+        consentModal.show();
+
+        // Elements
+        const consentCheckbox = document.getElementById('consentCheckbox');
+        const agreeConsentBtn = document.getElementById('agreeConsentBtn');
+        const denyConsentBtn = document.getElementById('denyConsentBtn');
+
+        // Event listeners
+
+        // Toggle the "Agree and Proceed" button state based on checkbox
+        consentCheckbox.addEventListener('change', () => {
+            agreeConsentBtn.disabled = !consentCheckbox.checked;
+        });
+
+        // "Agree and Proceed" button click
+        agreeConsentBtn.addEventListener('click', () => {
+            // Close the modal
+            const bootstrapModalInstance = bootstrap.Modal.getInstance(consentModalElement);
+            bootstrapModalInstance.hide();
+        });
+
+        // "Deny" button click
+        denyConsentBtn.addEventListener('click', () => {
+            window.location.href = 'dashboard.php';
+        });
+    });
+</script>
   <!-- End of top nav -->
             <div class="container2">
                 <h1>Household Form</h1>
@@ -90,99 +169,409 @@ if (!isset($_SESSION['username'])) {
 
 
 
-                    <!-- Step 1 -->
-                    <div class="form-step" id="step1">
-                        <div class="group-container">
-                            <div class="group">
-                                <label>Date Encoded:</label>
-                <input type="date" name="date_encoded" required>
-                                
-                            </div>
-                            <div class="group">
-                                <label>Province:</label>
-                                <input type="text" name="province" required placeholder="Province">
-                            </div>
-                            <div class="group">
-                                <label>Estimated Family Income:</label>
-                                <input type="number" name="estimated_family_income" required placeholder="Estimated Family Income">
-                            </div>
-                        </div>
-                        <div class="group-container">
-                            <div class="group">
-                                <label>House Number:</label>
-                                <input type="text" name="house_number" required placeholder="House Number">
-                            </div>
-                            <div class="group">
-                                <label>City/Municipality:</label>
-                                <input type="text" name="city" required placeholder="City/Municipality">
-                            </div>
-                            <div class="group">
-                                <label>Other Notes:</label>
-                                <textarea name="notes" rows="2" cols="50" placeholder="State Notes Here"></textarea>
-                             </div>
-                        </div>
-                        <div class="group-container">
-                            <div class="group">
-                                <label>Sitio/Zone:</label>
-                                <input type="text" name="sitio_zone_purok" required placeholder="Sitio/Zone">
-                            </div>
-                            <div class="group">
-                                <label>Barangay:</label>
-                                <input type="text" name="barangay" required placeholder="Barangay">
-                            </div>
-                            <div class="group">
-                            </div>
-                        </div>
-                        <div class="button-group">
-                        <span id="dashboard" class="dashboard" onclick="dashboard()">Leave form</span>
-                            <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next</button>
-                        </div>
-                    </div>
+                    <!-- Modal Alert -->
+<div id="duplicateModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Duplicate Record Found</h5>
+                <button type="button" class="close" aria-label="Close" onclick="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>A record with the same house number and barangay already exists for the current year. Would you like to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeModal()">Continue</button>
+                <button type="button" class="btn btn-secondary" onclick="redirectToDashboard()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-                    <!-- Step 2 -->
-                    <div class="form-step" id="step2" style="display:none;">
-                        <div class="table-responsive">
-                            <table id="dynamicTable">
-                                <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>Household Members:</th>
-                                        <th>Relationship to Head:</th>
-                                        <th>Birthdate:</th>
-                                        <th>Age:</th>
-                                        <th>Gender:</th>
-                                        <th>Civil Status:</th>
-                                        <th>Person w/ Disability:</th>
-                                        <th>Ethnicity:</th>
-                                        <th>Religion:</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td data-label="No.">1</td>
-                                        <td data-label="Household Members"><input type="text" name="household_members[]"placeholder="Name of Member"></td>
-                                        <td data-label="Relationship to Head"><input type="text" name="relationship_to_head[]"placeholder="Relationship to Head"></td>
-                                        <td data-label="Birthdate"><input type="date" name="birthdate[]"></td>
-                                        <td data-label="Age"><input type="number" name="age[]" placeholder="Age"></td>
-                                        <td data-label="Gender"><input type="text" name="gender[]" placeholder="Gender"></td>
-                                        <td data-label="Civil Status"><input type="text" name="civil_status[]" placeholder="Civil Status"></td>
-                                        <td data-label="Person w/ Disability"><input type="text" name="disability[]" placeholder="Person w/ Disability"></td>
-                                        <td data-label="Ethnicity"><input type="text" name="ethnicity[]" placeholder="Ethnicity"></td>
-                                        <td data-label="Religion"><input type="text" name="religion[]" placeholder="Religion"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="button-group-start" style="margin-top: 10px;">
+<!-- Step 1 Form -->
+<div class="form-step" id="step1">
+    <div class="group-container">
+        <div class="group">
+            <label>Origin Date:</label>
+            <input type="date" name="date_encoded" required oninput="checkDuplicate()">
+        </div>
+
+        <div class="group">
+            <label>Barangay:</label>
+            <input type="text" id="barangay" name="barangay" required placeholder="Barangay" onfocus="showBarangaySuggestions(this)" oninput="checkDuplicate(); showBarangaySuggestions(this)">
+            <div class="suggestions-box" id="barangay-suggestions"></div>
+        </div>
+
+        <div class="group">
+            <label>Estimated Family Income:</label>
+            <input type="number" name="estimated_family_income" required placeholder="Estimated Family Income">
+        </div>
+    </div>
+
+    <div class="group-container">
+        <div class="group">
+            <label>House Number:</label>
+            <input type="text" name="house_number" required placeholder="House Number" oninput="checkDuplicate()">
+        </div>
+
+        <div class="group">
+            <label>City/Municipality:</label>
+            <input type="text" id="city" name="city" required placeholder="City/Municipality">
+        </div>
+
+        <div class="group">
+            <label>Other Notes:</label>
+            <textarea name="notes" rows="2" cols="50" placeholder="State Notes Here"></textarea>
+        </div>
+    </div>
+
+    <div class="group-container">
+        <div class="group">
+            <label>Sitio/Zone:</label>
+            <input type="text" name="sitio_zone_purok" required placeholder="Sitio/Zone">
+        </div>
+
+        <div class="group">
+            <label>Province:</label>
+            <input type="text" id="province" name="province" required placeholder="Province">
+        </div>
+        <div class="group">
+        </div>
+    </div>
+
+    <div class="button-group">
+        <span id="dashboard" class="dashboard" onclick="redirectToDashboard()">Leave form</span>
+        <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next</button>
+    </div>
+</div>
+
+<!-- CSS for Modal and Suggestions Box -->
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-dialog {
+        max-width: 500px;
+        margin: 100px auto;
+    }
+    .suggestions-box {
+        border: 1px solid #ccc;
+        border-top: none;
+        position: absolute;
+        background-color: #ddc2c2;
+        z-index: 100;
+        max-height: 150px;
+        overflow-y: auto;
+        width: calc(100% - 22px);
+        display: none;
+    }
+    .suggestion-item {
+        padding: 8px;
+        cursor: pointer;
+    }
+    .suggestion-item:hover {
+        background-color: gray;
+    }
+</style>
+
+<!-- JavaScript for Modal, Suggestions, and Duplicate Check -->
+<script>
+const barangays = [
+    'tankulan', 'diclum', 'dicklum', 'san miguel', 'ticala', 'lingion',
+    'alae', 'damilag', 'mambatangan', 'mantibugao', 'minsuro', 'lunocan',
+    'agusan canyon', 'mampayag', 'dahilayan', 'sankanan', 'kalugmanan',
+    'lindaban', 'dalirig', 'maluko', 'santiago', 'guilang2', 'guilang-guilang'
+];
+
+function showBarangaySuggestions(input) {
+    const inputValue = input.value.toLowerCase();
+    const suggestionsBox = document.getElementById('barangay-suggestions');
+    suggestionsBox.innerHTML = '';
+
+    let filteredSuggestions = barangays;
+    if (inputValue.length > 0) {
+        filteredSuggestions = barangays.filter(item =>
+            item.toLowerCase().startsWith(inputValue)
+        );
+    }
+
+    if (filteredSuggestions.length > 0) {
+        filteredSuggestions.forEach(item => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'suggestion-item';
+            suggestionItem.textContent = item;
+            suggestionItem.onclick = function() {
+                input.value = item;
+                updateLocation();
+                suggestionsBox.innerHTML = '';
+                suggestionsBox.style.display = 'none';
+            };
+            suggestionsBox.appendChild(suggestionItem);
+        });
+        suggestionsBox.style.display = 'block';
+    } else {
+        suggestionsBox.style.display = 'none';
+    }
+}
+
+function updateLocation() {
+    const barangayInput = document.getElementById('barangay').value.toLowerCase();
+    if (barangays.includes(barangayInput)) {
+        document.getElementById('city').value = 'Manolo Fortich';
+        document.getElementById('province').value = 'Bukidnon';
+    } else {
+        document.getElementById('city').value = '';
+        document.getElementById('province').value = '';
+    }
+}
+
+function showModal() {
+    document.getElementById('duplicateModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('duplicateModal').style.display = 'none';
+}
+
+function redirectToDashboard() {
+    window.location.href = 'dashboard.php';
+}
+
+function checkDuplicate() {
+    const dateEncoded = document.querySelector('input[name="date_encoded"]').value;
+    const barangay = document.getElementById('barangay').value;
+    const houseNumber = document.querySelector('input[name="house_number"]').value;
+
+    if (dateEncoded && barangay && houseNumber) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'form_step1_check_duplicate.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            if (this.status === 200 && this.responseText === 'duplicate') {
+                showModal();
+            }
+        };
+        xhr.send(`date_encoded=${dateEncoded}&barangay=${barangay}&house_number=${houseNumber}`);
+    }
+}
+
+document.addEventListener('click', function(e) {
+    const barangayInput = document.getElementById('barangay');
+    const suggestionsBox = document.getElementById('barangay-suggestions');
+    
+    if (!barangayInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+        suggestionsBox.innerHTML = '';
+        suggestionsBox.style.display = 'none';
+    }
+});
+</script>
+
+<!-- Step 2 -->
+<div class="form-step" id="step2" style="display:none;">
+    <div class="table-responsive">
+        <table id="dynamicTable">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Household Members:</th>
+                    <th>Relationship to Head:</th>
+                    <th>Birthdate:</th>
+                    <th>Age:</th>
+                    <th>Gender:</th>
+                    <th>Civil Status:</th>
+                    <th>Person w/ Disability:</th>
+                    <th>Ethnicity:</th>
+                    <th>Religion:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-label="No.">1</td>
+                    <td data-label="Household Members">
+                        <input type="text" name="household_members[]" placeholder="Name of Member">
+                    </td>
+                    <td data-label="Relationship to Head">
+                        <input type="text" name="relationship_to_head[]" placeholder="Relationship to Head" onfocus="showRelationshipSuggestions(this)" oninput="showRelationshipSuggestions(this)">
+                        <div class="suggestions-box" id="relationship-suggestions"></div>
+                    </td>
+                    <td data-label="Birthdate">
+                        <input type="date" name="birthdate[]" onchange="calculateAge(this)">
+                    </td>
+                    <td data-label="Age">
+                        <input type="number" name="age[]" placeholder="Age" readonly>
+                    </td>
+                    <td data-label="Gender">
+                        <input type="text" name="gender[]" placeholder="Gender" onfocus="showGenderSuggestions(this)" oninput="showGenderSuggestions(this)">
+                        <div class="suggestions-box" id="gender-suggestions"></div>
+                    </td>
+                    <td data-label="Civil Status">
+                        <input type="text" name="civil_status[]" placeholder="Civil Status" onfocus="showCivilStatusSuggestions(this)" oninput="showCivilStatusSuggestions(this)">
+                        <div class="suggestions-box" id="civil-status-suggestions"></div>
+                    </td>
+                    <td data-label="Person w/ Disability">
+                        <input type="text" name="disability[]" placeholder="Person w/ Disability" onfocus="showDisabilitySuggestions(this)" oninput="showDisabilitySuggestions(this)">
+                        <div class="suggestions-box" id="disability-suggestions"></div>
+                    </td>
+                    <td data-label="Ethnicity">
+                        <input type="text" name="ethnicity[]" placeholder="Ethnicity" onfocus="showEthnicitySuggestions(this)" oninput="showEthnicitySuggestions(this)">
+                        <div class="suggestions-box" id="ethnicity-suggestions"></div>
+                    </td>
+                    <td data-label="Religion">
+                        <input type="text" name="religion[]" placeholder="Religion" onfocus="showReligionSuggestions(this)" oninput="showReligionSuggestions(this)">
+                        <div class="suggestions-box" id="religion-suggestions"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="button-group-start" style="margin-top: 10px;">
         <button type="button" class="btn btn-add" onclick="addRow()">Add Member</button>
         <button type="button" class="btn btn-danger btn-sm" onclick="deleteLastRow()">Delete Last Row</button>
     </div>
     <div class="button-group">
-    <button type="button" class="btn btn-secondary" onclick="previousStep(1)">Previous</button>
-    <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next</button>
+        <button type="button" class="btn btn-secondary" onclick="previousStep(1)">Previous</button>
+        <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next</button>
+    </div>
 </div>
 
-                    </div>
+<!-- CSS for Suggestions Box -->
+<style>
+    .suggestions-box {
+        border: 1px solid #ccc;
+        border-top: none;
+        position: absolute;
+        background-color: #ddc2c2;
+        z-index: 100;
+        max-height: 150px;
+        overflow-y: auto;
+        width: calc(12% - 22px); /* Same width as the input field */
+        display: none; /* Initially hidden */
+    }
+
+    .suggestion-item {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .suggestion-item:hover {
+        background-color: gray;
+    }
+</style>
+
+<script>
+    const relationships = [
+        'Head', 'Spouse', 'Son', 'Daughter', 'Stepson', 'Stepdaughter', 
+        'Son-in-law', 'Daughter-in-law', 'Grandson', 'Granddaughter', 
+        'Father', 'Mother', 'Brother', 'Sister', 'Uncle', 'Aunt', 
+        'Nephew', 'Niece', 'Housemaid', 'Houseboy', 'Others (nonrelative/boarder)'
+    ];
+
+    const gender = [
+        'Male', 'Female', 'Other'
+    ];
+
+    const civilStatuses = [
+        'Single', 'Married', 'Widower', 'Separated', 'Live-in'
+    ];
+
+    const disabilities = [
+        'None','Partially Hearing Impaired', 'Totally Hearing Impaired', 
+        'Partially Visually Impaired', 'Totally Visually Impaired', 
+        'Physically Impaired', 'W/ Special Needs'
+    ];
+
+    const ethnicities = [
+        'Boholano', 'Bukidnon', 'Cebuano', 'Higa-onon', 
+        'Ilocano', 'Ilonggo', 'Manobo', 'Matigsalog', 
+        'Talaandig', 'Others (specify)'
+    ];
+
+    const religions = [
+        'Roman Catholic', 'Islam', 'Iglesia ni Kristo', 'Aglipayan', 
+        'Protestant', 'Jehovah\'s Witness', 'Seventh Day Adventist', 
+        'Baptist', 'Mormons', 'Others (specify)', 'None'
+    ];
+
+    function showSuggestions(input, suggestionsArray, suggestionsBoxId) {
+        const inputValue = input.value.toLowerCase();
+        const suggestionsBox = document.getElementById(suggestionsBoxId);
+        suggestionsBox.innerHTML = ''; // Clear previous suggestions
+
+        // Filter suggestions based on input if the user has typed something
+        let filteredSuggestions = suggestionsArray;
+        if (inputValue.length > 0) {
+            filteredSuggestions = suggestionsArray.filter(item =>
+                item.toLowerCase().startsWith(inputValue)
+            );
+        }
+
+        // Show suggestions if any match
+        if (filteredSuggestions.length > 0) {
+            filteredSuggestions.forEach(item => {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.className = 'suggestion-item';
+                suggestionItem.textContent = item;
+
+                // Set the input value to the clicked suggestion
+                suggestionItem.onclick = function() {
+                    input.value = item;
+                    suggestionsBox.innerHTML = ''; // Clear suggestions
+                    suggestionsBox.style.display = 'none'; // Hide suggestions
+                };
+
+                suggestionsBox.appendChild(suggestionItem);
+            });
+            suggestionsBox.style.display = 'block'; // Show suggestions
+        } else {
+            suggestionsBox.style.display = 'none'; // Hide suggestions if no matches
+        }
+    }
+
+    function showRelationshipSuggestions(input) {
+        showSuggestions(input, relationships, 'relationship-suggestions');
+    }
+
+    function showGenderSuggestions(input) {
+        showSuggestions(input, gender, 'gender-suggestions');
+    }
+    function showCivilStatusSuggestions(input) {
+        showSuggestions(input, civilStatuses, 'civil-status-suggestions');
+    }
+
+    function showDisabilitySuggestions(input) {
+        showSuggestions(input, disabilities, 'disability-suggestions');
+    }
+
+    function showEthnicitySuggestions(input) {
+        showSuggestions(input, ethnicities, 'ethnicity-suggestions');
+    }
+
+    function showReligionSuggestions(input) {
+        showSuggestions(input, religions, 'religion-suggestions');
+    }
+
+    // Optional: Close suggestion box when clicking outside
+    document.addEventListener('click', function(e) {
+        const suggestionBoxes = document.querySelectorAll('.suggestions-box');
+        suggestionBoxes.forEach(box => {
+            if (!box.previousElementSibling.contains(e.target)) {
+                box.innerHTML = '';
+                box.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+
 
                     <!-- Step 3 -->
 <div class="form-step" id="step3" style="display:none;">
@@ -227,6 +616,22 @@ if (!isset($_SESSION['username'])) {
     </div>
 
     <script>
+        function calculateAge(birthdateInput) {
+    const birthdate = new Date(birthdateInput.value);
+    const today = new Date();
+    let age = today.getFullYear() - birthdate.getFullYear();
+    const monthDiff = today.getMonth() - birthdate.getMonth();
+
+    // Adjust age if birth month hasn't been reached or if it's the birth month but the birthdate hasn't occurred yet
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
+        age--;
+    }
+
+    // Find the corresponding age input field and set its value
+    const ageInput = birthdateInput.closest('tr').querySelector('input[name="age[]"]');
+    ageInput.value = age;
+}
+
         function goToStep(step) {
     document.getElementById('step' + currentStep).style.display = 'none';  // Hide the current step
     currentStep = step;  // Update current step
@@ -238,14 +643,30 @@ if (!isset($_SESSION['username'])) {
 let currentStep = 1;
 
 function nextStep(step) {
-    if (validateCurrentStep()) {
-        document.getElementById('step' + currentStep).style.display = 'none';
-        currentStep = step;
-        document.getElementById('step' + currentStep).style.display = 'block';
-        updateStepIndicator();
-        if (step === 3) fillStep3Table(); // Fill Step 3 table when navigating to Step 3
+    const currentInputs = document.getElementById('step' + currentStep).querySelectorAll('input');
+    let emptyFields = [];
+    
+    // Check for empty fields in the current step
+    currentInputs.forEach(input => {
+        if (input.value.trim() === '') {
+            emptyFields.push(input.placeholder); // Collect placeholders of empty fields
+        }
+    });
+
+    // If there are empty fields, show a single alert
+    if (emptyFields.length > 0) {
+        alert('Please fill in the following fields:\n' + emptyFields.join('\n'));
+        return; // Stop the function if there are empty fields
     }
+
+    // Proceed to the next step if there are no empty fields
+    document.getElementById('step' + currentStep).style.display = 'none';
+    currentStep = step;
+    document.getElementById('step' + currentStep).style.display = 'block';
+    updateStepIndicator();
+    if (step === 3) fillStep3Table(); // Fill Step 3 table when navigating to Step 3
 }
+
 
 function previousStep(step) {
     document.getElementById('step' + currentStep).style.display = 'none';
@@ -298,50 +719,180 @@ function fillStep3Table() {
             const newRow = step3Table.insertRow();
             newRow.innerHTML = `
                 <td data-label="No.">${index + 1}</td>
-                <td data-label="Household Members">${householdMember}</td> <!-- Add household member here for identification -->
-                <td data-label="Highest Grade/Year Completed"><input type="text" name="highest_grade[]" placeholder="Grade/Year"></td>
-                <td data-label="Currently Attending School?"><input type="text" name="attending_school[]" placeholder="Yes/No"></td>
-                <td data-label="Level Enrolled"><input type="text" name="level_enrolled[]" placeholder="Level Enrolled"></td>
-                <td data-label="Reasons for Not Attending School"><input type="text" name="reasons_not_attending[]" placeholder="Reasons"></td>
-                <td data-label="Can Read/Write Simple Message?"><input type="text" name="can_read_write[]" placeholder="Yes/No"></td>
-                <td data-label="Occupation"><input type="text" name="occupation[]" placeholder="Occupation"></td>
-                <td data-label="Work"><input type="text" name="work[]" placeholder="Current Work"></td>
+                <td data-label="Household Members">${householdMember}</td>
+                <td data-label="Highest Grade/Year Completed">
+                    <input type="text" name="highest_grade[]" placeholder="Grade/Year" onfocus="showSuggestions(this, highestGradeSuggestions)" oninput="filterSuggestions(this, highestGradeSuggestions)">
+                </td>
+                <td data-label="Currently Attending School?">
+                    <input type="text" name="attending_school[]" placeholder="Yes/No" onfocus="showSuggestions(this, attendingSchoolSuggestions)" oninput="handleAttendingSchoolInput(this)">
+                </td>
+                <td data-label="Level Enrolled">
+                    <input type="text" name="level_enrolled[]" placeholder="Level Enrolled" readonly>
+                </td>
+                <td data-label="Reasons for Not Attending School">
+                    <input type="text" name="reasons_not_attending[]" placeholder="Reasons" onfocus="showSuggestions(this, reasonsNotAttendingSuggestions)" oninput="filterSuggestions(this, reasonsNotAttendingSuggestions)">
+                </td>
+                <td data-label="Can Read/Write Simple Message?">
+                    <input type="text" name="can_read_write[]" placeholder="Yes/No" onfocus="showSuggestions(this, yesNoSuggestions)" oninput="filterSuggestions(this, yesNoSuggestions)">
+                </td>
+                <td data-label="Occupation">
+                    <input type="text" name="occupation[]" placeholder="Occupation" onfocus="showSuggestions(this, occupationSuggestions)" oninput="filterSuggestions(this, occupationSuggestions); handleOccupationInput(this);">
+                </td>
+                <td data-label="Work">
+                    <input type="text" name="work[]" placeholder="Current Work">
+                </td>
                 <td data-label="Status">
-                    <small style="font-weight: normal; color: gray;">Interested in ALS?</small>
-                    <br>
-                    <input type="text" name="status[]" placeholder="Yes/No">
+                    <small style="font-weight: normal; color: gray;">Interested in ALS?</small><br>
+                    <input type="text" name="status[]" placeholder="Yes/No" onfocus="showSuggestions(this, yesNoSuggestions)" oninput="filterSuggestions(this, yesNoSuggestions)">
                 </td>`;
         }
     });
 }
 
+// Suggestions arrays
+const highestGradeSuggestions = [
+    "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6",
+    "Grade 7/1st YR HS", "Grade 8/2nd YR HS", "Grade 9/3rd YR HS", "Grade 10/4th YR HS",
+    "Vocational", "1st Yr College", "2nd Yr College", "3rd Yr College", "4th Yr College",
+    "College Grad", "MA", "Ph.d."
+];
+
+const attendingSchoolSuggestions = ["Yes", "No"];
+
+const reasonsNotAttendingSuggestions = [
+    "Schools are very far", "No school within the Barangay", "No regular transportation",
+    "High cost of education", "Illness/Disability", "Housekeeping/Housework",
+    "Employment/Looking for work", "Lack of personal interest", "Cannot cope with school work", "Others (specify)"
+];
+
+const yesNoSuggestions = ["Yes", "No"];
+const occupationSuggestions = ["Yes", "No"];
+
+// Show suggestions
+function showSuggestions(input, suggestionsArray) {
+    const list = createSuggestionList(input);
+    suggestionsArray.forEach(suggestion => {
+        const option = document.createElement('div');
+        option.textContent = suggestion;
+        option.style.cursor = 'pointer';  // Change cursor to pointer
+        option.onmouseover = function() {
+            option.style.backgroundColor = "#e0e0e0";  // Highlight option on hover
+        };
+        option.onmouseout = function() {
+            option.style.backgroundColor = "";  // Remove highlight when not hovering
+        };
+        option.onclick = function() {
+            input.value = suggestion;
+            list.remove();
+            
+            if (input.name === 'attending_school[]') {
+                handleAttendingSchoolInput(input);
+            }
+
+            if (input.name === 'occupation[]') {
+                handleOccupationInput(input);
+            }
+        };
+        list.appendChild(option);
+    });
+}
+
+// Filter suggestions as the user types
+function filterSuggestions(input, suggestionsArray) {
+    const value = input.value.toLowerCase();
+    const list = createSuggestionList(input);
+    list.innerHTML = ''; // Clear previous suggestions
+    suggestionsArray.filter(s => s.toLowerCase().includes(value)).forEach(suggestion => {
+        const option = document.createElement('div');
+        option.textContent = suggestion;
+        option.style.cursor = 'pointer';  // Change cursor to pointer
+        option.onmouseover = function() {
+            option.style.backgroundColor = "#e0e0e0";  // Highlight option on hover
+        };
+        option.onmouseout = function() {
+            option.style.backgroundColor = "";  // Remove highlight when not hovering
+        };
+        option.onclick = function() {
+            input.value = suggestion;
+            list.remove();
+            if (input.name === 'attending_school[]') {
+                handleAttendingSchoolInput(input);
+            }
+
+            if (input.name === 'occupation[]') {
+                handleOccupationInput(input);
+            }
+        };
+        list.appendChild(option);
+    });
+}
+
+// Handle input for "Currently Attending School?"
+function handleAttendingSchoolInput(input) {
+    const row = input.closest('tr');
+    const levelEnrolledInput = row.querySelector('input[name="level_enrolled[]"]');
+    const reasonsInput = row.querySelector('input[name="reasons_not_attending[]"]');
+    const highestGrade = row.querySelector('input[name="highest_grade[]"]').value.trim();
+
+    if (input.value.toLowerCase() === 'yes') {
+        levelEnrolledInput.value = getNextGradeLevel(highestGrade);
+        reasonsInput.value = 'None';
+    } else if (input.value.toLowerCase() === 'no') {
+        levelEnrolledInput.value = 'N/A';
+    }
+}
+
+// Handle input for "Occupation"
+function handleOccupationInput(input) {
+    const row = input.closest('tr');
+    const workInput = row.querySelector('input[name="work[]"]');
+    
+    if (input.value.toLowerCase() === 'no') {
+        workInput.value = 'N/A';
+        workInput.setAttribute('readonly', 'true');  // Make the field read-only
+    } else {
+        workInput.value = '';  // Clear the work field if Occupation is not "No"
+        workInput.removeAttribute('readonly');  // Remove read-only attribute
+    }
+}
+
+// Determine next grade level
+function getNextGradeLevel(currentGrade) {
+    const index = highestGradeSuggestions.indexOf(currentGrade);
+    return index !== -1 && index < highestGradeSuggestions.length - 1 ? highestGradeSuggestions[index + 1] : 'N/A';
+}
+
+// Create a suggestion list below the input
+function createSuggestionList(input) {
+    let list = document.getElementById('suggestion-list');
+    if (list) list.remove(); // Remove any existing suggestion list
+
+    // Create a new suggestion list container
+    list = document.createElement('div');
+    list.id = 'suggestion-list';
+    list.style.position = 'absolute';
+    list.style.background = '#ddc2c2';
+    list.style.border = '1px solid #ccc';
+    list.style.zIndex = '1000'; // Ensure it's on top of other elements
+    list.style.width = input.offsetWidth + 'px'; // Match input width
+    list.style.maxHeight = '150px'; // Add a max-height and overflow for longer lists
+    list.style.overflowY = 'auto';
+
+    // Calculate the position of the input field and set the list position accordingly
+    const rect = input.getBoundingClientRect();
+    list.style.top = (rect.bottom + window.scrollY) + 'px'; // Position below input
+    list.style.left = (rect.left + window.scrollX) + 'px'; // Align left with input
+
+    // Append the list to the document body to avoid positioning issues within container elements
+    document.body.appendChild(list);
+    return list;
+}
 
 document.querySelector('form').addEventListener('submit', function(event) {
-    // Prevent form submission if there are missing fields
     if (!validateRows()) {
         event.preventDefault();
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </script>
 

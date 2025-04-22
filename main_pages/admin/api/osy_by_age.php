@@ -12,44 +12,38 @@ if ($conn->connect_error) {
     die(json_encode(['error' => 'Database connection failed: ' . $conn->connect_error]));
 }
 
-// SQL Query to fetch barangay and count of OSY (age 15-30)
-$sql = "SELECT l.barangay, COUNT(m.member_id) AS osy_count
+// SQL query to group OSY by date_encoded (year) and age ranges (15-20, 21-25, 26-30)
+$sql = "SELECT YEAR(l.date_encoded) AS year, 
+               CASE 
+                   WHEN m.age BETWEEN 15 AND 20 THEN '15-20' 
+                   WHEN m.age BETWEEN 21 AND 25 THEN '21-25' 
+                   WHEN m.age BETWEEN 26 AND 30 THEN '26-30' 
+               END AS age_range, 
+               COUNT(m.member_id) AS osy_count
         FROM members_tbl m
         JOIN location_tbl l ON m.record_id = l.record_id
         WHERE m.age BETWEEN 15 AND 30
-        GROUP BY l.barangay";
+        GROUP BY year, age_range";
 
 $result = $conn->query($sql);
 
-$district_counts = [
-    'District 1' => 0,
-    'District 2' => 0,
-    'District 3' => 0,
-    'District 4' => 0
-];
+$osy_data = [];
 
-if ($result) {
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $district = getDistrict($row['barangay']);
-            if (array_key_exists($district, $district_counts)) {
-                $district_counts[$district] += intval($row['osy_count']);
-            }
-        }
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $osy_data[] = [
+            'year' => $row['year'],
+            'age_range' => $row['age_range'],
+            'osy_count' => intval($row['osy_count'])
+        ];
     }
 } else {
-    // Handle query error
     echo json_encode(['error' => 'Query failed: ' . $conn->error]);
     exit();
 }
 
+// Close the connection
 $conn->close();
 
-// Prepare data for JSON response
-$districts = array_keys($district_counts);
-$counts = array_values($district_counts);
-
-echo json_encode([
-    'districts' => $districts,
-    'counts' => $counts
-]);
+// Return the data in JSON format
+echo json_encode($osy_data);

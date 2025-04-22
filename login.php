@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,18 +19,29 @@
     </style>
 </head>
 <body>
-  <div id="loader-wrapper">
-      <div id="loader"></div>        
-      <div class="loader-section section-left"></div>
-      <div class="loader-section section-right"></div>
-  </div>
-  <div class="form-container">
+    <div id="loader-wrapper">
+        <div id="loader"></div>        
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    </div>
+    <div class="form-container">
+    <?php
+    session_start();
+    if (isset($_SESSION['error'])) {
+        echo "<div class='alert alert-danger text-center' role='alert'>" . $_SESSION['error'] . "</div>";
+        unset($_SESSION['error']); // Clear error message after displaying
+    }
+    ?>
         <div class="form">
             <form action="src/db/login_process.php" method="post">
                 <div id="emailHelp" class="form-text">Please use your organizational account provided by the admin</div>
                 <div class="mb-3">
                     <label for="username" class="form-label">User Name</label>
                     <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="id_number" class="form-label">ID Number</label>
+                    <input type="text" class="form-control" id="id_number" name="id_number" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
@@ -41,9 +52,6 @@
                     <a href="index.php" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
-            <div class="mt-3 text-center">
-                <a href="request.php" class="request-account-link">Request Account</a>
-            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
