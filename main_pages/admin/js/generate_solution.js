@@ -65,18 +65,59 @@ async function generateSolution(reason) {
 function displaySolutions(topReasons, solutions, otherReasonsText, otherReasonsSolution) {
     const solutionsDiv = document.getElementById('solutions');
 
-
-    // Display top 3 reasons and their solutions
+    // Display top 3 reasons and their solutions with "Read more" modals
     topReasons.forEach((reasonObj, index) => {
+        const shortText = solutions[index].length > 1000 ? solutions[index].substring(0, 1000) + '...' : solutions[index];
+        const modalId = `modal-${index}`;
+
         const reasonDiv = document.createElement('div');
-        reasonDiv.innerHTML = `<h3>Reason: <span  style="font-weight: bold;  font-style: italic; text-decoration: underline;">${reasonObj.reason}</span> (Count: ${reasonObj.count})</h3><p style="font-size: 15px;">Solution: ${solutions[index]}</p>`;
+        reasonDiv.innerHTML = `
+            <h3>Reason: <span style="font-weight: bold; font-style: italic; text-decoration: underline;">${reasonObj.reason}</span> (Count: ${reasonObj.count})</h3>
+            <p style="font-size: 15px;">Solution: ${shortText}
+                <a href="#" style="color: blue; text-decoration: underline;" onclick="fetchAndShowModalSolution('${modalId}', \`${reasonObj.reason}\`); return false;">Read more</a>
+            </p>
+
+            <!-- Modal -->
+            <div id="${modalId}" class="modal" style="display:none; position:fixed; z-index:999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+                <div style="background-color:#fff; margin:10% auto; padding:20px; border:1px solid #888; width:80%; border-radius: 10px; max-height: 70%; overflow-y: auto;">
+                    <span style="float:right; font-size:28px; font-weight:bold; cursor:pointer;" onclick="closeModal('${modalId}')">&times;</span>
+                    <h3>Full Solution for: ${reasonObj.reason}</h3>
+                    <p id="${modalId}-content" style="font-size: 15px;">Loading...</p>
+                </div>
+            </div>
+        `;
         solutionsDiv.appendChild(reasonDiv);
     });
 
-    // Display general solution
+    // General Solution with modal
+    const generalModalId = "modal-general";
+    const shortGeneral = otherReasonsSolution.length > 350 ? otherReasonsSolution.substring(0, 350) + '...' : otherReasonsSolution;
+
     const otherDiv = document.createElement('div');
-    otherDiv.innerHTML = `<h3>General Solution:</h3><p style="font-size: 15px;"> ${otherReasonsSolution}</p>`;
+    otherDiv.innerHTML = `
+        <h3>General Solution:</h3>
+        <p style="font-size: 15px;">${shortGeneral}
+            <a href="#" style="color: blue; text-decoration: underline;" onclick="fetchAndShowModalSolution('${generalModalId}', 'general solutions for various other reasons for not attending school'); return false;">Read more</a>
+        </p>
+
+        <!-- Modal for general solution -->
+        <div id="${generalModalId}" class="modal" style="display:none; position:fixed; z-index:999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+            <div style="background-color:#fff; margin:10% auto; padding:20px; border:1px solid #888; width:80%; border-radius: 10px; max-height: 70%; overflow-y: auto;">
+                <span style="float:right; font-size:28px; font-weight:bold; cursor:pointer;" onclick="closeModal('${generalModalId}')">&times;</span>
+                <h3>Full General Solution</h3>
+                <p id="${generalModalId}-content" style="font-size: 15px;">Loading...</p>
+            </div>
+        </div>
+    `;
     solutionsDiv.appendChild(otherDiv);
+}
+
+function showModal(id) {
+    document.getElementById(id).style.display = 'block';
+}
+
+function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
 }
 
 // Initialize fetch function

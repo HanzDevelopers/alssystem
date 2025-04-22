@@ -555,6 +555,8 @@ $conn->close();
         <script src="../js/data.js"></script>
         <script src="../js/form.js"></script>
         <script src="../js/generate_solution.js"></script>
+<script src="../js/fetch_modal_solution.js"></script>
+
 
 </body>
 
